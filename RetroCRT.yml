@@ -1,0 +1,181 @@
+---
+
+##############################################################################
+# This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
+#
+# RetroCRT is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# RetroCRT is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
+##############################################################################
+
+- hosts: "all"
+  connection: "local"
+  become: "yes"
+  become_user: "root"
+
+  pre_tasks:
+
+    - name: "Reading Configs"
+      set_fact:
+        tv_region: "{{ lookup('env', 'tv_region') }}"
+        retrocrt_timings: "{{ lookup('env', 'retrocrt_timings') }}"
+        rotate_tv: "{{ lookup('env', 'rotate_tv') }}"
+        rotate_es: "{{ lookup('env', 'rotate_es') }}"
+        rotate_ra: "{{ lookup('env', 'rotate_ra') }}"
+        segasixteen: "{{ lookup('env', 'segasixteen') }}"
+        necsixteen: "{{ lookup('env', 'necsixteen') }}"
+
+    - name: "Set Default Timings"
+      set_fact:
+        default_timings: "{{ lookup('file', '{{ retrocrt_timings }}/default') }}"
+        
+#    - name: "Are we NTSC"
+#      set_fact:
+#        segasixteen: "genesis"
+#        segasixteenfull: "Genesis"
+#      when: tv_region == "ntsc"
+
+#    - name: "Are we PAL"
+#      set_fact:
+#        segasixteen: "megadrive"
+#        segasixteenfull: "Mega Drive"
+#      when: tv_region == "pal"
+
+    - name: "Find / UUID"
+      command: "findmnt --noheadings --output PARTUUID /"
+      register: root_uuid
+
+    - name: "Find / Filesystem Type"
+      command: "findmnt --noheadings --output FSTYPE /"
+      register: root_fstype
+
+  tasks:
+
+    # vfat doesn't like the standard Ansible backup extension
+    - name: "Backup /boot Configs"
+      copy:
+        src: "/boot/{{ item }}"
+        dest: "/boot/{{ item }}.{{ ansible_date_time.epoch }}"
+      with_items:
+        - "cmdline.txt"
+        - "config.txt"
+
+    - name: "Update /boot Configs"
+      template:
+        src: "templates/{{ item }}.j2"
+        dest: "/boot/{{ item }}"
+      with_items:
+        - "cmdline.txt"
+        - "config.txt"
+
+    - name: "Update EmulationStation Startup"
+      template:
+        src: "templates/autostart.sh.j2"
+        dest: "/opt/retropie/configs/all/autostart.sh"
+
+    - name: "Create Menu Item"
+      copy:
+        src: "bin/RetroCRT.sh"
+        dest: "/home/pi/RetroPie/retropiemenu/RetroCRT.sh"
+        mode: 0755
+        owner: "pi"
+        group: "pi"
+
+    - name: "EmulationStation Systems List"
+      template:
+        src: "templates/es_systems.cfg.j2"
+        dest: "/etc/emulationstation/es_systems.cfg"
+        backup: "yes"
+        owner: "root"
+        group: "root"
+        mode: 644
+
+    - name: "Copy RetroArch Configs"
+      synchronize:
+        src: "configs/retropie/"
+        dest: "/opt/retropie/configs/"
+        rsync_opts:
+          - "--backup"
+          - "--suffix .{{ansible_date_time.epoch}}"
+
+    - name: "Copy RetroArch ROM Configs"
+      synchronize:
+        src: "configs/roms/"
+        dest: '/home/pi/RetroPie/roms/{{ item }}'
+        rsync_opts:
+          - "--backup"
+          - "--suffix .{{ansible_date_time.epoch}}"
+      with_items:
+        - "arcade"
+        - "fba"
+        - "mame-libretro"
+        - "mame-mame4all"
+
+    - name: "Disable RetroArch Notifications"
+      lineinfile:
+        dest: "/opt/retropie/configs/all/retroarch.cfg"
+        backup: "yes"
+        regexp: '^video_font_enable ='
+        line: 'video_font_enable = "false"'
+
+    - name: "Fix Permissions"
+      file:
+        path: "{{ item }}"
+        state: "directory"
+        owner: "pi"
+        group: "pi"
+        recurse: "yes"
+      with_items:
+        - "/opt/retropie"
+        - "/home/pi"
+
+    - name: "Install 240p Test Suite ROMs & ISOs"
+      synchronize:
+        src: "files/roms/"
+        dest: "/home/pi/RetroPie/roms/"
+        rsync_opts:
+          - "--exclude README.md"
+
+    - name: "Download Theme: Freeplay"
+      git:
+        repo: "https://github.com/rxbrad/es-theme-freeplay"
+        dest: "/etc/emulationstation/themes/Freeplay"
+
+    - name: "Download Theme: GBZ35"
+      git:
+        repo: "https://github.com/rxbrad/es-theme-gbz35"
+        dest: "/etc/emulationstation/themes/GBZ35"
+
+    - name: "Download Theme: GBZ35 Dark"
+      git:
+        repo: "https://github.com/rxbrad/es-theme-gbz35-dark"
+        dest: "/etc/emulationstation/themes/GBZ35-Dark"
+
+    - name: "Download Theme: TFT"
+      git:
+        repo: "https://github.com/anthonycaccese/es-theme-tft"
+        dest: "/etc/emulationstation/themes/TFT"
+
+    - name: "Download Theme: Picade"
+      git:
+        repo: "https://github.com/anthonycaccese/es-theme-picade"
+        dest: "/etc/emulationstation/themes/Picade"
+
+    - name: "Download Theme: Bubblegum"
+      git:
+        repo: "https://github.com/xovox/es-theme-bubblegum"
+        dest: "/etc/emulationstation/themes/Bubblegum"
+
+    - name: "Download Theme: Honey"
+      git:
+        repo: "https://github.com/xovox/es-theme-honey"
+        dest: "/etc/emulationstation/themes/Honey"

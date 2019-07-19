@@ -1,0 +1,140 @@
+<?xml version="1.0"?>
+<systemList>
+  <system>
+    <name>arcade</name>
+    <fullname>Arcade</fullname>
+    <path>/home/pi/RetroPie/roms/arcade</path>
+    <extension>.7z .fba .zip .7Z .FBA .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ arcade %ROM%</command>
+    <platform>arcade</platform>
+    <theme>arcade</theme>
+  </system>
+  <system>
+    <name>fba</name>
+    <fullname>Final Burn Alpha</fullname>
+    <path>/home/pi/RetroPie/roms/fba</path>
+    <extension>.7z .fba .zip .7Z .FBA .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ fba %ROM%</command>
+    <platform>arcade</platform>
+    <theme>fba</theme>
+  </system>
+  <system>
+    <name>mame-libretro</name>
+    <fullname>Multiple Arcade Machine Emulator</fullname>
+    <path>/home/pi/RetroPie/roms/mame-libretro</path>
+    <extension>.zip .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ mame-libretro %ROM%</command>
+    <platform>arcade</platform>
+    <theme>mame</theme>
+  </system>
+  <system>
+    <name>mastersystem</name>
+    <fullname>Sega Master System</fullname>
+    <path>/home/pi/RetroPie/roms/mastersystem</path>
+    <extension>.7z .sms .bin .zip .7Z .SMS .BIN .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ mastersystem %ROM%</command>
+    <platform>mastersystem</platform>
+    <theme>mastersystem</theme>
+  </system>
+  <system>
+	  {% set segasixteen, segasixteenfull = "genesis", "Genesis" %}
+	  {% set segasixteen, segasixteenfull = "megadrive", "Mega Drive" %}
+    <name>{{ segasixteen | mandatory }}</name>
+    <fullname>Sega {{ segasixteenfull | mandatory }}</fullname>
+    <path>/home/pi/RetroPie/roms/{{ segasixteen | mandatory }}</path>
+    <extension>.7z .smd .bin .gen .md .sg .zip .7Z .SMD .BIN .GEN .MD .SG .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ megadrive %ROM%</command>
+    <platform>{{ segasixteen | mandatory }}</platform>
+    <theme>{{ segasixteen | mandatory }}</theme>
+  </system>
+  <system>
+    <name>n64</name>
+    <fullname>Nintendo 64</fullname>
+    <path>/home/pi/RetroPie/roms/n64</path>
+    <extension>.z64 .n64 .v64 .zip .Z64 .N64 .V64 .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ n64 %ROM%</command>
+    <platform>n64</platform>
+    <theme>n64</theme>
+  </system>
+  <system>
+    <name>neogeo</name>
+    <fullname>Neo Geo</fullname>
+    <path>/home/pi/RetroPie/roms/neogeo</path>
+    <extension>.7z .fba .zip .7Z .FBA .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ neogeo %ROM%</command>
+    <platform>neogeo</platform>
+    <theme>neogeo</theme>
+  </system>
+  <system>
+    <name>nes</name>
+    <fullname>Nintendo Entertainment System</fullname>
+    <path>/home/pi/RetroPie/roms/nes</path>
+    <extension>.7z .nes .zip .7Z .NES .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ nes %ROM%</command>
+    <platform>nes</platform>
+    <theme>nes</theme>
+  </system>
+  <system>
+    <name>pcengine</name>
+    <fullname>PC Engine</fullname>
+    <path>/home/pi/RetroPie/roms/pcengine</path>
+    <extension>.7z .pce .ccd .chd .cue .zip .7Z .PCE .CCD .CHD .CUE .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ pcengine %ROM%</command>
+    <platform>pcengine</platform>
+    <theme>pcengine</theme>
+  </system>
+  <system>
+    <name>psx</name>
+    <fullname>PlayStation</fullname>
+    <path>/home/pi/RetroPie/roms/psx</path>
+    <extension>.cue .cbn .img .iso .m3u .mdf .pbp .toc .z .znx .CUE .CBN .IMG .ISO .M3U .MDF .PBP .TOC .Z .ZNX</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ psx %ROM%</command>
+    <platform>psx</platform>
+    <theme>psx</theme>
+  </system>
+  <system>
+    <name>retropie</name>
+    <fullname>RetroPie</fullname>
+    <path>/home/pi/RetroPie/retropiemenu</path>
+    <extension>.rp .sh</extension>
+    <command>sudo /home/pi/RetroPie-Setup/retropie_packages.sh retropiemenu launch %ROM% &lt;/dev/tty &gt;/dev/tty</command>
+    <platform/>
+    <theme>retropie</theme>
+  </system>
+  <system>
+    <name>sega32x</name>
+    <fullname>Sega 32X</fullname>
+    <path>/home/pi/RetroPie/roms/sega32x</path>
+    <extension>.7z .32x .smd .bin .md .zip .7Z .32X .SMD .BIN .MD .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ sega32x %ROM%</command>
+    <platform>sega32x</platform>
+    <theme>sega32x</theme>
+  </system>
+  <system>
+    <name>segacd</name>
+    <fullname>Mega CD</fullname>
+    <path>/home/pi/RetroPie/roms/segacd</path>
+    <extension>.iso .cue .chd .ISO .CUE .CHD</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ segacd %ROM%</command>
+    <platform>segacd</platform>
+    <theme>segacd</theme>
+  </system>
+  <system>
+    <name>snes</name>
+    <fullname>Super Nintendo</fullname>
+    <path>/home/pi/RetroPie/roms/snes</path>
+    <extension>.7z .bin .bs .smc .sfc .fig .swc .mgd .zip .7Z .BIN .BS .SMC .SFC .FIG .SWC .MGD .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ snes %ROM%</command>
+    <platform>snes</platform>
+    <theme>snes</theme>
+  </system>
+  <system>
+    <name>supergrafx</name>
+    <fullname>SuperGrafx</fullname>
+    <path>/home/pi/RetroPie/roms/supergrafx</path>
+    <extension>.7z .pce .sgx .zip .7Z .PCE .SQX .ZIP</extension>
+    <command>/opt/retropie/supplementary/runcommand/runcommand.sh 0 _SYS_ pcengine %ROM%</command>
+    <platform>supergrafx</platform>
+    <theme>supergrafx</theme>
+  </system>
+</systemList>

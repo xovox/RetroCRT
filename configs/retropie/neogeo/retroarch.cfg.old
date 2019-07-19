@@ -1,0 +1,21 @@
+# Settings made here will only override settings in the global retroarch.cfg if placed above the #include line
+
+input_remapping_directory = "/opt/retropie/configs/neogeo/"
+
+custom_viewport_width = 1920
+custom_viewport_height = 224
+custom_viewport_x = -10
+custom_viewport_y = -4
+aspect_ratio_index = 22
+video_smooth = false
+video_fullscreen = true
+video_scale_integer = false
+video_threaded = true
+video_refresh_rate = 59.185
+video_vsync = true
+video_hard_sync = true
+
+savefile_directory = "/home/pi/RetroPie/savefiles/neogeo"
+savestate_directory = "/home/pi/RetroPie/savestates/neogeo"
+
+#include "/opt/retropie/configs/all/retroarch.cfg"

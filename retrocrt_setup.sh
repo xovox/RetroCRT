@@ -19,29 +19,44 @@ license="
 ##############################################################################
 "
 
-retroCRT=$HOME/RetroCRT
-retroCRTconfig=$retroCRT/config
+retrocrt_config=$HOME/.retrocrtrc
 
-if [ -f "$retroCRTconfig" ]; then
-	source "$retroCRTconfig"
+if [[ -f "$retrocrt_config" ]]; then
+	source "$retrocrt_config"
 fi
 
-title="RetroCRT Installer"
+retrocrt_install=${retrocrt_install:-$PWD}
 
-greetings="
-RetroCRT :: Utility suite to configure RetroPie for an analog CRT
+retrocrt_title="RetroCRT"
+
+licensea="
+RetroCRT :: Configure RetroPie for an analog CRT
 
 Copyright (C) 2019 Duncan Brown (\Zb\Z4https://github.com/xovox\Zn)
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
+(Continued on next screen)
+"
+
+licenseb="
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program.  If not, see \Zb\Z4https://www.gnu.org/licenses/\Zn
 "
 
 description="
-This software requires specialized hardware.  Currently, only the RetroTink Ultimate has been tested.
+RetroCRT is a suite of tools and configurations put together to enable the use of CRTs with the a Raspberry Pi running RetroPie.
+
+It achieves this by switching resolutions on the fly based on what platform or arcade rom you're currently using.
+
+Find developers, users, and support in our official Facebook group: \"RetroPie CRT Gamers\".
+"
+
+hardware="
+This software requires specialized hardware.
+
+Currently, only the RetroTink Ultimate over component and RGB have been successfully tested.
 
 Future updates will support built-in composite, VGA666 RGB, pi2scart.
 
@@ -69,7 +84,7 @@ Update RetroCRT installer and configs before we continue?
 
 This will restart the installer.
 
-----------------------------------------
+--------------------------------
 
 "
 
@@ -86,32 +101,49 @@ I'm unable to proceed.
 "
 
 ##############################################################################
+# are we being run in the ight dir?
+##############################################################################
+
+if [[ "$PWD" != "$retrocrt_install" ]]; then
+	echo -e "Please move the installer directory to \"$retrocrt_install\"\n"
+	exit
+        errorExit="true"
+fi
+
+##############################################################################
+# can we hit the internet?
+##############################################################################
+
+if ping -c 1 -w 1 8.8.8.8 > /dev/null 2>&1; then
+	network_up=true
+else
+	network_up=false
+fi
+
+##############################################################################
 # license & about the project
 ##############################################################################
 
-dialog --title "$title :: License & Warranty"	--colors			--msgbox "$greetings"		0 0
-dialog --title "$title :: About"		--colors			--msgbox "$description"		0 0
-
-if ping -c 1 -w 1 8.8.8.8 > /dev/null 2>&1; then
-	networkUp=true
-else
-	networkUp=false
-fi
+dialog --title "$retrocrt_title :: License & Warranty"	--colors			--msgbox "$licensea"		25 36
+dialog --title "$retrocrt_title :: License & Warranty"	--colors			--msgbox "$licenseb"		25 36
+dialog --title "$retrocrt_title :: About"		--colors			--msgbox "$description"		25 36
+dialog --title "$retrocrt_title :: Supported Hardware"	--colors			--msgbox "$hardware"		25 36
+retrocrt_hardware="retrotink_ultimate"
 
 ##############################################################################
 # first warning
 ##############################################################################
 
-dialog --title "$title :: Warning"		--colors	--defaultno	--yesno "$warning"		0 0 || exit
+dialog --title "$retrocrt_title :: Warning"		--colors	--defaultno	--yesno "$warning"		25 36 || exit
 
 ##############################################################################
 # update before proceding?
 ##############################################################################
 
-#if dialog --title "$title :: Check Updates"	--colors	--defaultno	--yesno "$checkupdates"		0 0 ; then
-if [ "$networkUp" = "true" ]; then
+#if dialog --title "$retrocrt_title :: Check Updates"	--colors	--defaultno	--yesno "$checkupdates"		25 36 ; then
+if [[ "$network_up" = "true" ]]; then
 	git fetch
-	if dialog --title "$title :: Update Status" --colors --defaultno --yesno "$updategit$(git status -u no)" 0 0 ; then
+	if dialog --title "$retrocrt_title :: Update Status" --colors --defaultno --yesno "$updategit$(git status -u no)" 25 36 ; then
 		git pull
 		$0
 		exit
@@ -122,73 +154,87 @@ fi
 # do we want to rotate our screen?
 ##############################################################################
 
-# up	es	ra
-# ^	0	0
-# >	1	3
-# v	2	2
-# <	3	1
+# up	es	ra	degrees
+# ^	0	0	0
+# >	1	3	90
+# v	2	2	180
+# <	3	1	270
 
-tvRotation=${tvRotation:-0}
+rotate_tv=${rotate_tv:-0}
 
-if [ "$tvRotation" = "0" ]; then
-	tvRotationDefault="--defaultno"
+if [[ "$rotate_tv" = "0" ]]; then
+	rotate_tv_default="--defaultno"
 fi
 
-if dialog --title "$title :: Screen Orientation" --colors $tvRotationDefault --yesno "$rotation" 0 0 ; then
-	tvRotation="$(dialog --title "$title :: Screen Orientation" --stdout --default-item "$tvRotation" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
+if dialog --title "$retrocrt_title :: Screen Orientation" --colors $rotate_tv_default --yesno "$rotation" 25 36 ; then
+	rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
 else
-	tvRotation=0
+	rotate_tv=0
 fi
 
-if [ "$tvRotation" = "0" ]; then
-	esRotation="0"
-	raRotation="0"
-elif [ "$tvRotation" = "90" ]; then
-	esRotation="3"
-	raRotation="1"
-elif [ "$tvRotation" = "180" ]; then
-	esRotation="2"
-	raRotation="2"
-elif [ "$tvRotation" = "270" ]; then
-	esRotation="1"
-	raRotation="3"
+if [[ "$rotate_tv" = "0" ]]; then
+	rotate_es="0"
+	rotate_ra="0"
+elif [[ "$rotate_tv" = "90" ]]; then
+	rotate_es="3"
+	rotate_ra="1"
+elif [[ "$rotate_tv" = "180" ]]; then
+	rotate_es="2"
+	rotate_ra="2"
+elif [[ "$rotate_tv" = "270" ]]; then
+	rotate_es="1"
+	rotate_ra="3"
 fi
+
+##############################################################################
+# Localized Consoles
+##############################################################################
+
+segasixteen=${segaixteen:-megadrive}
+necsixteen=${necsixteen:-pcengine}
+
+segasixteen="$(dialog --title "$retrocrt_title :: Sega 16-Bit Console" --stdout --default-item "$segasixteen" --menu "Which Sega 16-Bit Console?" 0 0 0 megadrive "Mega Drive" genesis "Genesis")"
+necsixteen="$(dialog --title "$retrocrt_title :: NEC '16-Bit' Console" --stdout --default-item "$necsixteen" --menu "Which NEC '16-Bit' Console?" 0 0 0 pcengine "PC Engine" tg16 "TurboGrafx-16")"
 
 ##############################################################################
 # choose a tv region
 ##############################################################################
 
-tvRegion=${tvRegion:-ntsc}
-#tvRegion="$(dialog --stdout --default-item "$tvRegion" --menu "What region are you?" 0 0 0 NTSC "NTSC" PAL "PAL" SECAM )"
+tv_region=${tv_region:-ntsc}
+#tv_region"$(dialog --stdout --default-item "$tv_region --menu "What region are you?" 0 0 0 NTSC "NTSC" PAL "PAL" SECAM )"
 
 ##############################################################################
 # one last chance to bail
 ##############################################################################
 
-dialog --title "$title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 0 0 || exit
+dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 25 36 || exit
 
 ##############################################################################
 # write our config
 ##############################################################################
 
-cat << CONFIG > $retroCRTconfig
+cat << CONFIG > $retrocrt_config
 #!/bin/bash
-
 $license
 
 # where we keep everything
-export retroCRT="/home/pi/RetroCRT"
+export retrocrt_install="$retrocrt_install"
 
-export tvRegion="$tvRegion"
+export tv_region="$tv_region"
 
-export tvRotation="$tvRotation"
-export esRotation="$esRotation"
-export raRotation="$raRotation"
+export rotate_tv="$rotate_tv"
+export rotate_es="$rotate_es"
+export rotate_ra="$rotate_ra"
+
+export segasixteen="$segasixteen"
+export necsixteen="$necsixteen"
+
+export retrocrt_hardware="$retrocrt_hardware"
 
 # our per-system video modes
-export hdmiTimings=$retroCRT/hdmi_timings/$tvRegion
+export retrocrt_timings="\$retrocrt_install/retrocrt_timings/\$tv_region/\$retrocrt_hardware"
 
-export PATH=\$retroCRT/bin:\$PATH
+export PATH="\$retrocrt_install/bin:\$PATH"
 
 # keep ansible from creating ugly .retry files
 export ANSIBLE_RETRY_FILES_ENABLED=0
@@ -198,29 +244,18 @@ CONFIG
 # pull in our config
 ##############################################################################
 
-source $retroCRTconfig
-
-if [ "$PWD" != "$retroCRT" ]; then
-	echo -e "Please move this directory to \"$retroCRT\"\n"
-        errorExit="true"
-fi
-
-if [ "$errorExit" ]; then
-	exit
-fi
-
-clear
+source $retrocrt_config
 
 ##############################################################################
 # install ansible
 ##############################################################################
 
 if ! (dpkg -l ansible > /dev/null); then
-	if [ "$networkUp" = "true" ]; then
+	if [[ "$network_up" = "true" ]]; then
 		sudo apt update
 		sudo apt -y install ansible
 	else
-		dialog --title "$title :: Fatal Error"	--colors			--msgbox "$noansible"		0 0
+		dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$noansible"		25 36
 		exit
 	fi
 fi
