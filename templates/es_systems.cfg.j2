@@ -37,8 +37,11 @@
     <theme>mastersystem</theme>
   </system>
   <system>
-	  {% set segasixteen, segasixteenfull = "genesis", "Genesis" %}
-	  {% set segasixteen, segasixteenfull = "megadrive", "Mega Drive" %}
+{%~ if segasixteen == "genesis" ~%}
+    {%~ set segasixteen, segasixteenfull = "genesis", "Genesis" ~%}
+{%~ else ~%}
+    {%~ set segasixteen, segasixteenfull = "megadrive", "Mega Drive" ~%}
+{%~ endif ~%}
     <name>{{ segasixteen | mandatory }}</name>
     <fullname>Sega {{ segasixteenfull | mandatory }}</fullname>
     <path>/home/pi/RetroPie/roms/{{ segasixteen | mandatory }}</path>

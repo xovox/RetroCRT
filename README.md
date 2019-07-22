@@ -28,11 +28,12 @@ NOTE: All games > 240p aren't currently supported since I'm focused on SD CRTs &
 # Supported Hardware
 
 * [RetroTink Ultimate](http://www.retrotink.com) is a board for the Raspberry Pi that gives you every analog connection you could want, in true 24-bit RGB color!
-  * Component & RGB work well
-  * S-Video & composite do not work 100%
+  * Component & RGB only, for now
 
 # Future Supported Hardware
 
+* Other RetroTink connections
+  * S-Video & composite do not work 100%
 * Raspberry Pi built-in composite out (untested)
 * VGA666 (untested)
 
@@ -83,6 +84,12 @@ Sadly, I don't have a SECAM or PAL setup to test everything on, I'll need someon
 
 # Installation
 
+## Images
+
+[Download the pre-built image](https://github.com/xovox/RetroCRT/releases).
+
+## DIY
+
 I'm assuming you're able to SSH in, or have a monitor & keyboard. I typically connect my Pi via Ethernet when I'm first configuring it for ease.
 
 You can also do the initial configuration with a monitor hooked up to HDMI.
@@ -107,9 +114,10 @@ cd RetroCRT &&
 
 ## NTSC
 
-| Make 		| Model 	| Tested 	| Issues	| Tested By
-|------		|-------	|--------	|--------	|-----------
-| Panasonic	| CT-27D10	| Component	| None          | Duncan
+| Make 		| Model 	| Tested 	| Issues
+|------		|-------	|--------	|--------
+| Panasonic	| CT-27D10	| Component	| None
+| Magnavox      | 20MS3442/17   | Component     | None
 
 # Troubleshooting
 

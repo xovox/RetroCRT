@@ -22,7 +22,7 @@ license="
 retrocrt_config=$HOME/.retrocrtrc
 
 if [[ -f "$retrocrt_config" ]]; then
-	source "$retrocrt_config"
+    source "$retrocrt_config"
 fi
 
 retrocrt_install=${retrocrt_install:-$PWD}
@@ -89,9 +89,7 @@ This will restart the installer.
 "
 
 rotation="
-Would you like to rotate EmulationStation?
-
-This requires the experimental version of EmulationStation to be installed via RetroPie-Setup.
+Would you like to rotate the screen?
 "
 
 noansible="
@@ -105,8 +103,8 @@ I'm unable to proceed.
 ##############################################################################
 
 if [[ "$PWD" != "$retrocrt_install" ]]; then
-	echo -e "Please move the installer directory to \"$retrocrt_install\"\n"
-	exit
+    echo -e "Please move the installer directory to \"$retrocrt_install\"\n"
+    exit
         errorExit="true"
 fi
 
@@ -115,9 +113,9 @@ fi
 ##############################################################################
 
 if ping -c 1 -w 1 8.8.8.8 > /dev/null 2>&1; then
-	network_up=true
+    network_up=true
 else
-	network_up=false
+    network_up=false
 fi
 
 ##############################################################################
@@ -128,7 +126,6 @@ dialog --title "$retrocrt_title :: License & Warranty"	--colors			--msgbox "$lic
 dialog --title "$retrocrt_title :: License & Warranty"	--colors			--msgbox "$licenseb"		25 36
 dialog --title "$retrocrt_title :: About"		--colors			--msgbox "$description"		25 36
 dialog --title "$retrocrt_title :: Supported Hardware"	--colors			--msgbox "$hardware"		25 36
-retrocrt_hardware="retrotink_ultimate"
 
 ##############################################################################
 # first warning
@@ -142,12 +139,12 @@ dialog --title "$retrocrt_title :: Warning"		--colors	--defaultno	--yesno "$warn
 
 #if dialog --title "$retrocrt_title :: Check Updates"	--colors	--defaultno	--yesno "$checkupdates"		25 36 ; then
 if [[ "$network_up" = "true" ]]; then
-	git fetch
-	if dialog --title "$retrocrt_title :: Update Status" --colors --defaultno --yesno "$updategit$(git status -u no)" 25 36 ; then
-		git pull
-		$0
-		exit
-	fi
+    git fetch
+    if dialog --title "$retrocrt_title :: Update Status" --colors --defaultno --yesno "$updategit$(git status -u no)" 25 36 ; then
+        git pull
+        $0
+        exit
+    fi
 fi
 
 ##############################################################################
@@ -163,45 +160,64 @@ fi
 rotate_tv=${rotate_tv:-0}
 
 if [[ "$rotate_tv" = "0" ]]; then
-	rotate_tv_default="--defaultno"
+    rotate_tv_default="--defaultno"
 fi
 
 if dialog --title "$retrocrt_title :: Screen Orientation" --colors $rotate_tv_default --yesno "$rotation" 25 36 ; then
-	rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
+    rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
 else
-	rotate_tv=0
+    rotate_tv=0
 fi
 
 if [[ "$rotate_tv" = "0" ]]; then
-	rotate_es="0"
-	rotate_ra="0"
+    rotate_es="0"
+    rotate_ra="0"
 elif [[ "$rotate_tv" = "90" ]]; then
-	rotate_es="3"
-	rotate_ra="1"
+    rotate_es="3"
+    rotate_ra="1"
 elif [[ "$rotate_tv" = "180" ]]; then
-	rotate_es="2"
-	rotate_ra="2"
+    rotate_es="2"
+    rotate_ra="2"
 elif [[ "$rotate_tv" = "270" ]]; then
-	rotate_es="1"
-	rotate_ra="3"
+    rotate_es="1"
+    rotate_ra="3"
 fi
+
+##############################################################################
+# our crt connection
+##############################################################################
+
+retrocrt_hardware="${retrocrt_hardware:-rt_rgb}"
+#retrocrt_hardware="$(dialog --title "$retrocrt_title :: Hardware Used" --stdout --default-item "$retrocrt_hardware" --menu "What CRT Connection?" 0 0 0 rt_rgb "RetroTink: RGB/Component" rt_svid "RetroTink: S-Video" rt_comp "RetroTink: Composite" 35 "3.5mm Jack")"
 
 ##############################################################################
 # Localized Consoles
 ##############################################################################
 
-segasixteen=${segaixteen:-megadrive}
-necsixteen=${necsixteen:-pcengine}
+#segasixteen=${segaixteen:-megadrive}
+#necsixteen=${necsixteen:-pcengine}
 
-segasixteen="$(dialog --title "$retrocrt_title :: Sega 16-Bit Console" --stdout --default-item "$segasixteen" --menu "Which Sega 16-Bit Console?" 0 0 0 megadrive "Mega Drive" genesis "Genesis")"
-necsixteen="$(dialog --title "$retrocrt_title :: NEC '16-Bit' Console" --stdout --default-item "$necsixteen" --menu "Which NEC '16-Bit' Console?" 0 0 0 pcengine "PC Engine" tg16 "TurboGrafx-16")"
+#segasixteen="$(dialog --title "$retrocrt_title :: Sega 16-Bit Console" --stdout --default-item "$segasixteen" --menu "Which Sega 16-Bit Console?" 0 0 0 megadrive "Mega Drive" genesis "Genesis")"
+#necsixteen="$(dialog --title "$retrocrt_title :: NEC '16-Bit' Console" --stdout --default-item "$necsixteen" --menu "Which NEC '16-Bit' Console?" 0 0 0 pcengine "PC Engine" tg16 "TurboGrafx-16")"
+
+#if [[ "$segasixteen" == "megadrive" ]]; then
+#	segasixteenfull="Mega Drive"
+#else
+#	segasixteenfull="Genesis"
+#fi
+
+#if [[ "$necsixteen" == "pcengine" ]]; then
+#	necsixteenfull="PC Engine"
+#else
+#	necsixteenfull="TurboGrafx-16"
+#fi
 
 ##############################################################################
 # choose a tv region
 ##############################################################################
 
 tv_region=${tv_region:-ntsc}
-#tv_region"$(dialog --stdout --default-item "$tv_region --menu "What region are you?" 0 0 0 NTSC "NTSC" PAL "PAL" SECAM )"
+#tv_region"$(dialog --stdout --default-item "$tv_region --menu "What region are you?" 0 0 0 NTSC "NTSC" PAL "PAL" SECAM "SECAM")"
 
 ##############################################################################
 # one last chance to bail
@@ -251,13 +267,13 @@ source $retrocrt_config
 ##############################################################################
 
 if ! (dpkg -l ansible > /dev/null); then
-	if [[ "$network_up" = "true" ]]; then
-		sudo apt update
-		sudo apt -y install ansible
-	else
-		dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$noansible"		25 36
-		exit
-	fi
+    if [[ "$network_up" = "true" ]]; then
+        sudo apt update
+        sudo apt -y install ansible
+    else
+        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$noansible"		25 36
+        exit
+    fi
 fi
 
 ##############################################################################
