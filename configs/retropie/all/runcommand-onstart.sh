@@ -35,4 +35,8 @@ export ra_rom_stripped="${ra_rom%.*}"
 export ra_rom_basename="$(basename "$ra_rom_stripped")"
 
 retrocrt_timings
+
+if [[ -x $HOME/bin/rcrt ]]; then
+	$HOME/bin/rcrt
+fi
 ) > /tmp/runCommandOnStart.out 2>&1

@@ -89,7 +89,7 @@ This will restart the installer.
 "
 
 rotation="
-Would you like to rotate the screen?
+Would you like to rotate the screen?  This requires a reboot.
 "
 
 noansible="
@@ -97,6 +97,22 @@ You're missing the ansible package, and networking is down.
 
 I'm unable to proceed.
 "
+
+bilinearmsg="
+RetroCRT is designed to work with ROMs greater than 240p, all the way up to 256p.  These higher resolutions will not render properly on a consumer CRT TV @ 240p.
+
+You have three choices on how to handle these games.
+
+- Keep original display size, but vertically centered.
+
+- Scale down to 240p, dropping lines.  On some games this will not be very noticible.
+
+- Scale down to 240p, but use bilinear filtering to smooth some of the rough edges.
+"
+
+#video_smooth = "false"
+
+#rotate_tv="$(dialog --title "$retrocrt_title :: Large Screen Games" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
 
 ##############################################################################
 # are we being run in the ight dir?
@@ -171,13 +187,13 @@ fi
 
 if [[ "$rotate_tv" = "0" ]]; then
     rotate_es="0"
-    rotate_ra="0"
+    rotate_ra="1"
 elif [[ "$rotate_tv" = "90" ]]; then
     rotate_es="3"
     rotate_ra="1"
 elif [[ "$rotate_tv" = "180" ]]; then
     rotate_es="2"
-    rotate_ra="2"
+    rotate_ra="1"
 elif [[ "$rotate_tv" = "270" ]]; then
     rotate_es="1"
     rotate_ra="3"

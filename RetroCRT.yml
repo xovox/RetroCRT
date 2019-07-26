@@ -71,11 +71,19 @@
         src: "templates/autostart.sh.j2"
         dest: "/opt/retropie/configs/all/autostart.sh"
 
-    - name: "Create Menu Item"
+    - name: "Menu Item"
       copy:
         src: "bin/RetroCRT.sh"
         dest: "/home/pi/RetroPie/retropiemenu/RetroCRT.sh"
         mode: 0755
+        owner: "pi"
+        group: "pi"
+
+    - name: "Menu Item Icon"
+      copy:
+        src: "files/RetroCRT.png"
+        dest: "/home/pi/RetroPie/retropiemenu/icons/RetroCRT.png"
+        mode: 0644
         owner: "pi"
         group: "pi"
 
@@ -94,6 +102,16 @@
         rsync_opts:
           - "--backup"
           - "--suffix .{{ansible_date_time.epoch}}"
+      with_items:
+        - "arcade"
+        - "fba"
+        - "mame-libretro"
+        - "mame-mame4all"
+
+    - name: "Vertical Game Config"
+      template:
+        src: "templates/vertical.cfg.j2"
+        dest: '/home/pi/RetroPie/roms/{{ item }}/vertical.cfg'
       with_items:
         - "arcade"
         - "fba"
