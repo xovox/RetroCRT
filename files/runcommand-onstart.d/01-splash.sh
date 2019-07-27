@@ -1,4 +1,6 @@
-#!/bin/bash -x
+#!/bin/bash
+
+source $HOME/.retrocrtrc
 
 framebuffer=/dev/fb0
 rom_image_dir="$HOME/RetroPie/roms/$ra_system/images"
