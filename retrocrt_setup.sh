@@ -110,6 +110,10 @@ You have three choices on how to handle these games.
 - Scale down to 240p, but use bilinear filtering to smooth some of the rough edges.
 "
 
+rebootmsg="
+If you've changed anything with rotation, you'll need to reboot for EmulationStation changes to take effect
+"
+
 #video_smooth = "false"
 
 #rotate_tv="$(dialog --title "$retrocrt_title :: Large Screen Games" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
@@ -207,28 +211,6 @@ retrocrt_hardware="${retrocrt_hardware:-rt_rgb}"
 #retrocrt_hardware="$(dialog --title "$retrocrt_title :: Hardware Used" --stdout --default-item "$retrocrt_hardware" --menu "What CRT Connection?" 0 0 0 rt_rgb "RetroTink: RGB/Component" rt_svid "RetroTink: S-Video" rt_comp "RetroTink: Composite" 35 "3.5mm Jack")"
 
 ##############################################################################
-# Localized Consoles
-##############################################################################
-
-#segasixteen=${segaixteen:-megadrive}
-#necsixteen=${necsixteen:-pcengine}
-
-#segasixteen="$(dialog --title "$retrocrt_title :: Sega 16-Bit Console" --stdout --default-item "$segasixteen" --menu "Which Sega 16-Bit Console?" 0 0 0 megadrive "Mega Drive" genesis "Genesis")"
-#necsixteen="$(dialog --title "$retrocrt_title :: NEC '16-Bit' Console" --stdout --default-item "$necsixteen" --menu "Which NEC '16-Bit' Console?" 0 0 0 pcengine "PC Engine" tg16 "TurboGrafx-16")"
-
-#if [[ "$segasixteen" == "megadrive" ]]; then
-#	segasixteenfull="Mega Drive"
-#else
-#	segasixteenfull="Genesis"
-#fi
-
-#if [[ "$necsixteen" == "pcengine" ]]; then
-#	necsixteenfull="PC Engine"
-#else
-#	necsixteenfull="TurboGrafx-16"
-#fi
-
-##############################################################################
 # choose a tv region
 ##############################################################################
 
@@ -258,8 +240,8 @@ export rotate_tv="$rotate_tv"
 export rotate_es="$rotate_es"
 export rotate_ra="$rotate_ra"
 
-export segasixteen="$segasixteen"
-export necsixteen="$necsixteen"
+#export segasixteen="$segasixteen"
+#export necsixteen="$necsixteen"
 
 export retrocrt_hardware="$retrocrt_hardware"
 
