@@ -22,6 +22,18 @@
   become: "yes"
   become_user: "root"
 
+  handlers:
+
+    - name: "Install Updated /boot Configs"
+      copy:
+        src: "/{{ item }}"
+        dest: "/boot/{{ item }}"
+        backup: "yes"
+      with_items:
+        - "cmdline.txt"
+        - "config.txt"
+      listen: "copyboot"
+
   pre_tasks:
 
     - name: "Reading Configs"
@@ -31,9 +43,6 @@
         rotate_tv: "{{ lookup('env', 'rotate_tv') }}"
         rotate_es: "{{ lookup('env', 'rotate_es') }}"
         rotate_ra: "{{ lookup('env', 'rotate_ra') }}"
-        segasixteen: "{{ lookup('env', 'segasixteen') }}"
-        segasixteenfull: "{{ lookup('env', 'segasixteenfull') }}"
-        necsixteen: "{{ lookup('env', 'necsixteen') }}"
 
     - name: "Set Default Timings"
       set_fact:
@@ -49,22 +58,14 @@
 
   tasks:
 
-    # vfat doesn't like the standard Ansible backup extension
-    - name: "Backup /boot Configs"
-      copy:
-        src: "/boot/{{ item }}"
-        dest: "/boot/{{ item }}.{{ ansible_date_time.epoch }}"
-      with_items:
-        - "cmdline.txt"
-        - "config.txt"
-
     - name: "Update /boot Configs"
       template:
         src: "templates/{{ item }}.j2"
-        dest: "/boot/{{ item }}"
+        dest: "/{{ item }}"
       with_items:
         - "cmdline.txt"
         - "config.txt"
+      notify: "copyboot"
 
     - name: "Update EmulationStation Startup"
       template:
@@ -95,28 +96,16 @@
           - "--backup"
           - "--suffix .{{ansible_date_time.epoch}}"
 
-    - name: "Copy RetroArch ROM Configs"
+    - name: "Copy On Start/End Scripts"
       synchronize:
-        src: "configs/roms/"
-        dest: '/home/pi/RetroPie/roms/{{ item }}'
+        src: "files/{{ item }}/"
+        dest: '/home/pi/RetroPie/{{ item }}/'
         rsync_opts:
           - "--backup"
           - "--suffix .{{ansible_date_time.epoch}}"
       with_items:
-        - "arcade"
-        - "fba"
-        - "mame-libretro"
-        - "mame-mame4all"
-
-    - name: "Vertical Game Config"
-      template:
-        src: "templates/vertical.cfg.j2"
-        dest: '/home/pi/RetroPie/roms/{{ item }}/vertical.cfg'
-      with_items:
-        - "arcade"
-        - "fba"
-        - "mame-libretro"
-        - "mame-mame4all"
+        - "runcommand-onstart.d"
+        - "runcommand-onend.d"
 
     - name: "Disable RetroArch Notifications"
       lineinfile:
@@ -125,22 +114,23 @@
         regexp: '^video_font_enable ='
         line: 'video_font_enable = "false"'
 
-    - name: "Install 240p Test Suite ROMs & ISOs"
+    - name: "240p Test Suite"
       synchronize:
         src: "files/roms/"
         dest: "/home/pi/RetroPie/roms/"
         rsync_opts:
           - "--exclude README.md"
 
-    - name: "Theme: Install GBZ35 Dark"
-      git:
-        repo: "https://github.com/rxbrad/es-theme-gbz35-dark"
-        dest: "/etc/emulationstation/themes/GBZ35-Dark"
-
     - name: "Theme: Delete Carbon"
       file:
         path: "/etc/emulationstation/themes/carbon"
         state: "absent"
+
+    - name: "Theme: Install GBZ35 Dark"
+      git:
+        depth: 1
+        repo: "https://github.com/rxbrad/es-theme-gbz35-dark"
+        dest: "/etc/emulationstation/themes/GBZ35-Dark"
 
     - name: "Fix Permissions"
       file:
@@ -152,33 +142,3 @@
       with_items:
         - "/opt/retropie"
         - "/home/pi"
-
-#    - name: "Download Theme: Freeplay"
-#      git:
-#        repo: "https://github.com/rxbrad/es-theme-freeplay"
-#        dest: "/etc/emulationstation/themes/Freeplay"
-
-#    - name: "Download Theme: GBZ35"
-#      git:
-#        repo: "https://github.com/rxbrad/es-theme-gbz35"
-#        dest: "/etc/emulationstation/themes/GBZ35"
-
-#    - name: "Download Theme: TFT"
-#      git:
-#        repo: "https://github.com/anthonycaccese/es-theme-tft"
-#        dest: "/etc/emulationstation/themes/TFT"
-
-#    - name: "Download Theme: Picade"
-#      git:
-#        repo: "https://github.com/anthonycaccese/es-theme-picade"
-#        dest: "/etc/emulationstation/themes/Picade"
-
-#    - name: "Download Theme: Bubblegum"
-#      git:
-#        repo: "https://github.com/xovox/es-theme-bubblegum"
-#        dest: "/etc/emulationstation/themes/Bubblegum"
-
-#    - name: "Download Theme: Honey"
-#      git:
-#        repo: "https://github.com/xovox/es-theme-honey"
-#        dest: "/etc/emulationstation/themes/Honey"
