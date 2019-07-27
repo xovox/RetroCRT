@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 framebuffer=/dev/fb0
 rom_image_dir="$HOME/RetroPie/roms/$ra_system/images"
@@ -16,8 +16,7 @@ $HOME/RetroPie/splashscreens/loading.jpg
 
 for rom_splash_screen in $rom_splash_screens ; do
     if [[ -f "$rom_splash_screen" ]]; then
-        echo fbi -d $framebuffer -a "$rom_splash_screen"
-        echo sleep 2
+        fbi --autozoom --noverbose --timeout 2 --once --device $framebuffer "$rom_splash_screen"
         break
     fi
 done

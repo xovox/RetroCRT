@@ -28,7 +28,6 @@
       copy:
         src: "/{{ item }}"
         dest: "/boot/{{ item }}"
-        backup: "yes"
       with_items:
         - "cmdline.txt"
         - "config.txt"
