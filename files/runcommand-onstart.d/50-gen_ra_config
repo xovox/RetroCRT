@@ -17,24 +17,33 @@
 # along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
 ##############################################################################
 
-# $1 - system
-# $2 - emulator in use
-# $3 - full path to rom
-# $4 - full emulator command line
+source $HOME/.retrocrtrc
 
-export rpie_onstart_script_dir="$HOME/RetroPie/runcommand-onstart.d"
-export runcommand_onstart_log="/dev/shm/runcommand-onstart.log"
-(
-set -x
-export ra_system="$1"
-export ra_emulator="$2"
-export ra_rom="$3"
-export ra_command="$4"
+rom_settings="$(egrep "^$ra_rom_basename," $retrocrt_install/retrocrt_resolutions.csv)"
+ra_rom_config="$ra_rom.cfg"
 
-export ra_rom_stripped="${ra_rom%.*}"
-export ra_rom_basename="$(basename "$ra_rom_stripped")"
+gen_ra_rom_config() {
+cat << RAROMCFG
+custom_viewport_width = "1920"
+custom_viewport_height = "$rom_vertical_resolution"
+RAROMCFG
 
-for rpie_onstart_script in $rpie_onstart_script_dir/* ; do
-	$rpie_onstart_script "$1" "$2" "$3" "$4"
-done
-) > $runcommand_onstart_log 2>&1
+if [[ "$rom_vertical_resolution" -gt 240 ]]; then
+cat << RAROMCFG
+custom_viewport_y = "-$[ ($rom_vertical_resolution - 240) / 2 ]"
+RAROMCFG
+fi
+
+if [[ "$rom_monitor_orientation" = "V" ]]; then
+cat << RAROMCFG
+video_allow_rotate = "true"
+video_rotation = "$rotate_ra"
+RAROMCFG
+fi
+}
+
+if [[ "$rom_settings" ]]; then
+	rom_vertical_resolution="$(cut -d',' -f3 <<< "$rom_settings")"
+	rom_monitor_orientation="$(cut -d',' -f4 <<< "$rom_settings")"
+	gen_ra_rom_config > "$ra_rom_config"
+fi
