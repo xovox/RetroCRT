@@ -15,9 +15,9 @@ $HOME/RetroPie/splashscreens/loading.jpg
 "
 
 for rom_splash_screen in $rom_splash_screens ; do
-	if [[ -f "$rom_splash_screen" ]]; then
-		echo fbi -d $framebuffer -a "$rom_splash_screen"
-		echo sleep 2
-		break
-	fi
+    if [[ -f "$rom_splash_screen" ]]; then
+        echo fbi -d $framebuffer -a "$rom_splash_screen"
+        echo sleep 2
+        break
+    fi
 done

@@ -43,7 +43,7 @@ fi
 }
 
 if [[ "$rom_settings" ]]; then
-	rom_vertical_resolution="$(cut -d',' -f3 <<< "$rom_settings")"
-	rom_monitor_orientation="$(cut -d',' -f4 <<< "$rom_settings")"
-	gen_ra_rom_config > "$ra_rom_config"
+    rom_vertical_resolution="$(cut -d',' -f3 <<< "$rom_settings")"
+    rom_monitor_orientation="$(cut -d',' -f4 <<< "$rom_settings")"
+    gen_ra_rom_config > "$ra_rom_config"
 fi

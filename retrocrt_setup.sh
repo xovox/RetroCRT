@@ -105,9 +105,9 @@ You have three choices on how to handle these games.
 
 - Keep original display size, but vertically centered.
 
-- Scale down to 240p, dropping lines.  On some games this will not be very noticible.
+- Scale down to 240p, dropping some lines.  On some games this will not be very noticible.
 
-- Scale down to 240p, but use bilinear filtering to smooth some of the rough edges.
+- Scale down to 240p, but use bilinear filtering to smooth some of the rough edges.  Some lines will look slightly strange.
 "
 
 rebootmsg="
@@ -220,6 +220,8 @@ tv_region=${tv_region:-ntsc}
 ##############################################################################
 # one last chance to bail
 ##############################################################################
+
+dialog --title "$retrocrt_title :: Reboot Info"	--colors			--msgbox "$rebootmsg"		25 36
 
 dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 25 36 || exit
 

@@ -22,6 +22,6 @@ export runcommand_onend_log="/dev/shm/runcommand-onend.log"
 (
 set -x
 for rpie_onend_script in $rpie_onend_script_dir/* ; do
-	$rpie_onend_script "$1" "$2" "$3" "$4"
+    $rpie_onend_script "$1" "$2" "$3" "$4"
 done
 ) > $runcommand_onend_log 2>&1
