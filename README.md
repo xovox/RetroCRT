@@ -36,14 +36,11 @@ NOTE: All games > 240p aren't currently supported since I'm focused on SD CRTs &
   * S-Video & composite do not work 100%
 * Raspberry Pi built-in composite out (untested)
 * VGA666 (untested)
+* pi2scart
 
 # Pre-Built Images
 
 [The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
-
-# See it in action!
-
-* Installation: [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/QwixXT4_c-0/0.jpg)](https://www.youtube.com/watch?v=QwixXT4_c-0)
 
 # What You Get
 
@@ -123,65 +120,16 @@ cd RetroCRT &&
 
 See the [troubleshooting doc](TROUBLESHOOTING.md).
 
-# Tasks
+# TODO
 
-* General
-- [ ] Reorganize repo, it grew too organically so things are scattered
-- [X] Build vanilla image people can directly write to their SD card
-  * [Releases](https://github.com/xovox/RetroCRT/releases)
-
-* Rotate Display
-- [X] Configured via standard config for RetroCRT.yml
-- [ ] Installs es-dev for vertical menuing
-- [X] ROM configs set for rotation
-- [ ] Template the ROM configs for custom rotation amount
-
-* S-Video Output
-
-This has been tested & we're only getting luma, not chroma.  This will hopefully be fixed.
-
-* 480i Output
-** I'm not sure that this is even possible, but it'd be great to have high res games working at native resolution
-** I've reached out to Mike Chi about this.
-
-* Menuing
-Menu won't be named "RetroCRT", but a more generic name for all of the other RetroPie tools I'm working on
-- [X] Launched from RetroPie menu
-- [X] Updates
-- [X] Monitor Orientation
-
-* Templatizing
-- [ ] ROM configs should be symlinks to a templated config
-
-* Scripts
-- [X] Work well with other RetroPie scripts I'm writing
-- [X] Get rid of env, everything should be discrete scripts in $HOME/RetroPie/scripts/ or something
-
-* On Start Script
-- [X] Use per-emulator timings
-- [X] Use per-game timings
-
-* On End Script
-- [X] Revert to boot's hdmi_timings
-
-* Script Installer
-- [X] Write installer wrapper
-
-* Ansible Installer
-- [X] Create config.txt using template
-- [X] Push RetroArch configs
-- [X] Limit what systems we play
-- [X] Remove notification text on game start
-- [X] Install SD friendly ES themes
-
-* Configs
-- [X] /boot/config.txt settings figured out
-- [X] Custom retroarch config for each rom
+* Outputs
+  *  RetroTink S-Video Output
+  *  RetroTink Component Output
+  *  3.5mm Composite Output
 
 * Video
-- [X] Collect NTSC timings
-- [ ] Collect PAL timings
-- [X] Custom hdmi_timings for each rom via runcommand-onstart
+  * Collect PAL timings
+  * Collect SECAM timings
 
 # Footnotes
 
