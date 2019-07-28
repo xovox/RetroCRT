@@ -92,8 +92,8 @@ rotation="
 Would you like to rotate the screen?  This requires a reboot.
 "
 
-noansible="
-You're missing the ansible package, and networking is down.
+fatalquit="
+Networking is down & we're missing the ansible package.
 
 I'm unable to proceed.
 "
@@ -232,7 +232,6 @@ dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$
 cat << CONFIG > $retrocrt_config
 #!/bin/bash
 $license
-
 # where we keep everything
 export retrocrt_install="$retrocrt_install"
 
@@ -241,9 +240,6 @@ export tv_region="$tv_region"
 export rotate_tv="$rotate_tv"
 export rotate_es="$rotate_es"
 export rotate_ra="$rotate_ra"
-
-#export segasixteen="$segasixteen"
-#export necsixteen="$necsixteen"
 
 export retrocrt_hardware="$retrocrt_hardware"
 
@@ -271,7 +267,7 @@ if ! (dpkg -l ansible > /dev/null); then
         sudo apt update
         sudo apt -y install ansible
     else
-        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$noansible"		25 36
+        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
         exit
     fi
 fi

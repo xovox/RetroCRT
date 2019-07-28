@@ -11,7 +11,8 @@ $rom_image_dir/$ra_rom_basename-splash.png
 $rom_image_dir/$ra_rom_basename-splash.jpg
 $rom_image_dir/$ra_rom_basename-image.png
 $rom_image_dir/$ra_rom_basename-image.jpg
-$rom_image_dir/default.png
+$rom_image_dir/default-splash.png
+$rom_image_dir/default-splash.jpg
 $HOME/RetroPie/splashscreens/loading.png
 $HOME/RetroPie/splashscreens/loading.jpg
 "
