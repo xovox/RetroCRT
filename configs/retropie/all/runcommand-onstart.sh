@@ -25,7 +25,6 @@
 export rpie_onstart_script_dir="$HOME/RetroPie/runcommand-onstart.d"
 export runcommand_onstart_log="/dev/shm/runcommand-onstart.log"
 (
-set -x
 export ra_system="$1"
 export ra_emulator="$2"
 export ra_rom="$3"
@@ -35,6 +34,9 @@ export ra_rom_stripped="${ra_rom%.*}"
 export ra_rom_basename="$(basename "$ra_rom_stripped")"
 
 for rpie_onstart_script in $rpie_onstart_script_dir/*.{sh,pl,py} ; do
+    echo "##############################################################################"
+    echo "$rpie_onstart_script"
+    echo "##############################################################################"
     $rpie_onstart_script "$1" "$2" "$3" "$4"
 done
 ) > $runcommand_onstart_log 2>&1
