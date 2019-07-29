@@ -2,7 +2,9 @@
 
 source $HOME/.retrocrtrc
 
-rom_settings="$(egrep "^$ra_rom_basename," $retrocrt_install/retrocrt_resolutions.csv)"
+if ! (grep -wq "$1" $retrocrt_install/retrocrt_timings/no_per_rom_timings.txt); then
+    rom_settings="$(egrep "^$ra_rom_basename," $retrocrt_install/retrocrt_resolutions.csv)"
+fi
 
 if [[ "$rom_settings" ]]; then
     rom_vertical_resolution="$(cut -d',' -f3 <<< "$rom_settings")"

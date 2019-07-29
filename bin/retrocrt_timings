@@ -17,8 +17,6 @@
 # along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
 ##############################################################################
 
-set -x
-
 source ~/.retrocrtrc
 
 system_timings="$retrocrt_timings/$ra_system"

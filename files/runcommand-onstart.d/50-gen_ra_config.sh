@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 ##############################################################################
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
@@ -19,7 +19,10 @@
 
 source $HOME/.retrocrtrc
 
-rom_settings="$(egrep "^$ra_rom_basename," $retrocrt_install/retrocrt_resolutions.csv)"
+if ! (grep -wq "$1" $retrocrt_install/retrocrt_timings/no_per_rom_timings.txt); then
+	rom_settings="$(egrep "^$ra_rom_basename," $retrocrt_install/retrocrt_resolutions.csv)"
+fi
+
 ra_rom_config="$ra_rom.cfg"
 
 gen_ra_rom_config() {
