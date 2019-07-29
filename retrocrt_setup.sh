@@ -110,10 +110,6 @@ You have three choices on how to handle these games.
 - Scale down to 240p, but use bilinear filtering to smooth some of the rough edges.  Some lines will look slightly strange.
 "
 
-rebootmsg="
-If you've changed anything with rotation, you'll need to reboot for EmulationStation changes to take effect
-"
-
 #video_smooth = "false"
 
 #rotate_tv="$(dialog --title "$retrocrt_title :: Large Screen Games" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
@@ -220,8 +216,6 @@ tv_region=${tv_region:-ntsc}
 ##############################################################################
 # one last chance to bail
 ##############################################################################
-
-dialog --title "$retrocrt_title :: Reboot Info"	--colors			--msgbox "$rebootmsg"		25 36
 
 dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 25 36 || exit
 
