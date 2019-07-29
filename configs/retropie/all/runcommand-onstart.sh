@@ -22,9 +22,10 @@
 # $3 - full path to rom
 # $4 - full emulator command line
 
+export runcommand_onstart_log="/dev/shm/runcommand-onstart.log"
+
 (
 export rpie_onstart_script_dir="$HOME/RetroPie/runcommand-onstart.d"
-export runcommand_onstart_log="/dev/shm/runcommand-onstart.log"
 export ra_system="$1"
 export ra_emulator="$2"
 export ra_rom="$3"
