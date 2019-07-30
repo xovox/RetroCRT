@@ -125,29 +125,9 @@ cd RetroCRT &&
 /bin/bash ./retrocrt_setup.sh
 ```
 
-# TV Compatibility
-
-## NTSC
-
-| Make 		| Model 	| Tested 	| Issues
-|------		|-------	|--------	|--------
-| Panasonic	| CT-27D10	| Component	| None
-| Magnavox      | 20MS3442/17   | Component     | None
-
 # Troubleshooting
 
 See the [troubleshooting doc](TROUBLESHOOTING.md).
-
-# TODO
-
-* Outputs
-  *  RetroTink S-Video Output
-  *  RetroTink Component Output
-  *  3.5mm Composite Output
-
-* Video
-  * Collect PAL timings
-  * Collect SECAM timings
 
 # Footnotes
 
