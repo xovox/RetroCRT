@@ -25,6 +25,12 @@ This project brings the above projects into one easy to swallow integration!
 
 NOTE: All games > 240p aren't currently supported since I'm focused on SD CRTs & progressive video
 
+See [the bugs list](#bugs) to see what's known to not work, or not fully work.
+
+# Downloads
+
+[The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
+
 # Supported Hardware
 
 * [RetroTink Ultimate](http://www.retrotink.com) is a board for the Raspberry Pi that gives you every analog connection you could want, in true 24-bit RGB color!
@@ -37,10 +43,6 @@ NOTE: All games > 240p aren't currently supported since I'm focused on SD CRTs &
 * Raspberry Pi built-in composite out (untested)
 * VGA666 (untested)
 * pi2scart
-
-# Pre-Built Images
-
-[The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
 
 # What You Get
 
@@ -109,6 +111,8 @@ cd RetroCRT &&
 
 # TV Compatibility
 
+This should work for all NTSC TVs, but these are ones that have been tested.
+
 ## NTSC
 
 | Make 		| Model 	| Tested 	| Issues
@@ -118,7 +122,12 @@ cd RetroCRT &&
 
 # Troubleshooting
 
+Before doing anything else, update RetroCRT!  You can do this 
 See the [troubleshooting doc](TROUBLESHOOTING.md).
+
+# Bugs
+
+- /home/pi/RetroPie/roms/arcade/ roms don't work, the menu asking what emulator to use doesn't display.
 
 # TODO
 
