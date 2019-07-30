@@ -1,3 +1,11 @@
+# Fixing Issues
+
+Your first step should be to run the RetroCRT tool via the RetroPie screen in EmulationStation.
+
+# Reporting Issues
+
+Use GitHub's built-in bug tracking or join [the Facebook group](https://www.facebook.com/groups/RetroPieCRT/) and post there.
+
 # Video Issues
 
 ## Image is too wide
@@ -6,7 +14,7 @@ You're not changing the horizontal resolution before starting the emulator, this
 
 ## Image is too narrow
 
-RetroArch is ignoring our custom_viewport_width setting, and probably the height as well.  This happens when you run the RetroPie updater.
+RetroArch is ignoring our custom_viewport_width setting, and probably the height as well.
 
 # Sound Issues
 
