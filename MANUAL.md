@@ -93,7 +93,7 @@ files/runcommand-onstart.d/50-gen_ra_config.sh
 
 # Reporting Issues
 
-GitHub.com has built-in issue tracking.
+GitHub.com has built-in issue tracking, that's probably best.
 
 If you don't want to sign up for GitHub.com, join our [Facebook group](https://www.facebook.com/groups/RetroPieCRT/) and post questions or issues there.
 
@@ -101,7 +101,7 @@ If you don't want to sign up for GitHub.com, join our [Facebook group](https://w
 
 Most issues can be solved by re-running the installer via the RetroPie menu.  This will apply, or re-apply, all necessary changes.  Simply select 'RetroCRT' from the RetroPie section of EmulationStation.
 
-
+Possibly more information can be found in [TROUBLESHOOTING.md](TROUBLESHOOTING.md).
 
 ## DIY
 
@@ -152,8 +152,6 @@ See the [troubleshooting doc](TROUBLESHOOTING.md).
 # Footnotes
 
 I am not affiliated with Mike Chi & RetroTink.
-
-Shout out to [Vykran](https://github.com/Vykyan/retroTINK-setup) for the initial groundwork, though he seems to be PAL & I'm NTSC... which brought us to where we are now.
 
 ```
                                                        .
