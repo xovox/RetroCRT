@@ -72,11 +72,10 @@ files/runcommand-onstart.d/75-set_screen_resolution.sh
 
 This happens before loading a game, and after the game exits.
 
+```
 /home/pi/RetroCRT/retrocrt_resolutions.csv
 files/runcommand-onend.d/99-set_screen_resolution.sh
 /home/pi/RetroCRT/retrocrt_timings/
-
-```
 ```
 
 ### Generating RetroArch Configuration
