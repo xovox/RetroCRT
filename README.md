@@ -113,6 +113,10 @@ cd RetroCRT &&
 
 This should work for all NTSC TVs, but these are ones that have been tested.
 
+## CRTs Behaving Badly
+
+Flat Trinitrons and many other more modern CRTs perform processing on 240p signals.  This may mean you'll see text "jumping" or weird ghosting effects happening on screen. This cannot be disabled on the TV.
+
 ## NTSC
 
 | Make 		| Model 	| Tested 	| Issues
@@ -132,9 +136,11 @@ See the [troubleshooting doc](TROUBLESHOOTING.md).
 # TODO
 
 * Outputs
-  *  RetroTink S-Video Output
-  *  RetroTink Component Output
-  *  3.5mm Composite Output
+  * RetroTink S-Video Output
+  * RetroTink Component Output
+  * 3.5mm Composite Output
+  * pi2jamma hat
+  * VGA666 hat
 
 * Video
   * Collect PAL timings
@@ -142,7 +148,7 @@ See the [troubleshooting doc](TROUBLESHOOTING.md).
 
 # Footnotes
 
-I am not affiliated with Mike Chi & RetroTink.
+I am not affiliated with Mike Chi, RetroTink, pi2jamma, or anyone else.  I'm doing this as a personal project.
 
 Shout out to [Vykran](https://github.com/Vykyan/retroTINK-setup) for the initial groundwork, though he seems to be PAL & I'm NTSC... which brought us to where we are now.
 
