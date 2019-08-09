@@ -35,9 +35,11 @@ export ra_rom_stripped="${ra_rom%.*}"
 export ra_rom_basename="$(basename "$ra_rom_stripped")"
 
 for rpie_onstart_script in $rpie_onstart_script_dir/*.{sh,pl,py} ; do
-    echo "##############################################################################"
-    echo "$rpie_onstart_script"
-    echo "##############################################################################"
-    $rpie_onstart_script "$1" "$2" "$3" "$4"
+    if [ -f "$rpie_onstart_script" ]; then
+        echo "##############################################################################"
+        echo "$rpie_onstart_script"
+        echo "##############################################################################"
+        $rpie_onstart_script "$1" "$2" "$3" "$4"
+    fi
 done
 ) > $runcommand_onstart_log 2>&1
