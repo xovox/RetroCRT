@@ -180,7 +180,7 @@ if [[ "$rotate_tv" = "0" ]]; then
 fi
 
 if dialog --title "$retrocrt_title :: Screen Orientation" --colors $rotate_tv_default --yesno "$rotation" 25 36 ; then
-    rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
+    rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
 else
     rotate_tv=0
 fi
