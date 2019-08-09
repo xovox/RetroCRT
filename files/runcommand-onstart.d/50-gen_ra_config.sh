@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 
 ##############################################################################
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
