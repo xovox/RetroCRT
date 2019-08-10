@@ -113,12 +113,18 @@
         regexp: '^video_font_enable ='
         line: 'video_font_enable = "false"'
 
+    - name: Check that the somefile.conf exists
+      stat:
+        path: "/home/pi/RetroPie/roms/.240p_copied"
+      register: roms_copied
+
     - name: "240p Test Suite"
       synchronize:
         src: "files/roms/"
         dest: "/home/pi/RetroPie/roms/"
         rsync_opts:
           - "--exclude README.md"
+      when: roms_copied.stat.exists == False
 
     - name: "Theme: Delete Carbon"
       file:
