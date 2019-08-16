@@ -23,26 +23,13 @@ Retro gaming with the $FREE [RetroPie](https://retropie.org.uk) Linux OS on a $3
 
 This project brings the above projects into one easy to swallow integration!
 
-NOTE: All games > 240p aren't currently supported since I'm focused on SD CRTs & progressive video
+NOTE: All games > 240p aren't currently well supported since I'm focused on SD CRTs & progressive video
 
 See [the bugs list](#bugs) to see what's known to not work, or not fully work.
 
 # Downloads
 
 [The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
-
-# Supported Hardware
-
-* [RetroTink Ultimate](http://www.retrotink.com) is a board for the Raspberry Pi that gives you every analog connection you could want, in true 24-bit RGB color!
-  * Component & RGB only, for now
-
-# Future Supported Hardware
-
-* Other RetroTink connections
-  * S-Video & composite do not work 100%
-* Raspberry Pi built-in composite out (untested)
-* VGA666 (untested)
-* pi2scart
 
 # What You Get
 
@@ -57,25 +44,47 @@ See [the bugs list](#bugs) to see what's known to not work, or not fully work.
 * 240p test suite roms for several platforms!
 * My unbridled enthusiasm about building this project!
 
+# Hardware Compatibility
+
+* [RetroTink Ultimate](http://www.retrotink.com) is a board for the Raspberry Pi that gives you every analog connection you could want, in true 24-bit RGB color!
+  * Component & RGB only, for now
+* VGA666, both RGB & with component converter
+
+## Future Supported Hardware
+
+* Other RetroTink connections
+  * S-Video & composite do not work 100%
+* Raspberry Pi built-in composite out (untested)
+* pi2scart
+
 ## Emulator Compatibility
 
 I'm aiming to cover everything available, but these are the only platforms I've thoroughly tested.
 
-* arcade
-* fba
-* mame-libretro
-* mastersystem
-* megadrive
-* n64
-* neogeo
-* nes
-* pcengine
-* psx
-* retropie
-* sega32x
-* segacd
-* snes
-* supergrafx
+* Arcade
+
+  * Misc Arcade (arcade)
+  * FinalBurn Alpha & Neo (fba)
+  * Mame 2003 0.79 (mame-libretro)
+  * Neo-Geo (neogeo)
+
+* Console
+
+  * Sega Master System (mastersystem)
+  * Sega Genesis/Megadrive (megadrive)
+  * Nintendo 64 (n64)
+  * Nintendo Entertainment System/Famicom (nes)
+  * TurboGrafx-16/PC Engine (pcengine)
+  * Sony Playstation (psx)
+  * Sega 32x (sega32x)
+  * Sega CD (segacd)
+  * Super Nintendo Entertainment System/Super Famicom (snes)
+  * SuperGrafx (supergrafx)
+
+* Handheld
+
+  * Atari Lynx (atarilynx)
+  * GameBoy Platforms (gb, gbc, gba)
 
 # NTSC vs SECAM & PAL
 
