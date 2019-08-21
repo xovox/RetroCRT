@@ -42,7 +42,7 @@ You're going to need a cable with a 3.5mm (1/8th in) connector cable on one end 
 
 * Hardware Required
   * CRT with composite input
-  * [Zune A/V Output Cable](https://www.amazon.com/Zune-Output-Cable-Discontinued-Manufacturer/dp/B000IXLHOM).
+  * [Zune A/V Output Cable](https://www.amazon.com/Zune-Output-Cable-Discontinued-Manufacturer/dp/B000IXLHOM)
   * [Generic Pi AV Cable](https://thepihut.com/products/av-composite-cable-3-5mm-to-3-x-rca-3m)
 
 * Advantages
