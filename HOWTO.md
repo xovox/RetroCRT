@@ -21,7 +21,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 If you're looking to connect your Raspberry Pi running RetroPie to an old school CRT set.  You're going to need a few things.
 
-## Lowest End, Composite
+# Resources
+
+* Facebook
+  * [RetroPie CRT Gamers](https://www.facebook.com/groups/RetroPieCRT/) is a group I started for this very purpose
+  * [The CRT Collective](https://www.facebook.com/groups/444560212348840/) is an excellent resource on TV repair, buying, and general knowledge
+
+# Lowest End, Composite
 
 NOTE: This method isn't yet supported by RetroCRT, but it will be.
 
@@ -51,7 +57,7 @@ You're going to need a cable with a 3.5mm (1/8th in) connector cable on one end 
   * This is the lowest quality video output you can get on the Pi
   * This is prone to [dot crawl](https://en.wikipedia.org/wiki/Dot_crawl)
 
-## Mid-Range, S-Video
+# Mid-Range, S-Video
 
 [S-Video](https://en.wikipedia.org/wiki/S-Video) is a decent step up from Composite.  You're separating Luma and Chroma which gives you far less interference, and better color depth.
 
@@ -76,7 +82,7 @@ You're going to need a cable with a 3.5mm (1/8th in) connector cable on one end 
   * Not natively supported by a Raspberry Pi
   * Additional hardware is required
 
-## Lower High-Range, Component/YPbPr
+# Lower High-Range, Component/YPbPr
 
 [Component video](https://en.wikipedia.org/wiki/Component_video) actually encompases *many* video formats, but in NA it typically refers to a specific type of video called [YPb/Pr](https://en.wikipedia.org/wiki/YPbPr)... sort of the way we call all facial tissue Kleenex.
 
@@ -105,7 +111,7 @@ This format separates the red and blue signals from luma, and derives the green 
   * Stuck at 240p or lower on standard CRTs
   * Fairly pricy hardware is required
 
-## Upper High-Range, RGB
+# Upper High-Range, RGB
 
 * Software Required
   * Customized Raspberry Pi OS with specific timings set for RGB, as well as setting video output over GPIO
