@@ -56,9 +56,16 @@ Find developers, users, and support in our official Facebook group: \"RetroPie C
 hardware="
 This software requires specialized hardware.
 
-Currently, only the RetroTink Ultimate over component and RGB have been successfully tested.
+The currently tested hardware is:
 
-Future updates will support built-in composite, VGA666 RGB, pi2scart.
+- RetroTink over component & RGB
+- VGA666 over RGB
+- pi2scart over RGB SCART
+
+Future supported hardware:
+
+- RetroTink S-Video & composite
+- Internal 3.5mm composite
 
 If you don't have the required hardware, this will not work.
 "
