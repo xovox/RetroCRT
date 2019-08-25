@@ -113,7 +113,7 @@
         regexp: '^video_font_enable ='
         line: 'video_font_enable = "false"'
 
-    - name: Check that the somefile.conf exists
+    - name: "Check State of Test ROMS"
       stat:
         path: "/home/pi/RetroPie/roms/.240p_copied"
       register: roms_copied
