@@ -59,13 +59,13 @@ This software requires specialized hardware.
 The currently tested hardware is:
 
 - RetroTink over component & RGB
-- VGA666 over RGB
-- pi2scart over RGB SCART
-
 Future supported hardware:
 
 - RetroTink S-Video & composite
 - Internal 3.5mm composite
+- VGA666 over RGB
+- pi2scart over RGB SCART
+
 
 If you don't have the required hardware, this will not work.
 "
