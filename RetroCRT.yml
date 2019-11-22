@@ -135,7 +135,13 @@
       git:
         depth: 1
         repo: "https://github.com/rxbrad/es-theme-gbz35-dark"
-        dest: "/etc/emulationstation/themes/GBZ35-Dark"
+        dest: "/etc/emulationstation/themes/GBZ35 Dark"
+
+    - name: "Theme: Install Push A"
+      git:
+        depth: 1
+        repo: "https://github.com/asche76/es-theme-push-a"
+        dest: "/etc/emulationstation/themes/Push A"
 
     - name: "Auto-Login Symlink"
       file:
