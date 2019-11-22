@@ -55,6 +55,11 @@
       command: "findmnt --noheadings --output FSTYPE /"
       register: root_fstype
 
+    - name: "Check State of Test ROMS"
+      stat:
+        path: "/home/pi/RetroPie/roms/.240p_copied"
+      register: roms_copied
+
   tasks:
 
     - name: "Update /boot Configs"
@@ -113,11 +118,6 @@
         regexp: '^video_font_enable ='
         line: 'video_font_enable = "false"'
 
-    - name: "Check State of Test ROMS"
-      stat:
-        path: "/home/pi/RetroPie/roms/.240p_copied"
-      register: roms_copied
-
     - name: "240p Test Suite"
       synchronize:
         src: "files/roms/"
@@ -137,6 +137,15 @@
         repo: "https://github.com/rxbrad/es-theme-gbz35-dark"
         dest: "/etc/emulationstation/themes/GBZ35-Dark"
 
+    - name: "Auto-Login Symlink"
+      file:
+        src: "/etc/systemd/system/autologin@.service"
+        dest: "/etc/systemd/system/getty.target.wants/getty@tty1.service"
+        owner: "root"
+        group: "root"
+        state: "link"
+        force: "yes"
+        
     - name: "Fix Permissions"
       file:
         path: "{{ item }}"
