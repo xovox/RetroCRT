@@ -233,6 +233,10 @@ dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$
 cat << CONFIG > $retrocrt_config
 #!/bin/bash
 $license
+
+physical_viewport_width=1920
+physical_viewport_height=240
+
 # where we keep everything
 export retrocrt_install="$retrocrt_install"
 
