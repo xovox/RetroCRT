@@ -213,6 +213,44 @@ fi
 retrocrt_hardware="${retrocrt_hardware:-rt_rgb}"
 #retrocrt_hardware="$(dialog --title "$retrocrt_title :: Hardware Used" --stdout --default-item "$retrocrt_hardware" --menu "What CRT Connection?" 0 0 0 rt_rgb "RetroTink: RGB/Component" rt_svid "RetroTink: S-Video" rt_comp "RetroTink: Composite" 35 "3.5mm Jack")"
 
+retrocrt_hardware_list='
+  lo18 "240p VGA/GERT666, pi2jamma, pi2scart"
+  hi18 "480p VGA/GERT666, pi2jamma, pi2scart"
+  lo24 "240p RetroTink Ultimate RGB & VGA
+  hi24 "480p RetroTink Ultimate RGB & VGA
+  ntsc24 "240p NTSC RetroTink Component"
+  pal24 "240p PAL RetroTink Component"
+  35n "NTSC Built-In Composite"
+  35p "PAL Built-In Composite"
+'
+
+retrocrt_hardware="${retrocrt_hardware:-lo18}"
+
+if [[ "$retrocrt_platform" = "lo18" ]]; then
+    retrocrt_timings="rgb/15khz"
+    retrocrt_depth="18"
+elif [[ "$retrocrt_platform" = "hi18" ]]; then
+    retrocrt_timings="rgb/31khz"
+    retrocrt_depth="18"
+elif [[ "$retrocrt_platform" = "lo24" ]]; then
+    retrocrt_timings="rgb/15khz"
+    retrocrt_depth="24"
+elif [[ "$retrocrt_platform" = "hi24" ]]; then
+    retrocrt_timings="rgb/31khz"
+    retrocrt_depth="24"
+elif [[ "$retrocrt_platform" = "ntsc24" ]]; then
+    retrocrt_timings="ntsc/15khz"
+    retrocrt_depth="24"
+elif [[ "$retrocrt_platform" = "pal24" ]]; then
+    retrocrt_timings="pal/15khz"
+    retrocrt_depth="24"
+elif [[ "$retrocrt_platform" = "35n" ]]; then
+    retrocrt_timings="35/ntscp"
+    retrocrt_depth="18"
+elif [[ "$retrocrt_platform" = "35p" ]]; then
+    retrocrt_timings="35/pal"
+    retrocrt_depth="18"
+fi
 ##############################################################################
 # choose a tv region
 ##############################################################################
