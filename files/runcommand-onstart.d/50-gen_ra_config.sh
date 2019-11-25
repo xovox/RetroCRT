@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 ##############################################################################
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
@@ -48,9 +48,15 @@ scale=10
 
 custom_viewport_width = physical_viewport_width * (custom_viewport_height / physical_viewport_height)
 
+if (custom_viewport_height >= (physical_viewport_height * 1.25)){
+	custom_viewport_height = custom_viewport_height / 2
+}
+
 scale = 0
 
 custom_viewport_width = (custom_viewport_width / 1) / 2 * 2
+custom_viewport_height = (custom_viewport_height / 1) / 2 * 2
+
 
 if (custom_viewport_width > physical_viewport_width){
     custom_viewport_width = physical_viewport_width
