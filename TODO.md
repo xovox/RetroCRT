@@ -25,7 +25,7 @@ Console/handheld platforms need to be done as well
 
 Handhelds aren't 4:3, so my current blanket math doesn't work for them.
 
-this should work for 15khz * 31khz
+this should work for 15khz & 31khz
 
 ```
 handheld_horizontal * (physical_horizontal / physical_vertical)
