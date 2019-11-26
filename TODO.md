@@ -28,7 +28,7 @@ Handhelds aren't 4:3, so my current blanket math doesn't work for them.
 this should work for 15khz & 31khz
 
 ```
-handheld_horizontal * (physical_horizontal / physical_vertical)
+handheld_horizontal * (physical_horizontal / virtual_horizontal)
 ```
 
 
