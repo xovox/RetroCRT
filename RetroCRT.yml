@@ -45,8 +45,10 @@
         home_dir: "{{ lookup('env', 'HOME') }}"
         #physical_viewport_width: "{{ lookup('env', 'physical_viewport_width') }}"
         #physical_viewport_height: "{{ lookup('env', 'physical_viewport_height') }}"
+        #physical_viewport_width: "{{ lookup('env', 'physical_viewport_width') }}"
         physical_viewport_width: 1920
         physical_viewport_height: 240
+        virtual_viewport_width: 320
 
     - name: "Set Default Timings"
       set_fact:
@@ -64,6 +66,96 @@
       stat:
         path: "{{home_dir}}/RetroPie/roms/.240p_copied"
       register: roms_copied
+
+    - name: "Resolution: Get 4:3 Vertical"
+      set_fact:
+        arcade_custom_viewport_height: 240
+        atari2600_custom_viewport_height: 200
+        atari5200_custom_viewport_height: 240
+        atari7800_custom_viewport_height: 240
+        fba_custom_viewport_height: 240
+        fds_custom_viewport_height: 224
+        mame_libretro_custom_viewport_height: 240
+        mastersystem_custom_viewport_height: 192
+        megadrive_custom_viewport_height: 224
+        msx_custom_viewport_height: 240
+        n64_custom_viewport_height: 480
+        neogeo_custom_viewport_height: 224
+        nes_custom_viewport_height: 224
+        pcengine_custom_viewport_height: 240
+        psx_custom_viewport_height: 240
+        sega32x_custom_viewport_height: 224
+        segacd_custom_viewport_height: 224
+        snes_custom_viewport_height: 224
+
+    - name: "Resolution: Handheld Multiplier"
+      set_fact:
+        handheld_multiplier: "{{ physical_viewport_width / virtual_viewport_width }}"
+
+    - name: "Resolution: Get Handheld"
+      set_fact:
+        atarilynx_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        atarilynx_custom_viewport_height: 102
+        gamegear_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        gamegear_custom_viewport_height: 144
+        gba_custom_viewport_width: "{{ 240 * handheld_multiplier }}"
+        gba_custom_viewport_height: 160
+        gbc_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        gbc_custom_viewport_height: 144
+        gb_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        gb_custom_viewport_height: 144
+        ngpc_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        ngpc_custom_viewport_height: 152
+        ngp_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        ngp_custom_viewport_height: 152
+        virtualboy_custom_viewport_width: "{{ 384 * handheld_multiplier }}"
+        virtualboy_custom_viewport_height: 224
+        wonderswancolor_custom_viewport_width: "{{ 224 * handheld_multiplier }}"
+        wonderswancolor_custom_viewport_height: 144
+        wonderswan_custom_viewport_width: "{{ 224 * handheld_multiplier }}"
+        wonderswan_custom_viewport_height: 144
+
+    - name: "Resolution: Calculate Percentages"
+      set_fact:
+        arcade_custom_viewport_percentage: "{{ arcade_custom_viewport_height / physical_viewport_height | float }}"
+        atari2600_custom_viewport_percentage: "{{ atari2600_custom_viewport_height / physical_viewport_height | float }}"
+        atari5200_custom_viewport_percentage: "{{ atari5200_custom_viewport_height / physical_viewport_height | float }}"
+        atari7800_custom_viewport_percentage: "{{ atari7800_custom_viewport_height / physical_viewport_height | float }}"
+        fba_custom_viewport_percentage: "{{ fba_custom_viewport_height / physical_viewport_height | float }}"
+        fds_custom_viewport_percentage: "{{ fds_custom_viewport_height / physical_viewport_height | float }}"
+        mame_libretro_custom_viewport_percentage: "{{ mame_libretro_custom_viewport_height / physical_viewport_height | float }}"
+        mastersystem_custom_viewport_percentage: "{{ mastersystem_custom_viewport_height / physical_viewport_height | float }}"
+        megadrive_custom_viewport_percentage: "{{ megadrive_custom_viewport_height / physical_viewport_height | float }}"
+        msx_custom_viewport_percentage: "{{ msx_custom_viewport_height / physical_viewport_height | float }}"
+        n64_custom_viewport_percentage: "{{ n64_custom_viewport_height / physical_viewport_height | float }}"
+        neogeo_custom_viewport_percentage: "{{ neogeo_custom_viewport_height / physical_viewport_height | float }}"
+        nes_custom_viewport_percentage: "{{ nes_custom_viewport_height / physical_viewport_height | float }}"
+        pcengine_custom_viewport_percentage: "{{ pcengine_custom_viewport_height / physical_viewport_height | float }}"
+        psx_custom_viewport_percentage: "{{ psx_custom_viewport_height / physical_viewport_height | float }}"
+        sega32x_custom_viewport_percentage: "{{ sega32x_custom_viewport_height / physical_viewport_height | float }}"
+        segacd_custom_viewport_percentage: "{{ segacd_custom_viewport_height / physical_viewport_height | float }}"
+        snes_custom_viewport_percentage: "{{ snes_custom_viewport_height / physical_viewport_height | float }}"
+
+    - name: "Resolution: Calc 4:3 Horizontal"
+      set_fact:
+        arcade_custom_viewport_width: "{{ (physical_viewport_width * arcade_custom_viewport_percentage | float) | int}}"
+        atari2600_custom_viewport_width: "{{ (physical_viewport_width * atari2600_custom_viewport_percentage | float) | int}}"
+        atari5200_custom_viewport_width: "{{ (physical_viewport_width * atari5200_custom_viewport_percentage | float) | int}}"
+        atari7800_custom_viewport_width: "{{ (physical_viewport_width * atari7800_custom_viewport_percentage | float) | int}}"
+        fba_custom_viewport_width: "{{ (physical_viewport_width * fba_custom_viewport_percentage | float) | int}}"
+        fds_custom_viewport_width: "{{ (physical_viewport_width * fds_custom_viewport_percentage | float) | int}}"
+        mame_libretro_custom_viewport_width: "{{ (physical_viewport_width * mame_libretro_custom_viewport_percentage | float) | int}}"
+        mastersystem_custom_viewport_width: "{{ (physical_viewport_width * mastersystem_custom_viewport_percentage | float) | int}}"
+        megadrive_custom_viewport_width: "{{ (physical_viewport_width * megadrive_custom_viewport_percentage | float) | int}}"
+        msx_custom_viewport_width: "{{ (physical_viewport_width * msx_custom_viewport_percentage | float) | int}}"
+        n64_custom_viewport_width: "{{ (physical_viewport_width * n64_custom_viewport_percentage | float) | int}}"
+        neogeo_custom_viewport_width: "{{ (physical_viewport_width * neogeo_custom_viewport_percentage | float) | int}}"
+        nes_custom_viewport_width: "{{ (physical_viewport_width * nes_custom_viewport_percentage | float) | int}}"
+        pcengine_custom_viewport_width: "{{ (physical_viewport_width * pcengine_custom_viewport_percentage | float) | int}}"
+        psx_custom_viewport_width: "{{ (physical_viewport_width * psx_custom_viewport_percentage | float) | int}}"
+        sega32x_custom_viewport_width: "{{ (physical_viewport_width * sega32x_custom_viewport_percentage | float) | int}}"
+        segacd_custom_viewport_width: "{{ (physical_viewport_width * segacd_custom_viewport_percentage | float) | int}}"
+        snes_custom_viewport_width: "{{ (physical_viewport_width * snes_custom_viewport_percentage | float) | int}}"
 
   tasks:
 
@@ -168,104 +260,20 @@
         - "/opt/retropie"
         - "{{home_dir}}"
 
-    - name: "Resolution: Get Vertical"
-      set_fact:
-        arcade_custom_viewport_height: 240
-        atari2600_custom_viewport_height: 200
-        atari5200_custom_viewport_height: 240
-        atari7800_custom_viewport_height: 240
-        atarilynx_custom_viewport_height: 204
-        fba_custom_viewport_height: 240
-        fds_custom_viewport_height: 224
-        gamegear_custom_viewport_height: 288
-        gba_custom_viewport_height: 160
-        gbc_custom_viewport_height: 144
-        gb_custom_viewport_height: 144
-        mame_libretro_custom_viewport_height: 240
-        mastersystem_custom_viewport_height: 192
-        megadrive_custom_viewport_height: 224
-        msx_custom_viewport_height: 240
-        n64_custom_viewport_height: 480
-        neogeo_custom_viewport_height: 224
-        nes_custom_viewport_height: 224
-        ngpc_custom_viewport_height: 228
-        ngp_custom_viewport_height: 228
-        pcengine_custom_viewport_height: 240
-        psx_custom_viewport_height: 240
-        sega32x_custom_viewport_height: 224
-        segacd_custom_viewport_height: 224
-        snes_custom_viewport_height: 224
-        virtualboy_custom_viewport_height: 224
-        wonderswancolor_custom_viewport_height: 288
-        wonderswan_custom_viewport_height: 288
-
-    - name: "Resolution: Calculate Percentages"
-      set_fact:
-        arcade_custom_viewport_percentage: "{{ arcade_custom_viewport_height / physical_viewport_height | float }}"
-        atari2600_custom_viewport_percentage: "{{ atari2600_custom_viewport_height / physical_viewport_height | float }}"
-        atari5200_custom_viewport_percentage: "{{ atari5200_custom_viewport_height / physical_viewport_height | float }}"
-        atari7800_custom_viewport_percentage: "{{ atari7800_custom_viewport_height / physical_viewport_height | float }}"
-        fba_custom_viewport_percentage: "{{ fba_custom_viewport_height / physical_viewport_height | float }}"
-        fds_custom_viewport_percentage: "{{ fds_custom_viewport_height / physical_viewport_height | float }}"
-        mame_libretro_custom_viewport_percentage: "{{ mame_libretro_custom_viewport_height / physical_viewport_height | float }}"
-        mastersystem_custom_viewport_percentage: "{{ mastersystem_custom_viewport_height / physical_viewport_height | float }}"
-        megadrive_custom_viewport_percentage: "{{ megadrive_custom_viewport_height / physical_viewport_height | float }}"
-        msx_custom_viewport_percentage: "{{ msx_custom_viewport_height / physical_viewport_height | float }}"
-        n64_custom_viewport_percentage: "{{ n64_custom_viewport_height / physical_viewport_height | float }}"
-        neogeo_custom_viewport_percentage: "{{ neogeo_custom_viewport_height / physical_viewport_height | float }}"
-        nes_custom_viewport_percentage: "{{ nes_custom_viewport_height / physical_viewport_height | float }}"
-        pcengine_custom_viewport_percentage: "{{ pcengine_custom_viewport_height / physical_viewport_height | float }}"
-        psx_custom_viewport_percentage: "{{ psx_custom_viewport_height / physical_viewport_height | float }}"
-        sega32x_custom_viewport_percentage: "{{ sega32x_custom_viewport_height / physical_viewport_height | float }}"
-        segacd_custom_viewport_percentage: "{{ segacd_custom_viewport_height / physical_viewport_height | float }}"
-        snes_custom_viewport_percentage: "{{ snes_custom_viewport_height / physical_viewport_height | float }}"
-
-#    - name: "Resolution: Calculate Handheld"
-#      set_fact:
-#        atarilynx_custom_viewport_percentage: "{{ atarilynx_custom_viewport_height / physical_viewport_height | float }}"
-#        gamegear_custom_viewport_percentage: "{{ gamegear_custom_viewport_height / physical_viewport_height | float }}"
-#        gba_custom_viewport_percentage: "{{ gba_custom_viewport_height / physical_viewport_height | float }}"
-#        gbc_custom_viewport_percentage: "{{ gbc_custom_viewport_height / physical_viewport_height | float }}"
-#        gb_custom_viewport_percentage: "{{ gb_custom_viewport_height / physical_viewport_height | float }}"
-#        ngpc_custom_viewport_percentage: "{{ ngpc_custom_viewport_height / physical_viewport_height | float }}"
-#        ngp_custom_viewport_percentage: "{{ ngp_custom_viewport_height / physical_viewport_height | float }}"
-#        virtualboy_custom_viewport_percentage: "{{ virtualboy_custom_viewport_height / physical_viewport_height | float }}"
-#        wonderswancolor_custom_viewport_percentage: "{{ wonderswancolor_custom_viewport_height / physical_viewport_height | float }}"
-#        wonderswan_custom_viewport_percentage: "{{ wonderswan_custom_viewport_height / physical_viewport_height | float }}"
-
-    - name: "Resolution: 4:3 Horizontal"
-      set_fact:
-        arcade_custom_viewport_width: "{{ (physical_viewport_width * arcade_custom_viewport_percentage | float) | int}}"
-        atari2600_custom_viewport_width: "{{ (physical_viewport_width * atari2600_custom_viewport_percentage | float) | int}}"
-        atari5200_custom_viewport_width: "{{ (physical_viewport_width * atari5200_custom_viewport_percentage | float) | int}}"
-        atari7800_custom_viewport_width: "{{ (physical_viewport_width * atari7800_custom_viewport_percentage | float) | int}}"
-        fba_custom_viewport_width: "{{ (physical_viewport_width * fba_custom_viewport_percentage | float) | int}}"
-        fds_custom_viewport_width: "{{ (physical_viewport_width * fds_custom_viewport_percentage | float) | int}}"
-        mame_libretro_custom_viewport_width: "{{ (physical_viewport_width * mame_libretro_custom_viewport_percentage | float) | int}}"
-        mastersystem_custom_viewport_width: "{{ (physical_viewport_width * mastersystem_custom_viewport_percentage | float) | int}}"
-        megadrive_custom_viewport_width: "{{ (physical_viewport_width * megadrive_custom_viewport_percentage | float) | int}}"
-        msx_custom_viewport_width: "{{ (physical_viewport_width * msx_custom_viewport_percentage | float) | int}}"
-        n64_custom_viewport_width: "{{ (physical_viewport_width * n64_custom_viewport_percentage | float) | int}}"
-        neogeo_custom_viewport_width: "{{ (physical_viewport_width * neogeo_custom_viewport_percentage | float) | int}}"
-        nes_custom_viewport_width: "{{ (physical_viewport_width * nes_custom_viewport_percentage | float) | int}}"
-        pcengine_custom_viewport_width: "{{ (physical_viewport_width * pcengine_custom_viewport_percentage | float) | int}}"
-        psx_custom_viewport_width: "{{ (physical_viewport_width * psx_custom_viewport_percentage | float) | int}}"
-        sega32x_custom_viewport_width: "{{ (physical_viewport_width * sega32x_custom_viewport_percentage | float) | int}}"
-        segacd_custom_viewport_width: "{{ (physical_viewport_width * segacd_custom_viewport_percentage | float) | int}}"
-        snes_custom_viewport_width: "{{ (physical_viewport_width * snes_custom_viewport_percentage | float) | int}}"
-
-    - name: "Resolution: Handheld Horizontal"
-      set_fact:
-        atarilynx_custom_viewport_width: "{{ (physical_viewport_width * atarilynx_custom_viewport_percentage | float) | int}}"
-        gamegear_custom_viewport_width: "{{ (physical_viewport_width * gamegear_custom_viewport_percentage | float) | int}}"
-        gba_custom_viewport_width: "{{ (physical_viewport_width * gba_custom_viewport_percentage | float) | int}}"
-        gbc_custom_viewport_width: "{{ (physical_viewport_width * gbc_custom_viewport_percentage | float) | int}}"
-        gb_custom_viewport_width: "{{ (physical_viewport_width * gb_custom_viewport_percentage | float) | int}}"
-        ngpc_custom_viewport_width: "{{ (physical_viewport_width * ngpc_custom_viewport_percentage | float) | int}}"
-        ngp_custom_viewport_width: "{{ (physical_viewport_width * ngp_custom_viewport_percentage | float) | int}}"
-        virtualboy_custom_viewport_width: "{{ (physical_viewport_width * virtualboy_custom_viewport_percentage | float) | int}}"
-        wonderswancolor_custom_viewport_width: "{{ (physical_viewport_width * wonderswancolor_custom_viewport_percentage | float) | int}}"
-        wonderswan_custom_viewport_width: "{{ (physical_viewport_width * wonderswan_custom_viewport_percentage | float) | int}}"
+    - name: "Configure RetroArch"
+      blockinfile:
+        dest: '/opt/retropie/configs/all/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        block: |
+                aspect_ratio_index = 23
+                video_fullscreen = true
+                video_hard_sync = true
+                video_refresh_rate = 59.73
+                video_scale_integer = true
+                video_smooth = false
+                video_threaded = true
+                video_vsync = true
 
     - name: "Configure Arcade"
       blockinfile:
