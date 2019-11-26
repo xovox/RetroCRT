@@ -15,7 +15,7 @@
 # Ansible Optimization
 
 * Read in resolution from env & convert to int
-** https://www.mydailytutorials.com/ansible-arithmetic-operations/
+  * https://www.mydailytutorials.com/ansible-arithmetic-operations/
 * https://garthkerr.com/using-ansible-template-for-partial-file-block/
 
 I feel like the retroarch config updates could be done in an item loop, maybe with a template
