@@ -184,6 +184,7 @@
         mame_libretro_custom_viewport_height: 240
         mastersystem_custom_viewport_height: 192
         megadrive_custom_viewport_height: 224
+        msx_custom_viewport_height: 240
         n64_custom_viewport_height: 480
         neogeo_custom_viewport_height: 224
         nes_custom_viewport_height: 224
@@ -214,6 +215,7 @@
         mame_libretro_custom_viewport_percentage: "{{ mame_libretro_custom_viewport_height / physical_viewport_height | float }}"
         mastersystem_custom_viewport_percentage: "{{ mastersystem_custom_viewport_height / physical_viewport_height | float }}"
         megadrive_custom_viewport_percentage: "{{ megadrive_custom_viewport_height / physical_viewport_height | float }}"
+        msx_custom_viewport_percentage: "{{ msx_custom_viewport_height / physical_viewport_height | float }}"
         n64_custom_viewport_percentage: "{{ n64_custom_viewport_height / physical_viewport_height | float }}"
         neogeo_custom_viewport_percentage: "{{ neogeo_custom_viewport_height / physical_viewport_height | float }}"
         nes_custom_viewport_percentage: "{{ nes_custom_viewport_height / physical_viewport_height | float }}"
@@ -244,6 +246,7 @@
         mame_libretro_custom_viewport_width: "{{ (physical_viewport_width * mame_libretro_custom_viewport_percentage | float) | int}}"
         mastersystem_custom_viewport_width: "{{ (physical_viewport_width * mastersystem_custom_viewport_percentage | float) | int}}"
         megadrive_custom_viewport_width: "{{ (physical_viewport_width * megadrive_custom_viewport_percentage | float) | int}}"
+        msx_custom_viewport_width: "{{ (physical_viewport_width * msx_custom_viewport_percentage | float) | int}}"
         n64_custom_viewport_width: "{{ (physical_viewport_width * n64_custom_viewport_percentage | float) | int}}"
         neogeo_custom_viewport_width: "{{ (physical_viewport_width * neogeo_custom_viewport_percentage | float) | int}}"
         nes_custom_viewport_width: "{{ (physical_viewport_width * nes_custom_viewport_percentage | float) | int}}"
@@ -397,6 +400,16 @@
         block: |
           custom_viewport_width = {{ megadrive_custom_viewport_width }}
           custom_viewport_height = {{ megadrive_custom_viewport_height }}
+
+    - name: "Configure MSX"
+      blockinfile:
+        path: '/opt/retropie/configs/msx/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ msx_custom_viewport_width }}
+          custom_viewport_height = {{ msx_custom_viewport_height }}
 
     - name: "Configure Nintendo 64"
       blockinfile:
