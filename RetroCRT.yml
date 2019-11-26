@@ -86,16 +86,16 @@
         src: "bin/RetroCRT.sh"
         dest: "{{home_dir}}/RetroPie/retropiemenu/RetroCRT.sh"
         mode: 0755
-        owner: "{{ ansible_user_id }}"
-        group: "{{ ansible_user_gid }}"
+        owner: "pi"
+        group: "pi"
 
     - name: "Menu Item Icon"
       copy:
         src: "files/RetroCRT.png"
         dest: "{{home_dir}}/RetroPie/retropiemenu/icons/RetroCRT.png"
         mode: 0644
-        owner: "{{ ansible_user_id }}"
-        group: "{{ ansible_user_gid }}"
+        owner: "pi"
+        group: "pi"
 
 #    - name: "Copy RetroArch Configs"
 #      synchronize:
@@ -161,8 +161,8 @@
       file:
         path: "{{ item }}"
         state: "directory"
-        owner: "{{ ansible_user_id }}"
-        group: "{{ ansible_user_gid }}"
+        owner: "pi"
+        group: "pi"
         recurse: "yes"
       with_items:
         - "/opt/retropie"
@@ -263,7 +263,7 @@
 
     - name: "Configure Arcade"
       blockinfile:
-        path: '/opt/retropie/configs/arcade/retroarch.cfg'
+        dest: '/opt/retropie/configs/arcade/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -273,7 +273,7 @@
 
     - name: "Configure Atari 2600"
       blockinfile:
-        path: '/opt/retropie/configs/atari2600/retroarch.cfg'
+        dest: '/opt/retropie/configs/atari2600/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -283,7 +283,7 @@
 
     - name: "Configure Atari 5200"
       blockinfile:
-        path: '/opt/retropie/configs/atari5200/retroarch.cfg'
+        dest: '/opt/retropie/configs/atari5200/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -293,7 +293,7 @@
 
     - name: "Configure Atari 7800"
       blockinfile:
-        path: '/opt/retropie/configs/atari7800/retroarch.cfg'
+        dest: '/opt/retropie/configs/atari7800/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -303,7 +303,7 @@
 
     - name: "Configure Atari Lynx"
       blockinfile:
-        path: '/opt/retropie/configs/atarilynx/retroarch.cfg'
+        dest: '/opt/retropie/configs/atarilynx/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -313,7 +313,7 @@
 
     - name: "Configure Final Burn Neo"
       blockinfile:
-        path: '/opt/retropie/configs/fba/retroarch.cfg'
+        dest: '/opt/retropie/configs/fba/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -323,7 +323,7 @@
 
     - name: "Configure Famicom Disk System"
       blockinfile:
-        path: '/opt/retropie/configs/fds/retroarch.cfg'
+        dest: '/opt/retropie/configs/fds/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -333,7 +333,7 @@
 
     - name: "Configure Game Gear"
       blockinfile:
-        path: '/opt/retropie/configs/gamegear/retroarch.cfg'
+        dest: '/opt/retropie/configs/gamegear/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -343,7 +343,7 @@
 
     - name: "Configure Game Boy Advance"
       blockinfile:
-        path: '/opt/retropie/configs/gba/retroarch.cfg'
+        dest: '/opt/retropie/configs/gba/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -353,7 +353,7 @@
 
     - name: "Configure Game Boy Color"
       blockinfile:
-        path: '/opt/retropie/configs/gbc/retroarch.cfg'
+        dest: '/opt/retropie/configs/gbc/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -363,7 +363,7 @@
 
     - name: "Configure Game Boy"
       blockinfile:
-        path: '/opt/retropie/configs/gb/retroarch.cfg'
+        dest: '/opt/retropie/configs/gb/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -373,7 +373,7 @@
 
     - name: "Configure MAME"
       blockinfile:
-        path: '/opt/retropie/configs/mame-libretro/retroarch.cfg'
+        dest: '/opt/retropie/configs/mame-libretro/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -383,7 +383,7 @@
 
     - name: "Configure Master System"
       blockinfile:
-        path: '/opt/retropie/configs/mastersystem/retroarch.cfg'
+        dest: '/opt/retropie/configs/mastersystem/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -393,7 +393,7 @@
 
     - name: "Configure Mega Drive/Genesis"
       blockinfile:
-        path: '/opt/retropie/configs/megadrive/retroarch.cfg'
+        dest: '/opt/retropie/configs/megadrive/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -403,7 +403,7 @@
 
     - name: "Configure MSX"
       blockinfile:
-        path: '/opt/retropie/configs/msx/retroarch.cfg'
+        dest: '/opt/retropie/configs/msx/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -413,7 +413,7 @@
 
     - name: "Configure Nintendo 64"
       blockinfile:
-        path: '/opt/retropie/configs/n64/retroarch.cfg'
+        dest: '/opt/retropie/configs/n64/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -423,7 +423,7 @@
 
     - name: "Configure Neo Geo"
       blockinfile:
-        path: '/opt/retropie/configs/neogeo/retroarch.cfg'
+        dest: '/opt/retropie/configs/neogeo/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -433,7 +433,7 @@
 
     - name: "Configure NES"
       blockinfile:
-        path: '/opt/retropie/configs/nes/retroarch.cfg'
+        dest: '/opt/retropie/configs/nes/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -443,7 +443,7 @@
 
     - name: "Configure Neo Geo Pocket Color"
       blockinfile:
-        path: '/opt/retropie/configs/ngpc/retroarch.cfg'
+        dest: '/opt/retropie/configs/ngpc/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -453,7 +453,7 @@
 
     - name: "Configure Neo Geo Pocket"
       blockinfile:
-        path: '/opt/retropie/configs/ngp/retroarch.cfg'
+        dest: '/opt/retropie/configs/ngp/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -463,7 +463,7 @@
 
     - name: "Configure PC-Engine/TurboGrafx-16"
       blockinfile:
-        path: '/opt/retropie/configs/pcengine/retroarch.cfg'
+        dest: '/opt/retropie/configs/pcengine/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -473,7 +473,7 @@
 
     - name: "Configure PlayStation"
       blockinfile:
-        path: '/opt/retropie/configs/psx/retroarch.cfg'
+        dest: '/opt/retropie/configs/psx/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -483,7 +483,7 @@
 
     - name: "Configure Sega 32X"
       blockinfile:
-        path: '/opt/retropie/configs/sega32x/retroarch.cfg'
+        dest: '/opt/retropie/configs/sega32x/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -493,7 +493,7 @@
 
     - name: "Configure Sega CD"
       blockinfile:
-        path: '/opt/retropie/configs/segacd/retroarch.cfg'
+        dest: '/opt/retropie/configs/segacd/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -503,7 +503,7 @@
 
     - name: "Configure Super Nintendo"
       blockinfile:
-        path: '/opt/retropie/configs/snes/retroarch.cfg'
+        dest: '/opt/retropie/configs/snes/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -513,7 +513,7 @@
 
     - name: "Configure Virtual Boy"
       blockinfile:
-        path: '/opt/retropie/configs/virtualboy/retroarch.cfg'
+        dest: '/opt/retropie/configs/virtualboy/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -523,7 +523,7 @@
 
     - name: "Configure WonderSwan Color"
       blockinfile:
-        path: '/opt/retropie/configs/wonderswancolor/retroarch.cfg'
+        dest: '/opt/retropie/configs/wonderswancolor/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
@@ -533,7 +533,7 @@
 
     - name: "Configure WonderSwan"
       blockinfile:
-        path: '/opt/retropie/configs/wonderswan/retroarch.cfg'
+        dest: '/opt/retropie/configs/wonderswan/retroarch.cfg'
         create: 'yes'
         backup: 'yes'
         insertbefore: "^#include"
