@@ -12,7 +12,17 @@
 
 # Timings Dirs
 
-# Aspect Ratios
+# Screen Resolution
+
+I'm probably making things more complicated than they need to be, but I want to make it flexible if someone wants to go higher or lower than 1920
+
+## Even Numbers
+
+Arcade games have math applied on load that makes sure our resolution is an even number
+
+Console/handheld platforms need to be done as well
+
+## Handhelds
 
 Handhelds aren't 4:3, so my current blanket math doesn't work for them.
 
