@@ -15,3 +15,19 @@
 # Ansible Optimization
 
 -[ ] https://garthkerr.com/using-ansible-template-for-partial-file-block/
+
+I feel like the retroarch config updates could be done in an item loop
+
+```
+    - name: "Configure Resolutions"
+      blockinfile:
+        path: '/opt/retropie/configs/{{item.platform}}/retroarch.cfg'
+        backup: 'yes'
+        block: |
+          custom_viewport_height = {{ item.custom_viewport_height }}
+          custom_viewport_width = {{ item.custom_viewport_width }}
+      loop:
+        - { platform: gba, custom_viewport_height: 160, custom_viewport_width: "{{ gba_custom_viewport_width }}" }
+```
+
+
