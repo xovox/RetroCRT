@@ -17,7 +17,7 @@
 # along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
 ##############################################################################
 
-- hosts: "all"
+- hosts: "localhost"
   connection: "local"
   become: "yes"
   become_user: "root"
@@ -42,6 +42,11 @@
         rotate_tv: "{{ lookup('env', 'rotate_tv') }}"
         rotate_es: "{{ lookup('env', 'rotate_es') }}"
         rotate_ra: "{{ lookup('env', 'rotate_ra') }}"
+        home_dir: "{{ lookup('env', 'HOME') }}"
+        #physical_viewport_width: "{{ lookup('env', 'physical_viewport_width') }}"
+        #physical_viewport_height: "{{ lookup('env', 'physical_viewport_height') }}"
+        physical_viewport_width: 1920
+        physical_viewport_height: 240
 
     - name: "Set Default Timings"
       set_fact:
@@ -57,7 +62,7 @@
 
     - name: "Check State of Test ROMS"
       stat:
-        path: "/home/pi/RetroPie/roms/.240p_copied"
+        path: "{{home_dir}}/RetroPie/roms/.240p_copied"
       register: roms_copied
 
   tasks:
@@ -79,31 +84,31 @@
     - name: "Menu Item"
       copy:
         src: "bin/RetroCRT.sh"
-        dest: "/home/pi/RetroPie/retropiemenu/RetroCRT.sh"
+        dest: "{{home_dir}}/RetroPie/retropiemenu/RetroCRT.sh"
         mode: 0755
-        owner: "pi"
-        group: "pi"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
 
     - name: "Menu Item Icon"
       copy:
         src: "files/RetroCRT.png"
-        dest: "/home/pi/RetroPie/retropiemenu/icons/RetroCRT.png"
+        dest: "{{home_dir}}/RetroPie/retropiemenu/icons/RetroCRT.png"
         mode: 0644
-        owner: "pi"
-        group: "pi"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
 
-    - name: "Copy RetroArch Configs"
-      synchronize:
-        src: "configs/retropie/"
-        dest: "/opt/retropie/configs/"
-        rsync_opts:
-          - "--backup"
-          - "--suffix .{{ansible_date_time.epoch}}"
+#    - name: "Copy RetroArch Configs"
+#      synchronize:
+#        src: "configs/retropie/"
+#        dest: "/opt/retropie/configs/"
+#        rsync_opts:
+#          - "--backup"
+#          - "--suffix .{{ansible_date_time.epoch}}"
 
     - name: "Copy On Start/End Scripts"
       synchronize:
         src: "files/{{ item }}/"
-        dest: '/home/pi/RetroPie/{{ item }}/'
+        dest: '{{home_dir}}/RetroPie/{{ item }}/'
         rsync_opts:
           - "--backup"
           - "--suffix .{{ansible_date_time.epoch}}"
@@ -121,7 +126,7 @@
     - name: "240p Test Suite"
       synchronize:
         src: "files/roms/"
-        dest: "/home/pi/RetroPie/roms/"
+        dest: "{{home_dir}}/RetroPie/roms/"
         rsync_opts:
           - "--exclude README.md"
       when: roms_copied.stat.exists == False
@@ -156,9 +161,370 @@
       file:
         path: "{{ item }}"
         state: "directory"
-        owner: "pi"
-        group: "pi"
+        owner: "{{ ansible_user_id }}"
+        group: "{{ ansible_user_gid }}"
         recurse: "yes"
       with_items:
         - "/opt/retropie"
-        - "/home/pi"
+        - "{{home_dir}}"
+
+    - name: "Resolution: Get Vertical"
+      set_fact:
+        arcade_custom_viewport_height: 240
+        atari2600_custom_viewport_height: 200
+        atari5200_custom_viewport_height: 240
+        atari7800_custom_viewport_height: 240
+        atarilynx_custom_viewport_height: 204
+        fba_custom_viewport_height: 240
+        fds_custom_viewport_height: 224
+        gamegear_custom_viewport_height: 288
+        gba_custom_viewport_height: 160
+        gbc_custom_viewport_height: 144
+        gb_custom_viewport_height: 144
+        mame_libretro_custom_viewport_height: 240
+        mastersystem_custom_viewport_height: 192
+        megadrive_custom_viewport_height: 224
+        n64_custom_viewport_height: 480
+        neogeo_custom_viewport_height: 224
+        nes_custom_viewport_height: 224
+        ngpc_custom_viewport_height: 228
+        ngp_custom_viewport_height: 228
+        pcengine_custom_viewport_height: 240
+        psx_custom_viewport_height: 240
+        sega32x_custom_viewport_height: 224
+        segacd_custom_viewport_height: 224
+        snes_custom_viewport_height: 224
+        virtualboy_custom_viewport_height: 224
+        wonderswancolor_custom_viewport_height: 288
+        wonderswan_custom_viewport_height: 288
+
+    - name: "Resolution: Calculate Percentages"
+      set_fact:
+        arcade_custom_viewport_percentage: "{{ arcade_custom_viewport_height / physical_viewport_height | float }}"
+        atari2600_custom_viewport_percentage: "{{ atari2600_custom_viewport_height / physical_viewport_height | float }}"
+        atari5200_custom_viewport_percentage: "{{ atari5200_custom_viewport_height / physical_viewport_height | float }}"
+        atari7800_custom_viewport_percentage: "{{ atari7800_custom_viewport_height / physical_viewport_height | float }}"
+        atarilynx_custom_viewport_percentage: "{{ atarilynx_custom_viewport_height / physical_viewport_height | float }}"
+        fba_custom_viewport_percentage: "{{ fba_custom_viewport_height / physical_viewport_height | float }}"
+        fds_custom_viewport_percentage: "{{ fds_custom_viewport_height / physical_viewport_height | float }}"
+        gamegear_custom_viewport_percentage: "{{ gamegear_custom_viewport_height / physical_viewport_height | float }}"
+        gba_custom_viewport_percentage: "{{ gba_custom_viewport_height / physical_viewport_height | float }}"
+        gbc_custom_viewport_percentage: "{{ gbc_custom_viewport_height / physical_viewport_height | float }}"
+        gb_custom_viewport_percentage: "{{ gb_custom_viewport_height / physical_viewport_height | float }}"
+        mame_libretro_custom_viewport_percentage: "{{ mame_libretro_custom_viewport_height / physical_viewport_height | float }}"
+        mastersystem_custom_viewport_percentage: "{{ mastersystem_custom_viewport_height / physical_viewport_height | float }}"
+        megadrive_custom_viewport_percentage: "{{ megadrive_custom_viewport_height / physical_viewport_height | float }}"
+        n64_custom_viewport_percentage: "{{ n64_custom_viewport_height / physical_viewport_height | float }}"
+        neogeo_custom_viewport_percentage: "{{ neogeo_custom_viewport_height / physical_viewport_height | float }}"
+        nes_custom_viewport_percentage: "{{ nes_custom_viewport_height / physical_viewport_height | float }}"
+        ngpc_custom_viewport_percentage: "{{ ngpc_custom_viewport_height / physical_viewport_height | float }}"
+        ngp_custom_viewport_percentage: "{{ ngp_custom_viewport_height / physical_viewport_height | float }}"
+        pcengine_custom_viewport_percentage: "{{ pcengine_custom_viewport_height / physical_viewport_height | float }}"
+        psx_custom_viewport_percentage: "{{ psx_custom_viewport_height / physical_viewport_height | float }}"
+        sega32x_custom_viewport_percentage: "{{ sega32x_custom_viewport_height / physical_viewport_height | float }}"
+        segacd_custom_viewport_percentage: "{{ segacd_custom_viewport_height / physical_viewport_height | float }}"
+        snes_custom_viewport_percentage: "{{ snes_custom_viewport_height / physical_viewport_height | float }}"
+        virtualboy_custom_viewport_percentage: "{{ virtualboy_custom_viewport_height / physical_viewport_height | float }}"
+        wonderswancolor_custom_viewport_percentage: "{{ wonderswancolor_custom_viewport_height / physical_viewport_height | float }}"
+        wonderswan_custom_viewport_percentage: "{{ wonderswan_custom_viewport_height / physical_viewport_height | float }}"
+
+    - name: "Resolution: Calculate Horizontal"
+      set_fact:
+        arcade_custom_viewport_width: "{{ (physical_viewport_width * arcade_custom_viewport_percentage | float) | int}}"
+        atari2600_custom_viewport_width: "{{ (physical_viewport_width * atari2600_custom_viewport_percentage | float) | int}}"
+        atari5200_custom_viewport_width: "{{ (physical_viewport_width * atari5200_custom_viewport_percentage | float) | int}}"
+        atari7800_custom_viewport_width: "{{ (physical_viewport_width * atari7800_custom_viewport_percentage | float) | int}}"
+        atarilynx_custom_viewport_width: "{{ (physical_viewport_width * atarilynx_custom_viewport_percentage | float) | int}}"
+        fba_custom_viewport_width: "{{ (physical_viewport_width * fba_custom_viewport_percentage | float) | int}}"
+        fds_custom_viewport_width: "{{ (physical_viewport_width * fds_custom_viewport_percentage | float) | int}}"
+        gamegear_custom_viewport_width: "{{ (physical_viewport_width * gamegear_custom_viewport_percentage | float) | int}}"
+        gba_custom_viewport_width: "{{ (physical_viewport_width * gba_custom_viewport_percentage | float) | int}}"
+        gbc_custom_viewport_width: "{{ (physical_viewport_width * gbc_custom_viewport_percentage | float) | int}}"
+        gb_custom_viewport_width: "{{ (physical_viewport_width * gb_custom_viewport_percentage | float) | int}}"
+        mame_libretro_custom_viewport_width: "{{ (physical_viewport_width * mame_libretro_custom_viewport_percentage | float) | int}}"
+        mastersystem_custom_viewport_width: "{{ (physical_viewport_width * mastersystem_custom_viewport_percentage | float) | int}}"
+        megadrive_custom_viewport_width: "{{ (physical_viewport_width * megadrive_custom_viewport_percentage | float) | int}}"
+        n64_custom_viewport_width: "{{ (physical_viewport_width * n64_custom_viewport_percentage | float) | int}}"
+        neogeo_custom_viewport_width: "{{ (physical_viewport_width * neogeo_custom_viewport_percentage | float) | int}}"
+        nes_custom_viewport_width: "{{ (physical_viewport_width * nes_custom_viewport_percentage | float) | int}}"
+        ngpc_custom_viewport_width: "{{ (physical_viewport_width * ngpc_custom_viewport_percentage | float) | int}}"
+        ngp_custom_viewport_width: "{{ (physical_viewport_width * ngp_custom_viewport_percentage | float) | int}}"
+        pcengine_custom_viewport_width: "{{ (physical_viewport_width * pcengine_custom_viewport_percentage | float) | int}}"
+        psx_custom_viewport_width: "{{ (physical_viewport_width * psx_custom_viewport_percentage | float) | int}}"
+        sega32x_custom_viewport_width: "{{ (physical_viewport_width * sega32x_custom_viewport_percentage | float) | int}}"
+        segacd_custom_viewport_width: "{{ (physical_viewport_width * segacd_custom_viewport_percentage | float) | int}}"
+        snes_custom_viewport_width: "{{ (physical_viewport_width * snes_custom_viewport_percentage | float) | int}}"
+        virtualboy_custom_viewport_width: "{{ (physical_viewport_width * virtualboy_custom_viewport_percentage | float) | int}}"
+        wonderswancolor_custom_viewport_width: "{{ (physical_viewport_width * wonderswancolor_custom_viewport_percentage | float) | int}}"
+        wonderswan_custom_viewport_width: "{{ (physical_viewport_width * wonderswan_custom_viewport_percentage | float) | int}}"
+
+    - name: "Configure Arcade"
+      blockinfile:
+        path: '/opt/retropie/configs/arcade/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ arcade_custom_viewport_width }}
+          custom_viewport_height = {{ arcade_custom_viewport_height }}
+
+    - name: "Configure Atari 2600"
+      blockinfile:
+        path: '/opt/retropie/configs/atari2600/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ atari2600_custom_viewport_width }}
+          custom_viewport_height = {{ atari2600_custom_viewport_height }}
+
+    - name: "Configure Atari 5200"
+      blockinfile:
+        path: '/opt/retropie/configs/atari5200/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ atari5200_custom_viewport_width }}
+          custom_viewport_height = {{ atari5200_custom_viewport_height }}
+
+    - name: "Configure Atari 7800"
+      blockinfile:
+        path: '/opt/retropie/configs/atari7800/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ atari7800_custom_viewport_width }}
+          custom_viewport_height = {{ atari7800_custom_viewport_height }}
+
+    - name: "Configure Atari Lynx"
+      blockinfile:
+        path: '/opt/retropie/configs/atarilynx/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ atarilynx_custom_viewport_width }}
+          custom_viewport_height = {{ atarilynx_custom_viewport_height }}
+
+    - name: "Configure Final Burn Neo"
+      blockinfile:
+        path: '/opt/retropie/configs/fba/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ fba_custom_viewport_width }}
+          custom_viewport_height = {{ fba_custom_viewport_height }}
+
+    - name: "Configure Famicom Disk System"
+      blockinfile:
+        path: '/opt/retropie/configs/fds/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ fds_custom_viewport_width }}
+          custom_viewport_height = {{ fds_custom_viewport_height }}
+
+    - name: "Configure Game Gear"
+      blockinfile:
+        path: '/opt/retropie/configs/gamegear/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ gamegear_custom_viewport_width }}
+          custom_viewport_height = {{ gamegear_custom_viewport_height }}
+
+    - name: "Configure Game Boy Advance"
+      blockinfile:
+        path: '/opt/retropie/configs/gba/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ gba_custom_viewport_width }}
+          custom_viewport_height = {{ gba_custom_viewport_height }}
+
+    - name: "Configure Game Boy Color"
+      blockinfile:
+        path: '/opt/retropie/configs/gbc/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ gbc_custom_viewport_width }}
+          custom_viewport_height = {{ gbc_custom_viewport_height }}
+
+    - name: "Configure Game Boy"
+      blockinfile:
+        path: '/opt/retropie/configs/gb/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ gb_custom_viewport_width }}
+          custom_viewport_height = {{ gb_custom_viewport_height }}
+
+    - name: "Configure MAME"
+      blockinfile:
+        path: '/opt/retropie/configs/mame-libretro/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ mame_libretro_custom_viewport_width }}
+          custom_viewport_height = {{ mame_libretro_custom_viewport_height }}
+
+    - name: "Configure Master System"
+      blockinfile:
+        path: '/opt/retropie/configs/mastersystem/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ mastersystem_custom_viewport_width }}
+          custom_viewport_height = {{ mastersystem_custom_viewport_height }}
+
+    - name: "Configure Mega Drive/Genesis"
+      blockinfile:
+        path: '/opt/retropie/configs/megadrive/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ megadrive_custom_viewport_width }}
+          custom_viewport_height = {{ megadrive_custom_viewport_height }}
+
+    - name: "Configure Nintendo 64"
+      blockinfile:
+        path: '/opt/retropie/configs/n64/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ n64_custom_viewport_width }}
+          custom_viewport_height = {{ n64_custom_viewport_height }}
+
+    - name: "Configure Neo Geo"
+      blockinfile:
+        path: '/opt/retropie/configs/neogeo/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ neogeo_custom_viewport_width }}
+          custom_viewport_height = {{ neogeo_custom_viewport_height }}
+
+    - name: "Configure NES"
+      blockinfile:
+        path: '/opt/retropie/configs/nes/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ nes_custom_viewport_width }}
+          custom_viewport_height = {{ nes_custom_viewport_height }}
+
+    - name: "Configure Neo Geo Pocket Color"
+      blockinfile:
+        path: '/opt/retropie/configs/ngpc/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ ngpc_custom_viewport_width }}
+          custom_viewport_height = {{ ngpc_custom_viewport_height }}
+
+    - name: "Configure Neo Geo Pocket"
+      blockinfile:
+        path: '/opt/retropie/configs/ngp/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ ngp_custom_viewport_width }}
+          custom_viewport_height = {{ ngp_custom_viewport_height }}
+
+    - name: "Configure PC-Engine/TurboGrafx-16"
+      blockinfile:
+        path: '/opt/retropie/configs/pcengine/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ pcengine_custom_viewport_width }}
+          custom_viewport_height = {{ pcengine_custom_viewport_height }}
+
+    - name: "Configure PlayStation"
+      blockinfile:
+        path: '/opt/retropie/configs/psx/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ psx_custom_viewport_width }}
+          custom_viewport_height = {{ psx_custom_viewport_height }}
+
+    - name: "Configure Sega 32X"
+      blockinfile:
+        path: '/opt/retropie/configs/sega32x/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ sega32x_custom_viewport_width }}
+          custom_viewport_height = {{ sega32x_custom_viewport_height }}
+
+    - name: "Configure Sega CD"
+      blockinfile:
+        path: '/opt/retropie/configs/segacd/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ segacd_custom_viewport_width }}
+          custom_viewport_height = {{ segacd_custom_viewport_height }}
+
+    - name: "Configure Super Nintendo"
+      blockinfile:
+        path: '/opt/retropie/configs/snes/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ snes_custom_viewport_width }}
+          custom_viewport_height = {{ snes_custom_viewport_height }}
+
+    - name: "Configure Virtual Boy"
+      blockinfile:
+        path: '/opt/retropie/configs/virtualboy/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ virtualboy_custom_viewport_width }}
+          custom_viewport_height = {{ virtualboy_custom_viewport_height }}
+
+    - name: "Configure WonderSwan Color"
+      blockinfile:
+        path: '/opt/retropie/configs/wonderswancolor/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ wonderswancolor_custom_viewport_width }}
+          custom_viewport_height = {{ wonderswancolor_custom_viewport_height }}
+
+    - name: "Configure WonderSwan"
+      blockinfile:
+        path: '/opt/retropie/configs/wonderswan/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ wonderswan_custom_viewport_width }}
+          custom_viewport_height = {{ wonderswan_custom_viewport_height }}
+
