@@ -17,7 +17,7 @@
 Handhelds aren't 4:3, so my current blanket math doesn't work for them.
 
 | System | Resolution | Math |
-| ------ | ---------- | |
+| ------ | ---------- | ---- |
 | atarilynx | 160x102 | |
 | gamegear | 160x144 | |
 | gb | 160x144 | |
