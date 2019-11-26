@@ -16,7 +16,7 @@
 
 -[ ] https://garthkerr.com/using-ansible-template-for-partial-file-block/
 
-I feel like the retroarch config updates could be done in an item loop
+I feel like the retroarch config updates could be done in an item loop, maybe with a template
 
 ```
     - name: "Configure Resolutions"
@@ -29,5 +29,3 @@ I feel like the retroarch config updates could be done in an item loop
       loop:
         - { platform: gba, custom_viewport_height: 160, custom_viewport_width: "{{ gba_custom_viewport_width }}" }
 ```
-
-
