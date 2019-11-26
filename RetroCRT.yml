@@ -71,7 +71,7 @@
     - name: "Resolution: Get 4:3 Vertical"
       set_fact:
         arcade_custom_viewport_height: 240
-        atari2600_custom_viewport_height: 200
+        atari2600_custom_viewport_height: 210
         atari5200_custom_viewport_height: 240
         atari7800_custom_viewport_height: 240
         fba_custom_viewport_height: 240
