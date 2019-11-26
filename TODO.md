@@ -25,6 +25,13 @@ Console/handheld platforms need to be done as well
 
 Handhelds aren't 4:3, so my current blanket math doesn't work for them.
 
+for a 15khz screen, i think this would work
+horizontal * (1920 / 320)
+
+for a 31khz screen, i think this would work
+horizontal * (1920 / 640)
+
+
 | System | Resolution | Math |
 | ------ | ---------- | ---- |
 | atarilynx | 160x102 | |
