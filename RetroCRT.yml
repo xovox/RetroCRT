@@ -49,6 +49,7 @@
         physical_viewport_width: 1920
         physical_viewport_height: 240
         virtual_viewport_width: 320
+        handheld_multiplier: 6
 
     - name: "Set Default Timings"
       set_fact:
@@ -88,34 +89,34 @@
         segacd_custom_viewport_height: 224
         snes_custom_viewport_height: 224
 
-    - name: "Resolution: Handheld Multiplier"
-      set_fact:
-        handheld_multiplier: "{{ physical_viewport_width / virtual_viewport_width }}"
+#    - name: "Resolution: Handheld Multiplier"
+#      set_fact:
+#        handheld_multiplier: "{{ (physical_viewport_width / virtual_viewport_width) | int }}"
 
     - name: "Resolution: Get Handheld"
       set_fact:
-        atarilynx_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        atarilynx_custom_viewport_width: 160
         atarilynx_custom_viewport_height: 102
-        gamegear_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        gamegear_custom_viewport_width: 160
         gamegear_custom_viewport_height: 144
-        gba_custom_viewport_width: "{{ 240 * handheld_multiplier }}"
+        gba_custom_viewport_width: 240
         gba_custom_viewport_height: 160
-        gbc_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        gbc_custom_viewport_width: 160
         gbc_custom_viewport_height: 144
-        gb_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        gb_custom_viewport_width: 160
         gb_custom_viewport_height: 144
-        ngpc_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        ngpc_custom_viewport_width: 160
         ngpc_custom_viewport_height: 152
-        ngp_custom_viewport_width: "{{ 160 * handheld_multiplier }}"
+        ngp_custom_viewport_width: 160
         ngp_custom_viewport_height: 152
-        virtualboy_custom_viewport_width: "{{ 384 * handheld_multiplier }}"
+        virtualboy_custom_viewport_width: 384
         virtualboy_custom_viewport_height: 224
-        wonderswancolor_custom_viewport_width: "{{ 224 * handheld_multiplier }}"
+        wonderswancolor_custom_viewport_width: 224
         wonderswancolor_custom_viewport_height: 144
-        wonderswan_custom_viewport_width: "{{ 224 * handheld_multiplier }}"
+        wonderswan_custom_viewport_width: 224
         wonderswan_custom_viewport_height: 144
 
-    - name: "Resolution: Calculate Percentages"
+    - name: "Resolution: Find 4:3 Multiplier"
       set_fact:
         arcade_custom_viewport_percentage: "{{ arcade_custom_viewport_height / physical_viewport_height | float }}"
         atari2600_custom_viewport_percentage: "{{ atari2600_custom_viewport_height / physical_viewport_height | float }}"
@@ -285,6 +286,16 @@
           custom_viewport_width = {{ arcade_custom_viewport_width }}
           custom_viewport_height = {{ arcade_custom_viewport_height }}
 
+    - name: "Configure Atari Lynx"
+      blockinfile:
+        dest: '/opt/retropie/configs/atarilynx/retroarch.cfg'
+        create: 'yes'
+        backup: 'yes'
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_width = {{ atarilynx_custom_viewport_width * handheld_multiplier }}
+          custom_viewport_height = {{ atarilynx_custom_viewport_height }}
+
     - name: "Configure Atari 2600"
       blockinfile:
         dest: '/opt/retropie/configs/atari2600/retroarch.cfg'
@@ -315,16 +326,6 @@
           custom_viewport_width = {{ atari7800_custom_viewport_width }}
           custom_viewport_height = {{ atari7800_custom_viewport_height }}
 
-    - name: "Configure Atari Lynx"
-      blockinfile:
-        dest: '/opt/retropie/configs/atarilynx/retroarch.cfg'
-        create: 'yes'
-        backup: 'yes'
-        insertbefore: "^#include"
-        block: |
-          custom_viewport_width = {{ atarilynx_custom_viewport_width }}
-          custom_viewport_height = {{ atarilynx_custom_viewport_height }}
-
     - name: "Configure Final Burn Neo"
       blockinfile:
         dest: '/opt/retropie/configs/fba/retroarch.cfg'
@@ -352,7 +353,7 @@
         backup: 'yes'
         insertbefore: "^#include"
         block: |
-          custom_viewport_width = {{ gamegear_custom_viewport_width }}
+          custom_viewport_width = {{ gamegear_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ gamegear_custom_viewport_height }}
 
     - name: "Configure Game Boy Advance"
@@ -362,7 +363,7 @@
         backup: 'yes'
         insertbefore: "^#include"
         block: |
-          custom_viewport_width = {{ gba_custom_viewport_width }}
+          custom_viewport_width = {{ gba_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ gba_custom_viewport_height }}
 
     - name: "Configure Game Boy Color"
@@ -372,7 +373,7 @@
         backup: 'yes'
         insertbefore: "^#include"
         block: |
-          custom_viewport_width = {{ gbc_custom_viewport_width }}
+          custom_viewport_width = {{ gbc_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ gbc_custom_viewport_height }}
 
     - name: "Configure Game Boy"
@@ -382,7 +383,7 @@
         backup: 'yes'
         insertbefore: "^#include"
         block: |
-          custom_viewport_width = {{ gb_custom_viewport_width }}
+          custom_viewport_width = {{ gb_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ gb_custom_viewport_height }}
 
     - name: "Configure MAME"
@@ -462,7 +463,7 @@
         backup: 'yes'
         insertbefore: "^#include"
         block: |
-          custom_viewport_width = {{ ngpc_custom_viewport_width }}
+          custom_viewport_width = {{ ngpc_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ ngpc_custom_viewport_height }}
 
     - name: "Configure Neo Geo Pocket"
@@ -472,7 +473,7 @@
         backup: 'yes'
         insertbefore: "^#include"
         block: |
-          custom_viewport_width = {{ ngp_custom_viewport_width }}
+          custom_viewport_width = {{ ngp_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ ngp_custom_viewport_height }}
 
     - name: "Configure PC-Engine/TurboGrafx-16"
@@ -532,7 +533,7 @@
         backup: 'yes'
         insertbefore: "^#include"
         block: |
-          custom_viewport_width = {{ virtualboy_custom_viewport_width }}
+          custom_viewport_width = {{ virtualboy_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ virtualboy_custom_viewport_height }}
 
     - name: "Configure WonderSwan Color"
@@ -542,7 +543,7 @@
         backup: 'yes'
         insertbefore: "^#include"
         block: |
-          custom_viewport_width = {{ wonderswancolor_custom_viewport_width }}
+          custom_viewport_width = {{ wonderswancolor_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ wonderswancolor_custom_viewport_height }}
 
     - name: "Configure WonderSwan"
@@ -552,6 +553,6 @@
         backup: 'yes'
         insertbefore: "^#include"
         block: |
-          custom_viewport_width = {{ wonderswan_custom_viewport_width }}
+          custom_viewport_width = {{ wonderswan_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ wonderswan_custom_viewport_height }}
 
