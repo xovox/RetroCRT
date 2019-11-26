@@ -12,6 +12,23 @@
 
 # Timings Dirs
 
+# Aspect Ratios
+
+Handhelds aren't 4:3, so my current blanket math doesn't work for them.
+
+| System | Resolution | Math |
+| ------ | ---------- | |
+| atarilynx | 160x102 | |
+| gamegear | 160x144 | |
+| gb | 160x144 | |
+| gbc | 160x144 | |
+| gba | 240x160 | |
+| ngp | 160x152 | |
+| ngpc | 160x152 | |
+| virtualboy | 384x224 | |
+| wonderswan | 224x144 | |
+| wonderswancolor | 224x144 | |
+
 # Ansible Optimization
 
 * Read in resolution from env & convert to int
