@@ -11,3 +11,7 @@
 
 
 #Timings Dirs
+
+# Ansible Optimization
+
+-[ ] https://garthkerr.com/using-ansible-template-for-partial-file-block/
