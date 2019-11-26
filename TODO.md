@@ -1,4 +1,4 @@
-#Setup Script
+# Setup Script
 
 * Add new hardware choices
 -[ ] 18rgb - VGA666/pi2scart/pi2jamma
@@ -10,7 +10,7 @@
 -[ ] 35mm - Internal Jack
 
 
-#Timings Dirs
+# Timings Dirs
 
 # Ansible Optimization
 
