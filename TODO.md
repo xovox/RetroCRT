@@ -37,7 +37,7 @@ Handhelds aren't 4:3, so my current blanket math doesn't work for them.
 
 I feel like the retroarch config updates could be done in an item loop, maybe with a template
 
-```
+```yaml
     - name: "Configure Resolutions"
       blockinfile:
         path: '/opt/retropie/configs/{{item.platform}}/retroarch.cfg'
