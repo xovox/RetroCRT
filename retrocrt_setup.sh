@@ -272,6 +272,7 @@ cat << CONFIG > $retrocrt_config
 #!/bin/bash
 $license
 
+# the resolution our pi will output, platforms work within this constraint
 physical_viewport_width=1920
 physical_viewport_height=240
 
