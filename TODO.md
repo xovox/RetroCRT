@@ -64,3 +64,39 @@ I feel like the retroarch config updates could be done in an item loop, maybe wi
       loop:
         - { platform: gba, custom_viewport_height: 160, custom_viewport_width: "{{ gba_custom_viewport_width }}" }
 ```
+
+# pi2jamma controls
+
+* https://medium.com/bigpanda-engineering/using-ansible-to-compile-nginx-from-sources-with-custom-modules-f6e6c6a42493
+
+```yaml
+---
+
+##############################################################################
+# This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
+#
+# RetroCRT is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# RetroCRT is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
+##############################################################################
+
+- hosts: "localhost"
+  connection: "local"
+  become: "yes"
+  become_user: "root"
+
+  tasks:
+
+    - name: "pikeyd: compile"
+      make:
+        chdir: "/home/pi/RetroCRT/pikeyd"
+```
