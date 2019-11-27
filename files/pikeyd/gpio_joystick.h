@@ -1,0 +1,3 @@
+#define CLK RPI_GPIO_P1_16
+#define PL RPI_GPIO_P1_18
+#define DIN RPI_GPIO_P1_15
