@@ -190,13 +190,13 @@
         owner: "pi"
         group: "pi"
 
-#    - name: "Copy RetroArch Configs"
-#      synchronize:
-#        src: "configs/retropie/"
-#        dest: "/opt/retropie/configs/"
-#        rsync_opts:
-#          - "--backup"
-#          - "--suffix .{{ansible_date_time.epoch}}"
+    - name: "Copy RetroArch Configs"
+      synchronize:
+        src: "configs/retropie/"
+        dest: "/opt/retropie/configs/"
+        rsync_opts:
+          - "--backup"
+          - "--suffix .{{ansible_date_time.epoch}}"
 
     - name: "Copy On Start/End Scripts"
       synchronize:
