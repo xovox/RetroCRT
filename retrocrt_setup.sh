@@ -19,6 +19,12 @@ license="
 ##############################################################################
 "
 
+req_packages="
+	ansible
+	dialog
+	git
+"
+
 retrocrt_config=$HOME/.retrocrtrc
 
 if [[ -f "$retrocrt_config" ]]; then
@@ -263,10 +269,10 @@ source $retrocrt_config
 # install ansible
 ##############################################################################
 
-if ! (dpkg -l ansible > /dev/null); then
+if ! (dpkg -l $req_packages > /dev/null); then
     if [[ "$network_up" = "true" ]]; then
         sudo apt update
-        sudo apt -y install ansible
+        sudo apt -y install $req_packages
     else
         dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
         exit
