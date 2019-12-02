@@ -38,6 +38,7 @@ ra_rom_config="$ra_rom.cfg"
 # extract our resolution & orientation information
 if [[ "$retrocrt_rom_settings" ]]; then
     custom_viewport_height="$(cut -d',' -f3 <<< "$retrocrt_rom_settings")"
+    custom_viewport_width="$(cut -d',' -f2 <<< "$retrocrt_rom_settings")"
     rom_monitor_orientation="$(cut -d',' -f4 <<< "$retrocrt_rom_settings")"
 fi
 
@@ -53,11 +54,13 @@ video_rotation = "$rotate_ra"
 GLOBAL
 
 if [[ "$rom_monitor_orientation" = "V" ]] && [[ "$rotate_ra" =~ [02] ]]; then
+if [[ "$custom_viewport_width" != "240" ]]; then
+echo video_smooth = true
+fi
 cat << SQUISHY
-custom_viewport_width = 960
+custom_viewport_width = 968
 custom_viewport_height = 240
-custom_viewport_x = $[ 1920 / 2 ]
-video_smooth = true
+custom_viewport_x = $[ (1920 - 968) / 2 ]
 SQUISHY
 exit
 fi
