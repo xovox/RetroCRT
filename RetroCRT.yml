@@ -174,6 +174,17 @@
         src: "templates/autostart.sh.j2"
         dest: "/opt/retropie/configs/all/autostart.sh"
 
+    - name: "Copy On Start/End Scripts"
+      synchronize:
+        src: "files/{{ item }}/"
+        dest: '{{home_dir}}/RetroPie/{{ item }}/'
+        rsync_opts:
+          - "--backup"
+          - "--suffix .{{ansible_date_time.epoch}}"
+      with_items:
+        - "runcommand-onstart.d"
+        - "runcommand-onend.d"
+
     - name: "Menu Item"
       copy:
         src: "bin/RetroCRT.sh"
@@ -189,32 +200,6 @@
         mode: 0644
         owner: "pi"
         group: "pi"
-
-    - name: "Copy RetroArch Configs"
-      synchronize:
-        src: "configs/retropie/"
-        dest: "/opt/retropie/configs/"
-        rsync_opts:
-          - "--backup"
-          - "--suffix .{{ansible_date_time.epoch}}"
-
-    - name: "Copy On Start/End Scripts"
-      synchronize:
-        src: "files/{{ item }}/"
-        dest: '{{home_dir}}/RetroPie/{{ item }}/'
-        rsync_opts:
-          - "--backup"
-          - "--suffix .{{ansible_date_time.epoch}}"
-      with_items:
-        - "runcommand-onstart.d"
-        - "runcommand-onend.d"
-
-    - name: "Disable RetroArch Notifications"
-      lineinfile:
-        dest: "/opt/retropie/configs/all/retroarch.cfg"
-        backup: "yes"
-        regexp: '^video_font_enable ='
-        line: 'video_font_enable = "false"'
 
     - name: "240p Test Suite"
       synchronize:
@@ -250,16 +235,20 @@
         state: "link"
         force: "yes"
         
-    - name: "Fix Permissions"
-      file:
-        path: "{{ item }}"
-        state: "directory"
-        owner: "pi"
-        group: "pi"
-        recurse: "yes"
-      with_items:
-        - "/opt/retropie"
-        - "{{home_dir}}"
+    - name: "Copy RetroArch Configs"
+      synchronize:
+        src: "configs/retropie/"
+        dest: "/opt/retropie/configs/"
+        rsync_opts:
+          - "--backup"
+          - "--suffix .{{ansible_date_time.epoch}}"
+
+    - name: "Disable RetroArch Notifications"
+      lineinfile:
+        dest: "/opt/retropie/configs/all/retroarch.cfg"
+        backup: "yes"
+        regexp: '^video_font_enable ='
+        line: 'video_font_enable = "false"'
 
     - name: "Configure RetroArch"
       blockinfile:
@@ -555,4 +544,15 @@
         block: |
           custom_viewport_width = {{ wonderswan_custom_viewport_width * handheld_multiplier }}
           custom_viewport_height = {{ wonderswan_custom_viewport_height }}
+
+    - name: "Fix Permissions"
+      file:
+        path: "{{ item }}"
+        state: "directory"
+        owner: "pi"
+        group: "pi"
+        recurse: "yes"
+      with_items:
+        - "/opt/retropie"
+        - "{{home_dir}}"
 
