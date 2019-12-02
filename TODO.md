@@ -101,8 +101,73 @@ I feel like the retroarch config updates could be done in an item loop, maybe wi
         chdir: "/home/pi/RetroCRT/pikeyd"
 ```
 
-# Vertical games on a horizontal monitor
+# vertical games that had a 240 horizontal resolution so they look great on 240p horizontal orientation
 
-(h_res / 2) * v_res
-bilinear filtering 
-
+```
+Andromeda
+Battle Lane! Vol. 5
+BlockBuster
+Burger Time
+Burnin' Rubber
+Cook Race
+Cosmos
+Crazy Blocks
+Dark Warrior
+Darwin 4078
+Dazzler
+Digger
+Disco No.1
+Dommy
+Dorodon
+Eggs
+Gold Bug
+Graplop
+Heart Attack
+Hero
+Hunchback Olympic
+Hunchback
+IPM Invader
+Jackal
+Jumping Jack
+Lady Bug
+Lock'n'Chase
+Logger
+Minky Monkey
+MotoRace USA
+Mr. Do!
+Mr. Do's Castle
+Mr. Do!
+Mr. Do vs. Unicorns
+Mr. Du!
+Mr. Jong
+Mr. Lo!
+Mustache Boy
+Night Star
+Noah's Ark
+Outline
+Pro Soccer
+Radar Zone
+Raiders
+Red Clash
+Rock Duck
+Scrambled Egg
+Shot Rider
+Sky Chuter
+Space Fortress
+Space Raider
+Strike Bowling
+Superbike
+Tennis
+The Berenstain Bears in Big Paw's Cave
+Tokushu Butai Jackal
+Top Gunner
+Traverse USA / Zippy Race
+Treasure Island
+Tugboat
+Video Eight Ball
+Wall Street
+World Tennis
+Yankee DO!
+Youma Ninpou Chou
+Zero Hour
+```
