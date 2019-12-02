@@ -100,3 +100,9 @@ I feel like the retroarch config updates could be done in an item loop, maybe wi
       make:
         chdir: "/home/pi/RetroCRT/pikeyd"
 ```
+
+# Vertical games on a horizontal monitor
+
+(h_res / 2) * v_res
+bilinear filtering 
+
