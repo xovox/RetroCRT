@@ -46,8 +46,23 @@ sed -i "/$retrocrt_divider/Q" $ra_rom_config
 
 # everything between these brackets is used to write the config
 {
-# add our divider
 echo "$retrocrt_divider"
+cat << GLOBAL
+video_allow_rotate = "true"
+video_rotation = "$rotate_ra"
+GLOBAL
+
+if [[ "$rom_monitor_orientation" = "V" ]] && [[ "$rotate_ra" =~ [02] ]]; then
+cat << SQUISHY
+custom_viewport_width = 960
+custom_viewport_height = 240
+custom_viewport_x = $[ 1920 / 2 ]
+video_smooth = true
+SQUISHY
+exit
+fi
+
+# add our divider
 cat << SCREENCALC | bc -q
 physical_viewport_width = $physical_viewport_width
 physical_viewport_height = $physical_viewport_height
@@ -83,13 +98,8 @@ print "custom_viewport_width = " ; custom_viewport_width
 print "custom_viewport_height = " ; custom_viewport_height
 print "custom_viewport_x = " ; (physical_viewport_width - custom_viewport_width) / 2
 print "custom_viewport_y = " ; (physical_viewport_height - custom_viewport_height) / 2
+print "video_rotation = $rotate_ra\n"
 SCREENCALC
 
-# if our game is vertical, let's rotate it!
-if [[ "$rom_monitor_orientation" = "V" ]]; then
-cat << RAROMCFG
-video_allow_rotate = "true"
-video_rotation = "$rotate_ra"
-RAROMCFG
-fi
+#fi
 } >> "$ra_rom_config"
