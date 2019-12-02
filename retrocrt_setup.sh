@@ -186,21 +186,17 @@ if [[ "$rotate_tv" = "0" ]]; then
     rotate_tv_default="--defaultno"
 fi
 
-if dialog --title "$retrocrt_title :: Screen Orientation" --colors $rotate_tv_default --yesno "$rotation" 25 36 ; then
-    rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
-else
-    rotate_tv=0
-fi
+rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
 
 if [[ "$rotate_tv" = "0" ]]; then
     rotate_es="0"
-    rotate_ra="1"
+    rotate_ra="0"
 elif [[ "$rotate_tv" = "90" ]]; then
     rotate_es="3"
     rotate_ra="1"
 elif [[ "$rotate_tv" = "180" ]]; then
     rotate_es="2"
-    rotate_ra="1"
+    rotate_ra="2"
 elif [[ "$rotate_tv" = "270" ]]; then
     rotate_es="1"
     rotate_ra="3"
@@ -263,6 +259,8 @@ tv_region=${tv_region:-ntsc}
 ##############################################################################
 
 dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 25 36 || exit
+
+clear
 
 ##############################################################################
 # write our config
