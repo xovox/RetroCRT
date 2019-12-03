@@ -205,28 +205,25 @@
         - { theme: "Push A", repo: "asche76/es-theme-push-a" }
         - { theme: "Push A Vertical", repo: "asche76/es-theme-push-a-v" }
 
-    - name: "Disable RetroArch Notifications"
-      lineinfile:
-        dest: "/opt/retropie/configs/all/retroarch.cfg"
-        backup: "yes"
-        regexp: "^video_font_enable ="
-        line: "video_font_enable = false"
-
-    # OPTIMIZE: convert to lineinfile
     - name: "Configure RetroArch"
-      blockinfile:
+      lineinfile:
         dest: "/opt/retropie/configs/all/retroarch.cfg"
         create: "yes"
         backup: "yes"
-        block: |
-                aspect_ratio_index = 23
-                video_fullscreen = true
-                video_hard_sync = true
-                video_refresh_rate = 59.73
-                video_scale_integer = false
-                video_smooth = false
-                video_threaded = true
-                video_vsync = true
+        state: present  
+        regexp: "^{{ item.variable }}.*"
+        line: "{{ item.variable }} = {{ item.value }}"
+      with_items:
+        - { variable: "aspect_ratio_index", value: "23" }
+        - { variable: "video_font_enable", value: "false" }
+        - { variable: "video_fullscreen", value: "true" }
+        - { variable: "video_hard_sync", value: "true" }
+        - { variable: "video_refresh_rate", value: "59.73" }
+        - { variable: "video_scale_integer", value: "false" }
+        - { variable: "video_smooth", value: "false" }
+        - { variable: "video_threaded", value: "true" }
+        - { variable: "video_vsync", value: "true" }
+
 
     # OPTIMIZE: convert to lineinfile
     - name: "Console/Arcade: Write Configuration"
