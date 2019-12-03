@@ -217,8 +217,8 @@
     - name: "Install Themes"
       git:
         depth: 1
-        repo: "https://github.com/rxbrad/es-theme-gbz35-dark"
-        dest: "/etc/emulationstation/themes/GBZ35 Dark"
+        repo: "https://github.com/{{ item.repo }}"
+        dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
         - { theme: "GBZ35 Dark", repo: "rxbrad/es-theme-gbz35-dark" }
         - { theme: "Push A", repo: "asche76/es-theme-push-a" }
