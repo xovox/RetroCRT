@@ -175,6 +175,7 @@ Zero Hour
 
 # Branch browser?
 
+* https://stackoverflow.com/questions/5188320/how-can-i-get-a-list-of-git-branches-ordered-by-most-recent-commit
 ```
 git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format='%(refname:short)'
 
