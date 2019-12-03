@@ -226,6 +226,12 @@
         repo: "https://github.com/asche76/es-theme-push-a"
         dest: "/etc/emulationstation/themes/Push A"
 
+    - name: "Theme: Install Push A Vertical"
+      git:
+        depth: 1
+        repo: "https://github.com/asche76/es-theme-push-a-v"
+        dest: "/etc/emulationstation/themes/Push A Vertical"
+
     - name: "Auto-Login Symlink"
       file:
         src: "/etc/systemd/system/autologin@.service"
