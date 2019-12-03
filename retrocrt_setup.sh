@@ -19,10 +19,35 @@ license="
 ##############################################################################
 "
 
-retrocrt_config=$HOME/.retrocrtrc
+req_packages="
+	ansible
+	dialog
+	git
+    python3-dev
+	virtualenv
+"
 
-if [[ -f "$retrocrt_config" ]]; then
-    source "$retrocrt_config"
+retrocrt_config=$HOME/.retrocrtrc
+retrocrt_venv=$HOME/.virtualenv/retrocrt
+
+if [[ ! -f $retrocrt_venv/bin/activate ]]; then
+	echo "########################################"
+    echo "Generating Python 3 Virtual Env"
+	echo "########################################"
+	virtualenv --python=python3 $HOME/.virtualenv/retrocrt
+fi
+
+for rcfile in $retrocrt_config $retrocrt_venv/bin/activate ; do
+	if [[ -f "$retrocrt_config" ]]; then
+		source "$rcfile"
+	fi
+done
+	
+if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
+	echo "########################################"
+    echo "Ensuring Virtual Env has Latest Ansible"
+	echo "########################################"
+	pip install --upgrade ansible
 fi
 
 retrocrt_install=${retrocrt_install:-$PWD}
@@ -304,10 +329,10 @@ source $retrocrt_config
 # install ansible
 ##############################################################################
 
-if ! (dpkg -l ansible > /dev/null); then
+if ! (dpkg -l $req_packages > /dev/null); then
     if [[ "$network_up" = "true" ]]; then
         sudo apt update
-        sudo apt -y install ansible
+        sudo apt -y install $req_packages
     else
         dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
         exit
@@ -318,4 +343,11 @@ fi
 # Run our configuration playbook
 ##############################################################################
 
+echo "########################################"
+echo "Running RetroCRT Ansible Playbook"
+echo "########################################"
+echo
+
 ansible-playbook RetroCRT.yml -i localhost,
+
+sleep 5
