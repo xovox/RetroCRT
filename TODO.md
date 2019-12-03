@@ -4,14 +4,6 @@ remove all mentions of pi user/group, we should use a variable
 
 RetroCRT.sh probably doesn't need to sudo
 
-# questionable actions!
-
-* update ansible's backup string so we can backup directly on /root
-```
-~/.virtualenv/retrocrt/lib/python3.5/site-packages/ansible/module_utils/basic.py
-            ext = time.strftime("%Y-%m-%d@%H:%M:%S~", time.localtime(time.time()))
-```
-
 # Setup Script
 
 * Add new hardware choices
