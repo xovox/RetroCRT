@@ -180,7 +180,7 @@
         dest: '{{home_dir}}/RetroPie/{{ item }}/'
         rsync_opts:
           - "--backup"
-          - "--suffix .{{ansible_date_time.epoch}}"
+          - "--suffix=.{{ansible_date_time.epoch}}"
       with_items:
         - "runcommand-onstart.d"
         - "runcommand-onend.d"
@@ -247,7 +247,7 @@
         dest: "/opt/retropie/configs/"
         rsync_opts:
           - "--backup"
-          - "--suffix .{{ansible_date_time.epoch}}"
+          - "--suffix=.{{ansible_date_time.epoch}}"
 
     - name: "Disable RetroArch Notifications"
       lineinfile:
