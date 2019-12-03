@@ -24,6 +24,7 @@
 
   handlers:
 
+    # OPTIMIZE maybe just do lineinfile
     - name: "Install Updated /boot Configs"
       copy:
         src: "/{{ item }}"
@@ -160,6 +161,7 @@
 
   tasks:
 
+    # OPTIMIZE maybe just update config.txt in place without template
     # we do this like this since we can't backup on /boot's FS
     - name: "Update /boot Configs"
       template:
@@ -210,6 +212,7 @@
         regexp: "^video_font_enable ="
         line: "video_font_enable = false"
 
+    # OPTIMIZE: convert to lineinfile
     - name: "Configure RetroArch"
       blockinfile:
         dest: "/opt/retropie/configs/all/retroarch.cfg"
@@ -225,6 +228,7 @@
                 video_threaded = true
                 video_vsync = true
 
+    # OPTIMIZE: convert to lineinfile
     - name: "Console/Arcade: Write Configuration"
       blockinfile:
         path: "/opt/retropie/configs/{{ item.sys }}/retroarch.cfg"
@@ -254,6 +258,7 @@
         - { sys: segacd, y: "{{ segacd_height }}", x: "{{ segacd_width }}" }
         - { sys: snes, y: "{{ snes_height }}", x: "{{ snes_width }}" }
 
+    # OPTIMIZE: convert to lineinfile
     - name: "Handheld: Write Configuration"
       blockinfile:
         path: "/opt/retropie/configs/{{ item.sys }}/retroarch.cfg"
