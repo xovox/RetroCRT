@@ -171,3 +171,14 @@ Yankee DO!
 Youma Ninpou Chou
 Zero Hour
 ```
+
+
+# Branch browser?
+
+```
+git for-each-ref --count=30 --sort=-committerdate refs/heads/ --format='%(refname:short)'
+
+for i in $(git branch -a | grep remotes/origin | cut -d'/' -f3 | grep -v HEAD) ; do
+	echo  "$i  $(git config branch.$i.description)"
+done | column -t -s '     '
+```
