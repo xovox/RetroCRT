@@ -160,6 +160,7 @@
 
   tasks:
 
+    # we do this like this since we can't backup on /boot's FS
     - name: "Update /boot Configs"
       template:
         src: "templates/{{ item }}.j2"
@@ -169,52 +170,30 @@
         - "config.txt"
       notify: "copyboot"
 
-    - name: "Update EmulationStation Startup"
+    - name: "Populate Templates"
       template:
-        src: "templates/autostart.sh.j2"
-        dest: "/opt/retropie/configs/all/autostart.sh"
-
-    - name: "Copy On Start/End Scripts"
-      synchronize:
-        src: "files/{{ item }}/"
-        dest: "{{home_dir}}/RetroPie/{{ item }}/"
-        rsync_opts:
-          - "--backup"
-          - "--suffix=.{{ansible_date_time.epoch}}"
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
       with_items:
-        - "runcommand-onstart.d"
-        - "runcommand-onend.d"
+        - { src: "templates/autostart.sh.j2", dest: "/opt/retropie/configs/all/autostart.sh" }
 
-    - name: "Menu Item"
+    - name: "Menu Items"
       copy:
-        src: "bin/RetroCRT.sh"
-        dest: "{{home_dir}}/RetroPie/retropiemenu/RetroCRT.sh"
-        mode: 0755
+        src: "files/RetroCRT.sh"
+        dest: "{{home_dir}}/RetroPie/retropiemenu/{{ item.dest }}"
+        mode: "{{ item.mode }}"
         owner: "pi"
         group: "pi"
+      with_items:
+        - { src: "RetroCRT.sh", dest: "RetroCRT.sh", mode: "0755" }
+        - { src: "RetroCRT.png", dest: "icons/RetroCRT.png", mode: "0644" }
 
-    - name: "Menu Item Icon"
-      copy:
-        src: "files/RetroCRT.png"
-        dest: "{{home_dir}}/RetroPie/retropiemenu/icons/RetroCRT.png"
-        mode: 0644
-        owner: "pi"
-        group: "pi"
-
-    - name: "240p Test Suite"
-      synchronize:
-        src: "files/roms/"
-        dest: "{{home_dir}}/RetroPie/roms/"
-        rsync_opts:
-          - "--exclude README.md"
-      when: roms_copied.stat.exists == False
-
-    - name: "Theme: Delete Carbon"
+    - name: "Themes: Delete Carbon"
       file:
         path: "/etc/emulationstation/themes/carbon"
         state: "absent"
 
-    - name: "Install Themes"
+    - name: "Themes: Install/Update"
       git:
         depth: 1
         repo: "https://github.com/{{ item.repo }}"
@@ -223,41 +202,6 @@
         - { theme: "GBZ35 Dark", repo: "rxbrad/es-theme-gbz35-dark" }
         - { theme: "Push A", repo: "asche76/es-theme-push-a" }
         - { theme: "Push A Vertical", repo: "asche76/es-theme-push-a-v" }
-
-#    - name: "Theme: Install GBZ35 Dark"
-#      git:
-#        depth: 1
-#        repo: "https://github.com/rxbrad/es-theme-gbz35-dark"
-#        dest: "/etc/emulationstation/themes/GBZ35 Dark"
-
-#    - name: "Theme: Install Push A"
-#      git:
-#        depth: 1
-#        repo: "https://github.com/asche76/es-theme-push-a"
-#        dest: "/etc/emulationstation/themes/Push A"
-
-#    - name: "Theme: Install Push A Vertical"
-#      git:
-#        depth: 1
-#        repo: "https://github.com/asche76/es-theme-push-a-v"
-#        dest: "/etc/emulationstation/themes/Push A Vertical"
-
-    - name: "Auto-Login Symlink"
-      file:
-        src: "/etc/systemd/system/autologin@.service"
-        dest: "/etc/systemd/system/getty.target.wants/getty@tty1.service"
-        owner: "root"
-        group: "root"
-        state: "link"
-        force: "yes"
-        
-    - name: "Copy RetroArch Configs"
-      synchronize:
-        src: "configs/retropie/"
-        dest: "/opt/retropie/configs/"
-        rsync_opts:
-          - "--backup"
-          - "--suffix=.{{ansible_date_time.epoch}}"
 
     - name: "Disable RetroArch Notifications"
       lineinfile:
@@ -332,6 +276,42 @@
         - { sys: wonderswancolor, y: "{{ wonderswancolor_height }}", x: "{{ wonderswancolor_width }}" }
         - { sys: wonderswan, y: "{{ wonderswan_height }}", x: "{{ wonderswan_width }}" }
 
+    - name: "Copy On Start/End Scripts"
+      synchronize:
+        src: "files/{{ item }}/"
+        dest: "{{home_dir}}/RetroPie/{{ item }}/"
+        rsync_opts:
+          - "--backup"
+          - "--suffix=.{{ansible_date_time.epoch}}"
+      with_items:
+        - "runcommand-onstart.d"
+        - "runcommand-onend.d"
+
+    - name: "Copy 240p Test Suite"
+      synchronize:
+        src: "files/roms/"
+        dest: "{{home_dir}}/RetroPie/roms/"
+        rsync_opts:
+          - "--exclude README.md"
+      when: roms_copied.stat.exists == False
+
+    - name: "Copy RetroArch Configs"
+      synchronize:
+        src: "configs/retropie/"
+        dest: "/opt/retropie/configs/"
+        rsync_opts:
+          - "--backup"
+          - "--suffix=.{{ansible_date_time.epoch}}"
+
+    - name: "Auto-Login Symlink"
+      file:
+        src: "/etc/systemd/system/autologin@.service"
+        dest: "/etc/systemd/system/getty.target.wants/getty@tty1.service"
+        owner: "root"
+        group: "root"
+        state: "link"
+        force: "yes"
+        
     - name: "Fix Permissions"
       file:
         path: "{{ item }}"
