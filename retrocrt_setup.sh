@@ -27,8 +27,13 @@ req_packages="
 	virtualenv
 "
 
-retrocrt_config=$HOME/.retrocrtrc
-retrocrt_venv=$HOME/.virtualenv/retrocrt
+bad_backup_string="%Y-%m-%d@%H:%M:%S~"
+good_backup_string="%Y%m%d_%H%M%S"
+ansible_basic_py="$HOME/.virtualenv/retrocrt/lib/python3.5/site-packages/ansible/module_utils/basic.py"
+retrocrt_config="$HOME/.retrocrtrc"
+retrocrt_venv="$HOME/.virtualenv/retrocrt"
+retrocrt_title="RetroCRT"
+
 
 if [[ ! -f $retrocrt_venv/bin/activate ]]; then
 	echo "########################################"
@@ -42,6 +47,8 @@ for rcfile in $retrocrt_config $retrocrt_venv/bin/activate ; do
 		source "$rcfile"
 	fi
 done
+
+retrocrt_install=${retrocrt_install:-$PWD}
 	
 if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
 	echo "########################################"
@@ -52,19 +59,12 @@ fi
 
 ##############################################################################
 # make an dos happy backup file template
-badbackup="%Y-%m-%d@%H:%M:%S~"
-goodbackup="%Y%m%d_%H%M%S"
-ansible_basic="$HOME/.virtualenv/retrocrt/lib/python3.5/site-packages/ansible/module_utils/basic.py"
-
-if grep -wq "$badbackup" $ansible_basic ; then
-    sed -i.$(date +%Y%m%d_%H%M%S) "s/$badbackup/$goodbackup/" \
-        $ansible_basic
-fi
 ##############################################################################
 
-retrocrt_install=${retrocrt_install:-$PWD}
-
-retrocrt_title="RetroCRT"
+if grep -wq "$bad_backup_string" $ansible_basic_py ; then
+    sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
+        $ansible_basic_py
+fi
 
 licensea="
 RetroCRT :: Configure RetroPie for an analog CRT
@@ -96,13 +96,13 @@ This software requires specialized hardware.
 The currently tested hardware is:
 
 - RetroTink over component & RGB
+- VGA666 over RGB
+- pi2scart over RGB SCART
+
 Future supported hardware:
 
 - RetroTink S-Video & composite
 - Internal 3.5mm composite
-- VGA666 over RGB
-- pi2scart over RGB SCART
-
 
 If you don't have the required hardware, this will not work.
 "
