@@ -43,10 +43,22 @@ if [[ "$retrocrt_rom_settings" ]]; then
 fi
 
 # delete anything we've already written to the config
-sed -i "/$retrocrt_divider/Q" $ra_rom_config
+old_config="$(sed "/$retrocrt_divider/Q" $ra_rom_config)"
+
+rm "$ra_rom_config"
+
+squishy() {
+cat << SQUISHY
+custom_viewport_width = 1210
+custom_viewport_height = 240
+custom_viewport_x = $[ (1920 - 1210) / 2 ]
+SQUISHY
+	exit
+}
 
 # everything between these brackets is used to write the config
 {
+echo "$old_config"
 echo "$retrocrt_divider"
 cat << GLOBAL
 video_allow_rotate = "true"
@@ -54,15 +66,14 @@ video_rotation = "$rotate_ra"
 GLOBAL
 
 if [[ "$rom_monitor_orientation" = "V" ]] && [[ "$rotate_ra" =~ [02] ]]; then
-if [[ "$custom_viewport_width" != "240" ]]; then
-echo video_smooth = true
+	if [[ "$custom_viewport_width" != "240" ]]; then
+		echo video_smooth = true
+	fi
+	squishy
 fi
-cat << SQUISHY
-custom_viewport_width = 968
-custom_viewport_height = 240
-custom_viewport_x = $[ (1920 - 968) / 2 ]
-SQUISHY
-exit
+
+if [[ "$rom_monitor_orientation" = "H" ]] && [[ "$rotate_ra" =~ [13] ]]; then
+	squishy
 fi
 
 # add our divider
