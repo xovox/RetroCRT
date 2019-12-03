@@ -50,6 +50,18 @@ if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
 	pip install --upgrade ansible
 fi
 
+##############################################################################
+# make an dos happy backup file template
+badbackup="%Y-%m-%d@%H:%M:%S~"
+goodbackup="%Y%m%d_%H%M%S"
+ansible_basic="$HOME/.virtualenv/retrocrt/lib/python3.5/site-packages/ansible/module_utils/basic.py"
+
+if grep -wq "$badbackup" $ansible_basic ; then
+    sed -i.$(date +%Y%m%d_%H%M%S) "s/$badbackup/$goodbackup/" \
+        $ansible_basic
+fi
+##############################################################################
+
 retrocrt_install=${retrocrt_install:-$PWD}
 
 retrocrt_title="RetroCRT"
