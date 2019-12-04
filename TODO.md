@@ -4,6 +4,18 @@ remove all mentions of pi user/group, we should use a variable
 
 RetroCRT.sh probably doesn't need to sudo
 
+# timings
+
+15khz standard
+```
+320 1 20 37 55 240 1 2 3 16 0 0 0 60 0 6400000 1
+```
+
+15khz gaming
+```
+1920 1 80 224 465 240 1 2 3 16 0 0 0 60 0 42109740 1
+```
+
 # Setup Script
 
 * Add new hardware choices
@@ -15,8 +27,6 @@ RetroCRT.sh probably doesn't need to sudo
 - [ ] 24cps - RetroTink Composite
 - [ ] 35mm - Internal Jack
 
-# Timings Dirs
-
 # Screen Resolution
 
 I'm probably making things more complicated than they need to be, but I want to make it flexible if someone wants to go higher or lower than 1920
@@ -27,49 +37,11 @@ Arcade games have math applied on load that makes sure our resolution is an even
 
 Console/handheld platforms need to be done as well
 
-## Handhelds
-
-Handhelds aren't 4:3, so my current blanket math doesn't work for them.
-
-this should work for 15khz & 31khz
-
-```
-handheld_horizontal * (physical_horizontal / virtual_horizontal)
-```
-
-
-| System | Resolution | Math |
-| ------ | ---------- | ---- |
-| atarilynx | 160x102 | |
-| gamegear | 160x144 | |
-| gb | 160x144 | |
-| gbc | 160x144 | |
-| gba | 240x160 | |
-| ngp | 160x152 | |
-| ngpc | 160x152 | |
-| virtualboy | 384x224 | |
-| wonderswan | 224x144 | |
-| wonderswancolor | 224x144 | |
-
 # Ansible Optimization
 
 * Read in resolution from env & convert to int
   * https://www.mydailytutorials.com/ansible-arithmetic-operations/
 * https://garthkerr.com/using-ansible-template-for-partial-file-block/
-
-I feel like the retroarch config updates could be done in an item loop, maybe with a template
-
-```yaml
-    - name: "Configure Resolutions"
-      blockinfile:
-        path: '/opt/retropie/configs/{{item.platform}}/retroarch.cfg'
-        backup: 'yes'
-        block: |
-          custom_viewport_height = {{ item.custom_viewport_height }}
-          custom_viewport_width = {{ item.custom_viewport_width }}
-      loop:
-        - { platform: gba, custom_viewport_height: 160, custom_viewport_width: "{{ gba_custom_viewport_width }}" }
-```
 
 # pi2jamma controls
 
