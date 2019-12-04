@@ -4,6 +4,9 @@ remove all mentions of pi user/group, we should use a variable
 
 RetroCRT.sh probably doesn't need to sudo
 
+# /boot/config.txt or /boot/retrocrt.txt
+* should have directives to configure stuff like pi2jamma/etc
+
 # timings
 
 15khz standard
