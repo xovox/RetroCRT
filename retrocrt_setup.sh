@@ -34,6 +34,8 @@ retrocrt_config="$HOME/.retrocrtrc"
 retrocrt_venv="$HOME/.virtualenv/retrocrt"
 retrocrt_title="RetroCRT"
 
+export PS4="\[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
+
 
 if [[ ! -f $retrocrt_venv/bin/activate ]]; then
 	echo "########################################"
@@ -360,6 +362,7 @@ echo "Running RetroCRT Ansible Playbook"
 echo "########################################"
 echo
 
+set -x
 ansible-playbook RetroCRT.yml -i localhost,
 
 sleep 5
