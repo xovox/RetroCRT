@@ -22,18 +22,6 @@
   become: "yes"
   become_user: "root"
 
-  handlers:
-
-    # OPTIMIZE maybe just do lineinfile
-    - name: "Install Updated /boot Configs"
-      copy:
-        src: "/{{ item }}"
-        dest: "/boot/{{ item }}"
-      with_items:
-        - "cmdline.txt"
-        - "config.txt"
-      listen: "copyboot"
-
   pre_tasks:
 
     - name: "Reading Configs"
@@ -55,7 +43,7 @@
     - name: "Set Default Timings"
       set_fact:
         default_timings: "{{ lookup('file', '{{ retrocrt_timings }}/default') }}"
-        
+
     - name: "Find / UUID"
       command: "findmnt --noheadings --output PARTUUID /"
       register: root_uuid
@@ -161,23 +149,34 @@
 
   tasks:
 
-    # OPTIMIZE maybe just update config.txt in place without template
-    # we do this like this since we can't backup on /boot's FS
-    - name: "Update /boot Configs"
-      template:
-        src: "templates/{{ item }}.j2"
-        dest: "/{{ item }}"
-      with_items:
-        - "cmdline.txt"
-        - "config.txt"
-      notify: "copyboot"
-
     - name: "Populate Templates"
       template:
-        src: "{{ item.src }}"
+        src: "templates/{{ item.src }}"
         dest: "{{ item.dest }}"
+        backup: "yes"
       with_items:
-        - { src: "templates/autostart.sh.j2", dest: "/opt/retropie/configs/all/autostart.sh" }
+        - { src: "cmdline.txt.j2", dest: "/boot/cmdline.txt" }
+        - { src: "autostart.sh.j2", dest: "/opt/retropie/configs/all/autostart.sh" }
+
+    - name: "Update config.txt"
+      lineinfile:
+        dest: "/boot/config.txt"
+        create: "yes"
+        backup: "yes"
+        state: "present"
+        regexp: "^{{ item.variable }}.*"
+        line: "{{ item.variable }}={{ item.value }}"
+      with_items:
+        - { variable: "force_turbo", value: "0" }
+        - { variable: "disable_audio_dither", value: "1" }
+        - { variable: "audio_pwm_mode", value: "0" }
+        - { variable: "dtoverlay", value: "dpi24" }
+        - { variable: "enable_dpi_lcd", value: "1" }
+        - { variable: "display_default_lcd", value: "1" }
+        - { variable: "dpi_group", value: "2" }
+        - { variable: "dpi_mode", value: "87" }
+        - { variable: "disable_splash", value: "1" }
+        - { variable: "hdmi_timings", value: "{{ default_timings }}" }
 
     - name: "Menu Items"
       copy:
@@ -210,7 +209,7 @@
         dest: "/opt/retropie/configs/all/retroarch.cfg"
         create: "yes"
         backup: "yes"
-        state: present  
+        state: "present"
         regexp: "^{{ item.variable }}.*"
         line: "{{ item.variable }} = {{ item.value }}"
       with_items:
@@ -224,8 +223,6 @@
         - { variable: "video_threaded", value: "true" }
         - { variable: "video_vsync", value: "true" }
 
-
-    # OPTIMIZE: convert to lineinfile
     - name: "Console/Arcade: Write Configuration"
       blockinfile:
         path: "/opt/retropie/configs/{{ item.sys }}/retroarch.cfg"
@@ -255,7 +252,6 @@
         - { sys: segacd, y: "{{ segacd_height }}", x: "{{ segacd_width }}" }
         - { sys: snes, y: "{{ snes_height }}", x: "{{ snes_width }}" }
 
-    # OPTIMIZE: convert to lineinfile
     - name: "Handheld: Write Configuration"
       blockinfile:
         path: "/opt/retropie/configs/{{ item.sys }}/retroarch.cfg"
@@ -278,16 +274,17 @@
         - { sys: wonderswancolor, y: "{{ wonderswancolor_height }}", x: "{{ wonderswancolor_width }}" }
         - { sys: wonderswan, y: "{{ wonderswan_height }}", x: "{{ wonderswan_width }}" }
 
-    - name: "Copy On Start/End Scripts"
+    - name: "Copy Over Directories"
       synchronize:
-        src: "files/{{ item }}/"
-        dest: "{{home_dir}}/RetroPie/{{ item }}/"
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
         rsync_opts:
           - "--backup"
           - "--suffix=.{{ansible_date_time.epoch}}"
       with_items:
-        - "runcommand-onstart.d"
-        - "runcommand-onend.d"
+        - { src: "files/runcommand-onstart.d", dest: "{{home_dir}}/RetroPie" }
+        - { src: "files/runcommand-onend.d", dest: "{{home_dir}}/RetroPie" }
+        - { src: "files/retropie/", dest: "/opt/retropie/configs/" }
 
     - name: "Copy 240p Test Suite"
       synchronize:
@@ -297,14 +294,6 @@
           - "--exclude README.md"
       when: roms_copied.stat.exists == False
 
-    - name: "Copy RetroArch Configs"
-      synchronize:
-        src: "configs/retropie/"
-        dest: "/opt/retropie/configs/"
-        rsync_opts:
-          - "--backup"
-          - "--suffix=.{{ansible_date_time.epoch}}"
-
     - name: "Auto-Login Symlink"
       file:
         src: "/etc/systemd/system/autologin@.service"
@@ -313,7 +302,7 @@
         group: "root"
         state: "link"
         force: "yes"
-        
+
     - name: "Fix Permissions"
       file:
         path: "{{ item }}"
