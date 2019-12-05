@@ -215,7 +215,7 @@
         - { variable: "video_threaded", value: "true" }
         - { variable: "video_vsync", value: "true" }
 
-    - name: "Copy Over Directories"
+    - name: "Sync Directories"
       synchronize:
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
@@ -244,9 +244,20 @@
         state: "link"
         force: "yes"
 
+    - name: "Splash Screens"
+      copy:
+        src: "files/{{ item.src }}"
+        dest: "{{home_dir}}/RetroPie/splashscreens/{{ item.src }}"
+        mode: "{{ item.mode }}"
+        owner: "pi"
+        group: "pi"
+      with_items:
+        - { src: "RetroCRT.png", mode: "644" }
+        - { src: "RetroCRT.mp4", mode: "644" }
+
     - name: "Menu Items"
       copy:
-        src: "files/RetroCRT.sh"
+        src: "files/{{ item.src }}"
         dest: "{{home_dir}}/RetroPie/retropiemenu/{{ item.dest }}"
         mode: "{{ item.mode }}"
         owner: "pi"
