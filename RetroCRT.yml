@@ -277,6 +277,7 @@
         repo: "https://github.com/{{ item.repo }}"
         dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
+        - { theme: "Retro CRT", repo: "xovox/es-theme-retrocrt" }
         - { theme: "GBZ35 Dark", repo: "rxbrad/es-theme-gbz35-dark" }
         - { theme: "Push A", repo: "asche76/es-theme-push-a" }
         - { theme: "Push A Vertical", repo: "asche76/es-theme-push-a-v" }
@@ -318,6 +319,7 @@
         group: "pi"
         recurse: "yes"
       with_items:
+        - "/etc/emulationstation/themes"
         - "/opt/retropie"
         - "{{home_dir}}"
 
