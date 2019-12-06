@@ -7,6 +7,34 @@ RetroCRT.sh probably doesn't need to sudo
 # /boot/config.txt or /boot/retrocrt.txt
 * should have directives to configure stuff like pi2jamma/etc
 
+# console updates
+
+i want to try to use the retrocrt es theme font for the console if possible
+* https://retropie.org.uk/forum/topic/11030/instructions-how-to-permanently-enlarge-alter-font-and-font-size/2
+
+```
+# CONFIGURATION FILE FOR SETUPCON
+
+# Consult the console-setup(5) manual page.
+
+ACTIVE_CONSOLES="/dev/tty[1-6]"
+
+CHARMAP="UTF-8"
+
+CODESET="guess"
+FONTFACE="Terminus"
+FONTSIZE="6x12"
+
+VIDEOMODE=
+
+# The following is an example how to use a braille font
+# FONT='lat9w-08.psf.gz brl-8x8.psf'
+```
+
+# bashrc update
+
+retropie have the banner print even when you're trying rsync or scp, we need to block that
+
 # timings
 
 15khz standard
