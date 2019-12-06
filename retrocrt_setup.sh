@@ -19,6 +19,9 @@ license="
 ##############################################################################
 "
 
+# lock in the ansible version we're running
+ansible_ver="2.9.2"
+
 req_packages="
 	ansible
 	dialog
@@ -54,9 +57,9 @@ retrocrt_install=${retrocrt_install:-$PWD}
 	
 if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
 	echo "########################################"
-    echo "Ensuring Virtual Env has Latest Ansible"
+    echo "Ensuring Virtual Env has Ansible $ansible_ver"
 	echo "########################################"
-	pip install --upgrade ansible
+	pip install ansible==$ansible_ver
 fi
 
 ##############################################################################
