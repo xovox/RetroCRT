@@ -31,7 +31,6 @@ req_packages="
 
 bad_backup_string="%Y-%m-%d@%H:%M:%S~"
 good_backup_string="%Y%m%d_%H%M%S"
-ansible_basic_py="$HOME/.virtualenv/retrocrt/lib/python3.5/site-packages/ansible/module_utils/basic.py"
 retrocrt_config="$HOME/.retrocrtrc"
 retrocrt_venv="$HOME/.virtualenv/retrocrt"
 retrocrt_title="RetroCRT"
@@ -310,6 +309,9 @@ fi
 ##############################################################################
 # make an dos happy backup file template
 ##############################################################################
+
+ansible_basic_py="$HOME/.virtualenv/retrocrt/lib/python3.5/site-packages/ansible/module_utils/basic.py"
+ansible_basic_py="$(find /home/pi/.virtualenv/retrocrt/ | grep "ansible/module_utils/basic.py$")"
 
 if grep -wq "$bad_backup_string" $ansible_basic_py ; then
     sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
