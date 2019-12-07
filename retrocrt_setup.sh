@@ -23,7 +23,6 @@ license="
 ansible_ver="2.9.2"
 
 req_packages="
-	ansible
 	dialog
 	git
     python3-dev
@@ -36,40 +35,10 @@ ansible_basic_py="$HOME/.virtualenv/retrocrt/lib/python3.5/site-packages/ansible
 retrocrt_config="$HOME/.retrocrtrc"
 retrocrt_venv="$HOME/.virtualenv/retrocrt"
 retrocrt_title="RetroCRT"
-
-export PS4="\[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
-
-
-if [[ ! -f $retrocrt_venv/bin/activate ]]; then
-	echo "########################################"
-    echo "Generating Python 3 Virtual Env"
-	echo "########################################"
-	virtualenv --python=python3 $HOME/.virtualenv/retrocrt
-fi
-
-for rcfile in $retrocrt_config $retrocrt_venv/bin/activate ; do
-	if [[ -f "$retrocrt_config" ]]; then
-		source "$rcfile"
-	fi
-done
-
 retrocrt_install=${retrocrt_install:-$PWD}
 	
-if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
-	echo "########################################"
-    echo "Ensuring Virtual Env has Ansible $ansible_ver"
-	echo "########################################"
-	pip install ansible==$ansible_ver
-fi
 
-##############################################################################
-# make an dos happy backup file template
-##############################################################################
-
-if grep -wq "$bad_backup_string" $ansible_basic_py ; then
-    sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
-        $ansible_basic_py
-fi
+export PS4="\[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
 
 licensea="
 RetroCRT :: Configure RetroPie for an analog CRT
@@ -305,6 +274,49 @@ dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$
 clear
 
 ##############################################################################
+# install ansible
+##############################################################################
+
+if ! (dpkg -l $req_packages > /dev/null); then
+    if [[ "$network_up" = "true" ]]; then
+        sudo apt update
+        sudo apt -y install $req_packages
+    else
+        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
+        exit
+    fi
+fi
+
+if [[ ! -f $retrocrt_venv/bin/activate ]]; then
+	echo "########################################"
+    echo "Generating Python 3 Virtual Env"
+	echo "########################################"
+	virtualenv --python=python3 $HOME/.virtualenv/retrocrt
+fi
+
+for rcfile in $retrocrt_config $retrocrt_venv/bin/activate ; do
+	if [[ -f "$retrocrt_config" ]]; then
+		source "$rcfile"
+	fi
+done
+
+if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
+	echo "########################################"
+    echo "Ensuring Virtual Env has Ansible $ansible_ver"
+	echo "########################################"
+	pip install ansible==$ansible_ver
+fi
+
+##############################################################################
+# make an dos happy backup file template
+##############################################################################
+
+if grep -wq "$bad_backup_string" $ansible_basic_py ; then
+    sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
+        $ansible_basic_py
+fi
+
+##############################################################################
 # write our config
 ##############################################################################
 
@@ -341,20 +353,6 @@ CONFIG
 ##############################################################################
 
 source $retrocrt_config
-
-##############################################################################
-# install ansible
-##############################################################################
-
-if ! (dpkg -l $req_packages > /dev/null); then
-    if [[ "$network_up" = "true" ]]; then
-        sudo apt update
-        sudo apt -y install $req_packages
-    else
-        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
-        exit
-    fi
-fi
 
 ##############################################################################
 # Run our configuration playbook
