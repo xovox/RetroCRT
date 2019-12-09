@@ -236,7 +236,7 @@
         src: "files/roms/"
         dest: "{{home_dir}}/RetroPie/roms/"
         rsync_opts:
-          - "--exclude README.md"
+          - "--exclude=README.md"
       when: roms_copied.stat.exists == False
 
     - name: "Auto-Login Symlink"
@@ -275,16 +275,24 @@
         path: "/etc/emulationstation/themes/carbon"
         state: "absent"
 
-    - name: "Themes: Install/Update"
+    - name: "Theme: Base Install/Update"
       git:
         depth: 1
         repo: "https://github.com/{{ item.repo }}"
         dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
         - { theme: "Retro CRT 240p", repo: "xovox/es-theme-retrocrt-240p" }
+
+    - name: "Theme: Optional Install/Update"
+      git:
+        depth: 1
+        repo: "https://github.com/{{ item.repo }}"
+        dest: "/etc/emulationstation/themes/{{ item.theme }}"
+      with_items:
         - { theme: "GBZ35 Dark", repo: "rxbrad/es-theme-gbz35-dark" }
         - { theme: "Push A", repo: "asche76/es-theme-push-a" }
         - { theme: "Push A Vertical", repo: "asche76/es-theme-push-a-v" }
+      when: install_optional_themes == "yes"
 
     - name: "Populate Templates"
       template:
