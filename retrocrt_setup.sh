@@ -294,7 +294,7 @@ if [[ ! -f $retrocrt_venv/bin/activate ]]; then
 fi
 
 for rcfile in $retrocrt_config $retrocrt_venv/bin/activate ; do
-	if [[ -f "$retrocrt_config" ]]; then
+	if [[ -f "$rcfile" ]]; then
 		source "$rcfile"
 	fi
 done
