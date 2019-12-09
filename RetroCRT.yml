@@ -155,6 +155,8 @@
         block: |
           custom_viewport_height = {{ item.y }}
           custom_viewport_width = {{ item.x }}
+          savefile_directory = /home/pi/RetroPie/savefile/{{ item.sys }}
+          savestate_directory = /home/pi/RetroPie/savestate/{{ item.sys }}
       with_items:
         - { sys: "arcade", y: "{{ arcade_height }}", x: "{{ arcade_width }}" }
         - { sys: "atari2600", y: "{{ atari2600_height }}", x: "{{ atari2600_width }}" }
@@ -184,6 +186,8 @@
         block: |
           custom_viewport_height = {{ item.y }}
           custom_viewport_width = {{ item.x }}
+          savefile_directory = /home/pi/RetroPie/savefile/{{ item.sys }}
+          savestate_directory = /home/pi/RetroPie/savestate/{{ item.sys }}
       with_items:
         - { sys: "atarilynx", y: "{{ atarilynx_height }}", x: "{{ atarilynx_width }}" }
         - { sys: "gamegear", y: "{{ gamegear_height }}", x: "{{ gamegear_width }}" }
@@ -310,6 +314,16 @@
         - { variable: "dpi_mode", value: "87" }
         - { variable: "disable_splash", value: "1" }
         - { variable: "hdmi_timings", value: "{{ default_timings }}" }
+
+    - name: "Create Save States Directories"
+      shell: /usr/bin/find . -mindepth 1 -maxdepth 1 -type d -exec mkdir -p /home/pi/RetroPie/savestates/{} \;
+      args:
+        chdir: /home/pi/RetroPie/roms
+
+    - name: "Create Save Files Directories"
+      shell: /usr/bin/find . -mindepth 1 -maxdepth 1 -type d -exec mkdir -p /home/pi/RetroPie/savefiles/{} \;
+      args:
+        chdir: /home/pi/RetroPie/roms
 
     - name: "Fix Permissions"
       file:
