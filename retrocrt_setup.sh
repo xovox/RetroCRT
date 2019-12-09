@@ -216,7 +216,7 @@ fi
 # our crt connection
 ##############################################################################
 
-retrocrt_hardware="${retrocrt_hardware:-rt_rgb}"
+retrocrt_hardware="${retrocrt_hardware:-15khz}"
 #retrocrt_hardware="$(dialog --title "$retrocrt_title :: Hardware Used" --stdout --default-item "$retrocrt_hardware" --menu "What CRT Connection?" 0 0 0 rt_rgb "RetroTink: RGB/Component" rt_svid "RetroTink: S-Video" rt_comp "RetroTink: Composite" 35 "3.5mm Jack")"
 
 retrocrt_hardware_list='
@@ -261,7 +261,7 @@ fi
 # choose a tv region
 ##############################################################################
 
-tv_region=${tv_region:-ntsc}
+tv_region=${tv_region:-rgb}
 #tv_region"$(dialog --stdout --default-item "$tv_region --menu "What region are you?" 0 0 0 NTSC "NTSC" PAL "PAL" SECAM "SECAM")"
 
 ##############################################################################
