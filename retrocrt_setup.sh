@@ -304,7 +304,7 @@ if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
 fi
 
 ##############################################################################
-# make an dos happy backup file template
+# make a dos happy backup file template
 ##############################################################################
 
 ansible_basic_py="$HOME/.virtualenv/retrocrt/lib/python3.5/site-packages/ansible/module_utils/basic.py"
