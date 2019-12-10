@@ -345,11 +345,8 @@
         - "/opt/retropie"
         - "{{home_dir}}"
 
-    - name: Ansible apt with_items example
+    - name: "Install Required Packages"
       apt:
-        name: "{{ item }}"
+        name: [ 'bc', 'p7zip-full', 'vim' ]
         update_cache: true
         state: present
-      with_items:
-        - 'p7zip-full'
-        - 'vim'
