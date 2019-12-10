@@ -100,9 +100,6 @@ updategit="
 Update RetroCRT installer and configs before we continue?
 
 This will restart the installer.
-
---------------------------------
-
 "
 
 rotation="
@@ -173,7 +170,7 @@ dialog --title "$retrocrt_title :: Warning"		--colors	--defaultno	--yesno "$warn
 #if dialog --title "$retrocrt_title :: Check Updates"	--colors	--defaultno	--yesno "$checkupdates"		25 36 ; then
 if [[ "$network_up" = "true" ]]; then
     git fetch
-    if dialog --title "$retrocrt_title :: Update Status" --colors --defaultno --yesno "$updategit$(git status -u no)" 25 36 ; then
+    if dialog --title "$retrocrt_title :: Update Status" --colors --defaultno --yesno "$updategit" 25 36 ; then
         git pull
         $0
         exit
