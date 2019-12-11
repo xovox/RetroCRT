@@ -281,7 +281,7 @@
         repo: "https://github.com/{{ item.repo }}"
         dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
-        - { theme: "Retro CRT 240p", repo: "xovox/es-theme-retrocrt-240p" }
+        - { theme: "RetroCRT 240p", repo: "xovox/es-theme-retrocrt-240p" }
 
 #    - name: "Theme: Optional Install/Update"
 #      git:
