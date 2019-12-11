@@ -201,7 +201,7 @@
         - { sys: "wonderswancolor", y: "{{ wonderswancolor_height }}", x: "{{ wonderswancolor_width }}" }
         - { sys: "wonderswan", y: "{{ wonderswan_height }}", x: "{{ wonderswan_width }}" }
 
-    - name: "Configure RetroArch"
+    - name: "RetroArch: Write Configuration"
       lineinfile:
         dest: "/opt/retropie/configs/all/retroarch.cfg"
         create: "yes"
@@ -210,6 +210,8 @@
         regexp: "^{{ item.variable }}.*"
         line: "{{ item.variable }} = {{ item.value }}"
       with_items:
+        - { variable: "custom_viewport_width", value: "{{ physical_viewport_width }}" }
+        - { variable: "custom_viewport_height", value: "{{ physical_viewport_height }}" }
         - { variable: "aspect_ratio_index", value: "23" }
         - { variable: "video_font_enable", value: "false" }
         - { variable: "video_fullscreen", value: "true" }
