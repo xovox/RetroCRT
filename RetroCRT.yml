@@ -251,7 +251,7 @@
     - name: "Splash Screens"
       copy:
         src: "files/{{ item.src }}"
-        dest: "{{home_dir}}/RetroPie/splashscreens/{{ item.src }}"
+        dest: "{{home_dir}}/RetroPie/splashscreens/"
         mode: "{{ item.mode }}"
         owner: "pi"
         group: "pi"
@@ -275,7 +275,7 @@
         path: "/etc/emulationstation/themes/carbon"
         state: "absent"
 
-    - name: "Theme: Base Install/Update"
+    - name: "Theme: RetroCRT Install/Update"
       git:
         depth: 1
         repo: "https://github.com/{{ item.repo }}"
@@ -303,7 +303,7 @@
         - { src: "cmdline.txt.j2", dest: "/boot/cmdline.txt" }
         - { src: "autostart.sh.j2", dest: "/opt/retropie/configs/all/autostart.sh" }
 
-    - name: "Update config.txt"
+    - name: "Update /boot/config.txt"
       lineinfile:
         dest: "/boot/config.txt"
         create: "yes"
@@ -333,6 +333,12 @@
       args:
         chdir: /home/pi/RetroPie/roms
 
+    - name: "Install Required Packages"
+      apt:
+        name: [ 'bc', 'p7zip-full', 'vim' ]
+        update_cache: true
+        state: present
+
     - name: "Fix Permissions"
       file:
         path: "{{ item }}"
@@ -345,8 +351,3 @@
         - "/opt/retropie"
         - "{{home_dir}}"
 
-    - name: "Install Required Packages"
-      apt:
-        name: [ 'bc', 'p7zip-full', 'vim' ]
-        update_cache: true
-        state: present
