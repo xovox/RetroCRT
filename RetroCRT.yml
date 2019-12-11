@@ -251,7 +251,7 @@
 
     - name: "Themes: Delete Non-Supported"
       file:
-        path: "/etc/emulationstation/themes/{{ theme }}"
+        path: "/etc/emulationstation/themes/{{ item.theme }}"
         state: "absent"
       with_items:
         - { theme: "carbon" }
