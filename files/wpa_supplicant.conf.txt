@@ -1,0 +1,17 @@
+##############################################################################
+# Update this file & rename it to wpa_supplicant.conf & it will be copied over
+# the next time you run RetroCRT's setup!
+##############################################################################
+
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+# UPDATE TO YOUR COUNTRY CODE
+country=US
+
+# UPDATE FOR YOUR NETWORK
+# ssid = your network name
+# psk = your network passphrase
+network={
+	ssid="YOURNETWORK"
+	psk="YOURPASSPHRASE"
+}
