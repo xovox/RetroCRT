@@ -328,11 +328,11 @@
         owner: "{{ item.owner }}"
         group: "{{ item.group }}"
       with_items:
-        - { src: "retrocrt.conf.txt",         dest: "/boot/retrocrt/",                         force: "no",   mode: "644", owner: "pi", group: "pi" }
-        - { src: "wpa_supplicant.conf.txt",   dest: "/boot/retrocrt/",                         force: "no",   mode: "644", owner: "pi", group: "pi" }
-        - { src: "RetroCRT.png",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644", owner: "pi", group: "pi" }
-        - { src: "RetroCRT.mp4",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644", owner: "pi", group: "pi" }
-        - { src: "RetroCRT.sh",               dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755", owner: "pi", group: "pi" }
+        - { src: "retrocrt.conf.txt",         dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
+        - { src: "wpa_supplicant.conf.txt",   dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
+        - { src: "RetroCRT.png",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi" }
+        - { src: "RetroCRT.mp4",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi" }
+        - { src: "RetroCRT.sh",               dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755",  owner: "pi",    group: "pi" }
 
     - name: "Fix Permissions"
       file:
