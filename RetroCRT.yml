@@ -24,7 +24,7 @@
 
   pre_tasks:
 
-    - name: "Reading Configs"
+    - name: "Reading ~/.retrocrtrc"
       set_fact:
         tv_region: "{{ lookup('env', 'tv_region') }}"
         retrocrt_timings: "{{ lookup('env', 'retrocrt_timings') }}"
