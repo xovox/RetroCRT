@@ -275,6 +275,8 @@
         - { theme: "GBZ35 Dark", repo: "rxbrad/es-theme-gbz35-dark" }
         - { theme: "Push A", repo: "asche76/es-theme-push-a" }
         - { theme: "Push A Vertical", repo: "asche76/es-theme-push-a-v" }
+        - { theme: "Bubble Gum", repo: "xovox/es-theme-bubblegum" }
+        - { theme: "Honey", repo: "xovox/es-theme-honey" }
       when: install_optional_themes == "yes"
 
     - name: "Populate Templates"
@@ -347,4 +349,3 @@
         - "/etc/emulationstation/themes"
         - "/opt/retropie"
         - "{{home_dir}}"
-
