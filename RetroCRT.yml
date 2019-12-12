@@ -41,6 +41,11 @@
         #physical_viewport_height: "{{ lookup('env', 'physical_viewport_height') }}"
         #physical_viewport_width: "{{ lookup('env', 'physical_viewport_width') }}"
 
+    - name: "Read /boot/retrocrt/retrocrt.yml"
+      include_vars:
+        dir: "/boot/retrocrt"
+        files_matching: "retrocrt.yaml"
+
     - name: "Set Default Timings"
       set_fact:
         default_timings: "{{ lookup('file', '{{ retrocrt_timings }}/default') }}"
