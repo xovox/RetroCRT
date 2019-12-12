@@ -350,7 +350,7 @@
         backup: "yes"
         state: "present"
         regexp: "^{{ item.variable }}.*"
-        line: "{{ item.variable }} = {{ item.value }}"
+        line: '{{ item.variable }}="{{ item.value }}"'
       with_items:
         - { variable: "FONTFACE", value: "Terminus" }
         - { variable: "FONTSIZE", value: "6x12" }
