@@ -171,11 +171,11 @@ dialog --title "$retrocrt_title :: Warning"		--colors	--defaultno	--yesno "$warn
 if [[ "$network_up" = "true" ]]; then
     git fetch
     if dialog --title "$retrocrt_title :: Update Status" --colors --defaultno --yesno "$updategit" 25 36 ; then
-		clear
+		clear ; reset ; clear
 		set -x
         git pull
-        $0
 		sleep 5
+        $0
         exit
     fi
 fi
