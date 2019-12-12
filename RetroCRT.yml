@@ -22,6 +22,12 @@
   become: "yes"
   become_user: "root"
 
+  handlers:
+
+    - name: "Save Console Font"
+      shell: setupcon --save-only
+      listen: "setupcon"
+
   pre_tasks:
 
     - name: "Reading ~/.retrocrtrc"
@@ -354,6 +360,7 @@
       with_items:
         - { variable: "FONTFACE", value: "Terminus" }
         - { variable: "FONTSIZE", value: "6x12" }
+      notify: "setupcon"
 
     - name: "Fix Permissions"
       file:
