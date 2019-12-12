@@ -48,15 +48,15 @@ See [the bugs list](#bugs) to see what's known to not work, or not fully work.
 
 * [RetroTink Ultimate](http://www.retrotink.com) is a board for the Raspberry Pi that gives you every analog connection you could want, in true 24-bit RGB color!
   * Component & RGB only, for now
+* pi2jamma
+* pi2scart
+* VGA666/GERT666
 
 ## Future Supported Hardware
 
 * Other RetroTink connections
   * S-Video & composite do not work 100%
 * Raspberry Pi built-in composite out (untested)
-* pi2scart
-* pi2scart with RGB
-* VGA666, both RGB & with component converter
 
 ## Emulator Compatibility
 
@@ -141,7 +141,7 @@ See the [troubleshooting doc](TROUBLESHOOTING.md).
 
 # Bugs
 
-- /home/pi/RetroPie/roms/arcade/ roms don't work, the menu asking what emulator to use doesn't display.
+- runcommand doesn't work, joy2key or something else isn't working.
 
 # TODO
 
@@ -149,13 +149,16 @@ See the [troubleshooting doc](TROUBLESHOOTING.md).
   * RetroTink S-Video Output
   * RetroTink Component Output
   * 3.5mm Composite Output
-  * pi2jamma hat
-  * VGA666 hat
 
 * Video
   * Collect PAL timings
   * Collect SECAM timings
 
+# Copying to NTFS
+
+```
+sudo rsync -rt  --progress ./ /tmp/a/retropie-mount/
+```
 # Footnotes
 
 I am not affiliated with Mike Chi, RetroTink, pi2jamma, or anyone else.  I'm doing this as a personal project.
