@@ -165,6 +165,10 @@ I am not affiliated with Mike Chi, RetroTink, pi2jamma, or anyone else.  I'm doi
 
 Shout out to [Vykran](https://github.com/Vykyan/retroTINK-setup) for the initial groundwork, though he seems to be PAL & I'm NTSC... which brought us to where we are now.
 
+# theme
+
+* https://retropie.org.uk/forum/topic/24277/my-clean-simple-240p-es-theme-retrocrt/2
+
 ```
                                                        .
                                                        ;\
