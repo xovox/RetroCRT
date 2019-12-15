@@ -42,7 +42,7 @@ See [the bugs list](#bugs) to see what's known to not work, or not fully work.
 
 # What You Get
 
-* My 240p EmulationStation theme, [RetroCRT 240p](https://github.com/xovox/es-theme-RetroCRT-240p](RetroCRT 240p)!
+* My 240p EmulationStation theme, [RetroCRT 240p](https://github.com/xovox/es-theme-RetroCRT-240p)!
 * 240p test suite roms for several console platforms!
 * Easy installation!
 * Pixel-perfect console emulation!
