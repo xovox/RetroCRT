@@ -31,20 +31,18 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 
 * [RetroTink Ultimate](http://www.retrotink.com)
   * Component & RGB only, for now
+  * NTSC only, for now
 * [pi2jamma](http://arcadeforge.net/Pi2Jamma-Pi2SCART/Pi2Jamma::248.html)
   * JAMMA controls are currently unsupported, but will be
 * [pi2scart](http://arcadeforge.net/Pi2Jamma-Pi2SCART/PI2SCART::264.html)
 * [GERT VGA 666](https://github.com/PiSupply/Gert-VGA-666)
   * You can buy it on [Amazon](amazon.com/Raspberry-Adapter-Board-Atomic-Market/dp/B075DM4C5V)
 
-# Bugs & Improvements
-
-See [the issues page](https://github.com/xovox/RetroCRT/issues/) to see all open bugs & improvements. Feel free to submit a new issue!
-
 # What You Get
 
 * My 240p EmulationStation theme, [RetroCRT 240p](https://github.com/xovox/es-theme-RetroCRT-240p)!
 * Only updates required lines in configs, preserving your personal customizations!
+  * Per-ROM configs still get overwritten. See [issue #5](https://github.com/xovox/RetroCRT/issues/5)
 * 240p test suite roms for several console platforms!
 * Easy installation!
 * Pixel-perfect console emulation!
@@ -62,9 +60,9 @@ See [the issues page](https://github.com/xovox/RetroCRT/issues/) to see all open
   * S-Video & composite do not work 100%
 * Raspberry Pi built-in composite out (untested)
 
-# NTSC vs SECAM & PAL
+# Bugs, TODO & Improvements
 
-Sadly, I don't have a SECAM or PAL setup to test everything on, I'll need someone else to do that for me.
+See [the issues page](https://github.com/xovox/RetroCRT/issues/) to see all open bugs & improvements. Feel free to submit a new issue!
 
 # Installation
 
@@ -98,42 +96,11 @@ cd RetroCRT &&
 
 This should work for all NTSC TVs, but these are ones that have been tested.
 
-## CRTs Behaving Badly
-
-Flat Trinitrons and many other more modern CRTs perform processing on 240p signals.  This may mean you'll see text "jumping" or weird ghosting effects happening on screen. This cannot be disabled on the TV.
-
-## NTSC
-
-| Make 		| Model 	| Tested 	| Issues
-|------		|-------	|--------	|--------
-| Panasonic	| CT-27D10	| Component	| None
-| Magnavox      | 20MS3442/17   | Component     | None
-
 # Troubleshooting
 
-Before doing anything else, update RetroCRT!  You can do this 
+Before doing anything else, update RetroCRT!  You can do this in the 
 See the [troubleshooting doc](TROUBLESHOOTING.md).
 
-# Bugs
-
-- runcommand doesn't work, joy2key or something else isn't working.
-
-# TODO
-
-* Outputs
-  * RetroTink S-Video Output
-  * RetroTink Component Output
-  * 3.5mm Composite Output
-
-* Video
-  * Collect PAL timings
-  * Collect SECAM timings
-
-# Copying to NTFS
-
-```
-sudo rsync -rt  --progress ./ /tmp/a/retropie-mount/
-```
 # Footnotes
 
 I am not affiliated with Mike Chi, RetroTink, pi2jamma, or anyone else.  I'm doing this as a personal project.
