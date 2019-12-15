@@ -19,11 +19,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # RetroCRT
 
-Retro gaming with the $FREE [RetroPie](https://retropie.org.uk) Linux OS on a $35 [Raspberry Pi](https://www.raspberrypi.org) is pretty sweet, but instead of an HDTV... wouldn't you rather do it on a 20+ year old component/RGB CRT?
+RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk) gaming on CRTs easy and user friendly.
 
-This project brings the above projects into one easy to swallow integration!
+![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/NES_Mockup.jpg)
 
-NOTE: All games > 240p aren't currently well supported since I'm focused on SD CRTs & progressive video
+
+# Supported Hardware
+
+* [RetroTink Ultimate](http://www.retrotink.com)
+  * Component & RGB only, for now
+* [pi2jamma](http://arcadeforge.net/Pi2Jamma-Pi2SCART/Pi2Jamma::248.html)
+  * JAMMA controls are currently unsupported, but will be
+* [pi2scart](http://arcadeforge.net/Pi2Jamma-Pi2SCART/PI2SCART::264.html)
+* [GERT VGA 666](https://github.com/PiSupply/Gert-VGA-666)
+  * You can buy it on [Amazon](amazon.com/Raspberry-Adapter-Board-Atomic-Market/dp/B075DM4C5V)
 
 See [the bugs list](#bugs) to see what's known to not work, or not fully work.
 
@@ -33,6 +42,8 @@ See [the bugs list](#bugs) to see what's known to not work, or not fully work.
 
 # What You Get
 
+* My 240p EmulationStation theme, [https://github.com/xovox/es-theme-RetroCRT-240p](RetroCRT 240p)!
+* 240p test suite roms for several console platforms!
 * Easy installation!
 * Pixel-perfect console emulation!
 * Pixel-perfect arcade emulation for most games!
@@ -41,51 +52,13 @@ See [the bugs list](#bugs) to see what's known to not work, or not fully work.
 * Installation of CRT Friendly EmulationStation themes!
 * No system messages on boot/shutdown/reboot!
 * No annoying EmulationStation yellow text!
-* 240p test suite roms for several platforms!
 * My unbridled enthusiasm about building this project!
-
-# Hardware Compatibility
-
-* [RetroTink Ultimate](http://www.retrotink.com) is a board for the Raspberry Pi that gives you every analog connection you could want, in true 24-bit RGB color!
-  * Component & RGB only, for now
-* pi2jamma
-* pi2scart
-* VGA666/GERT666
 
 ## Future Supported Hardware
 
 * Other RetroTink connections
   * S-Video & composite do not work 100%
 * Raspberry Pi built-in composite out (untested)
-
-## Emulator Compatibility
-
-I'm aiming to cover everything available, but these are the only platforms I've thoroughly tested.
-
-* Arcade
-
-  * Misc Arcade (arcade)
-  * FinalBurn Alpha & Neo (fba)
-  * Mame 2003 0.79 (mame-libretro)
-  * Neo-Geo (neogeo)
-
-* Console
-
-  * Sega Master System (mastersystem)
-  * Sega Genesis/Megadrive (megadrive)
-  * Nintendo 64 (n64)
-  * Nintendo Entertainment System/Famicom (nes)
-  * TurboGrafx-16/PC Engine (pcengine)
-  * Sony Playstation (psx)
-  * Sega 32x (sega32x)
-  * Sega CD (segacd)
-  * Super Nintendo Entertainment System/Super Famicom (snes)
-  * SuperGrafx (supergrafx)
-
-* Handheld
-
-  * Atari Lynx (atarilynx)
-  * GameBoy Platforms (gb, gbc, gba)
 
 # NTSC vs SECAM & PAL
 
