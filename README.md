@@ -29,6 +29,9 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 
 # Supported Hardware
 
+* Raspberry Pi
+  * 3 B & B+ are the only ones tested
+
 * [RetroTink Ultimate](http://www.retrotink.com)
   * Component & RGB only, for now
   * NTSC only, for now
@@ -49,7 +52,7 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 * Pixel-perfect arcade emulation for most games!
   * This is achieved with on-load screen resolution changes!
 * Automatic rotation for vertical games!
-* Installation of CRT Friendly EmulationStation themes!
+* Installation of additional CRT Friendly EmulationStation themes!
 * No system messages on boot/shutdown/reboot!
 * No annoying EmulationStation yellow text!
 * My unbridled enthusiasm about building this project!
