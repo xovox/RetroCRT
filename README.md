@@ -21,8 +21,11 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk) gaming on CRTs easy and user friendly.
 
-![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/NES_Mockup.png)
+# Downloads
 
+[The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
+
+![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/NES_Mockup.png)
 
 # Supported Hardware
 
@@ -34,15 +37,14 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 * [GERT VGA 666](https://github.com/PiSupply/Gert-VGA-666)
   * You can buy it on [Amazon](amazon.com/Raspberry-Adapter-Board-Atomic-Market/dp/B075DM4C5V)
 
-See [the bugs list](#bugs) to see what's known to not work, or not fully work.
+# Bugs & Improvements
 
-# Downloads
-
-[The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
+See [the issues page](https://github.com/xovox/RetroCRT/issues/) to see all open bugs & improvements. Feel free to submit a new issue!
 
 # What You Get
 
 * My 240p EmulationStation theme, [RetroCRT 240p](https://github.com/xovox/es-theme-RetroCRT-240p)!
+* Only updates required lines in configs, preserving your personal customizations!
 * 240p test suite roms for several console platforms!
 * Easy installation!
 * Pixel-perfect console emulation!
