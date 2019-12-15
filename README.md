@@ -58,35 +58,6 @@ See [the bugs list](#bugs) to see what's known to not work, or not fully work.
   * S-Video & composite do not work 100%
 * Raspberry Pi built-in composite out (untested)
 
-## Emulator Compatibility
-
-I'm aiming to cover everything available, but these are the only platforms I've thoroughly tested.
-
-* Arcade
-
-  * Misc Arcade (arcade)
-  * FinalBurn Alpha & Neo (fba)
-  * Mame 2003 0.79 (mame-libretro)
-  * Neo-Geo (neogeo)
-
-* Console
-
-  * Sega Master System (mastersystem)
-  * Sega Genesis/Megadrive (megadrive)
-  * Nintendo 64 (n64)
-  * Nintendo Entertainment System/Famicom (nes)
-  * TurboGrafx-16/PC Engine (pcengine)
-  * Sony Playstation (psx)
-  * Sega 32x (sega32x)
-  * Sega CD (segacd)
-  * Super Nintendo Entertainment System/Super Famicom (snes)
-  * SuperGrafx (supergrafx)
-
-* Handheld
-
-  * Atari Lynx (atarilynx)
-  * GameBoy Platforms (gb, gbc, gba)
-
 # NTSC vs SECAM & PAL
 
 Sadly, I don't have a SECAM or PAL setup to test everything on, I'll need someone else to do that for me.
@@ -165,10 +136,6 @@ I am not affiliated with Mike Chi, RetroTink, pi2jamma, or anyone else.  I'm doi
 
 Shout out to [Vykran](https://github.com/Vykyan/retroTINK-setup) for the initial groundwork, though he seems to be PAL & I'm NTSC... which brought us to where we are now.
 
-# theme
-
-* https://retropie.org.uk/forum/topic/24277/my-clean-simple-240p-es-theme-retrocrt/2
-
 ```
                                                        .
                                                        ;\
@@ -185,5 +152,3 @@ Shout out to [Vykran](https://github.com/Vykyan/retroTINK-setup) for the initial
          `.   ,'          `.   ,'          `.   ,'          `.  |,'          `.  \,'          `.
            \ /              \ /              \ /              \ /              \ /              \
 ```
-
-|  |
