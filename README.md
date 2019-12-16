@@ -29,6 +29,8 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 
 # Supported Hardware
 
+* See [the issues page](https://github.com/xovox/RetroCRT/issues) to see planned supported hardware
+
 * Raspberry Pi
   * 3 B & B+ are the only ones tested
 
@@ -56,22 +58,6 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 * No system messages on boot/shutdown/reboot!
 * No annoying EmulationStation yellow text!
 * My unbridled enthusiasm about building this project!
-
-## Future Supported Hardware
-
-* Other RetroTink connections
-  * S-Video & composite do not work 100%
-* Raspberry Pi built-in composite out (untested)
-
-<<<<<<< HEAD
-# NTSC vs SECAM & PAL
-
-Sadly, I don't have a SECAM or PAL setup to test everything on, I'll need someone else to do that for me.
-=======
-# Bugs, TODO & Improvements
-
-See [the issues page](https://github.com/xovox/RetroCRT/issues/) to see all open bugs & improvements. Feel free to submit a new issue!
->>>>>>> 86bab12271afbc0a312c01d1e579177697c396f3
 
 # Installation
 
