@@ -51,6 +51,7 @@ sed -i "
 /custom_viewport_width/d
 /custom_viewport_height/d
 /custom_viewport_x/d
+/custom_viewport_y/d
 " "$ra_rom_config"
 
 # extract our resolution & orientation information
