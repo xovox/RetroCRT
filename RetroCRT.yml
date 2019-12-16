@@ -35,7 +35,7 @@
         path: "/boot/retrocrt"
         state: "directory"
 
-    - name: "Reading ~/.retrocrtrc"
+    - name: "Reading RetroCRT Env Vars"
       set_fact:
         tv_region: "{{ lookup('env', 'tv_region') }}"
         retrocrt_timings: "{{ lookup('env', 'retrocrt_timings') }}"
