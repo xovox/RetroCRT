@@ -33,6 +33,7 @@ ansible_ver="2.9.2"
 req_packages="
 	dialog
 	git
+    python3-apt
     python3-dev
 	virtualenv
 "
