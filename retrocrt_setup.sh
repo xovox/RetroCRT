@@ -23,6 +23,8 @@ license="
 # pull in our config
 ##############################################################################
 
+retrocrt_config="$HOME/.retrocrtrc"
+retrocrt_title="RetroCRT"
 source $retrocrt_config
 
 # lock in the ansible version we're running
@@ -37,9 +39,7 @@ req_packages="
 
 bad_backup_string="%Y-%m-%d@%H:%M:%S~"
 good_backup_string="%Y%m%d_%H%M%S"
-retrocrt_config="$HOME/.retrocrtrc"
 retrocrt_venv="$HOME/.virtualenv/retrocrt"
-retrocrt_title="RetroCRT"
 retrocrt_install=${retrocrt_install:-$PWD}
 	
 
