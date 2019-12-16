@@ -21,6 +21,15 @@ retrocrt_divider="# RetroCRT: Do not add or edit anything below this line"
 
 source $HOME/.retrocrtrc
 
+squishy() {
+cat << SQUISHY
+custom_viewport_width = 1210
+custom_viewport_height = 240
+custom_viewport_x = $[ (1920 - 1210) / 2 ]
+SQUISHY
+exit
+}
+
 # if this platform isn't in our list of no per-rom resolutions...
 if ! (grep -wq "$1" $retrocrt_install/retrocrt_timings/no_per_rom_timings.txt); then
     # check for a per-rom resolution
@@ -34,6 +43,17 @@ fi
 
 # the RA config we're going to update
 ra_rom_config="$ra_rom.cfg"
+touch "$ra_rom_config"
+
+# remove the sections that we care about
+sed -i "
+/video_allow_rotate/d
+/video_rotation/d
+/video_smooth/d
+/custom_viewport_width/d
+/custom_viewport_height/d
+/custom_viewport_x/d
+" "$ra_rom_config"
 
 # extract our resolution & orientation information
 if [[ "$retrocrt_rom_settings" ]]; then
@@ -42,24 +62,8 @@ if [[ "$retrocrt_rom_settings" ]]; then
     rom_monitor_orientation="$(cut -d',' -f4 <<< "$retrocrt_rom_settings")"
 fi
 
-# delete anything we've already written to the config
-old_config="$(sed "/$retrocrt_divider/Q" $ra_rom_config)"
-
-rm "$ra_rom_config"
-
-squishy() {
-cat << SQUISHY
-custom_viewport_width = 1210
-custom_viewport_height = 240
-custom_viewport_x = $[ (1920 - 1210) / 2 ]
-SQUISHY
-	exit
-}
-
 # everything between these brackets is used to write the config
 {
-echo "$old_config"
-echo "$retrocrt_divider"
 cat << GLOBAL
 video_allow_rotate = "true"
 video_rotation = "$rotate_ra"
@@ -76,7 +80,6 @@ if [[ "$rom_monitor_orientation" = "H" ]] && [[ "$rotate_ra" =~ [13] ]]; then
 	squishy
 fi
 
-# add our divider
 cat << SCREENCALC | bc -q
 physical_viewport_width = $physical_viewport_width
 physical_viewport_height = $physical_viewport_height
