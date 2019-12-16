@@ -19,6 +19,12 @@ license="
 ##############################################################################
 "
 
+##############################################################################
+# pull in our config
+##############################################################################
+
+source $retrocrt_config
+
 # lock in the ansible version we're running
 ansible_ver="2.9.2"
 
@@ -190,8 +196,6 @@ fi
 
 #rotate_tv="$(dialog --title "$retrocrt_title :: Large Screen Games" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
 
-set -x
-echo $rotate_tv
 rotate_tv=${rotate_tv:-0}
 
 export rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
@@ -307,7 +311,6 @@ CONFIG
 ##############################################################################
 
 source $retrocrt_config
-
 
 ##############################################################################
 # install ansible
