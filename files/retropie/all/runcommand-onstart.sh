@@ -25,7 +25,7 @@
 export runcommand_onstart_log="/dev/shm/runcommand-onstart.log"
 
 (
-export rpie_onstart_script_dir="$HOME/scripts/runcommand-onstart.d"
+export rpie_onstart_script_dir="$HOME/RetroPie/scripts/runcommand-onstart.d"
 export ra_system="$1"
 export ra_emulator="$2"
 export ra_rom="$3"
