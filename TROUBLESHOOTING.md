@@ -1,10 +1,10 @@
 # Fixing Issues
 
-Your first step should be to run the RetroCRT tool via the RetroPie screen in EmulationStation.
+Your first step should be to run the RetroCRT tool & update it, then run it again via the RetroPie screen in EmulationStation.
 
 # Reporting Issues
 
-Use GitHub's built-in bug tracking or join [the Facebook group](https://www.facebook.com/groups/RetroPieCRT/) and post there.
+Use RetroCRT's [bug tracking page](https://github.com/xovox/RetroCRT/issues) or join [the Facebook group](https://www.facebook.com/groups/RetroPieCRT/) and post there.
 
 # Video Issues
 
@@ -15,9 +15,3 @@ You're not changing the horizontal resolution before starting the emulator, this
 ## Image is too narrow
 
 RetroArch is ignoring our custom_viewport_width setting, and probably the height as well.
-
-# Sound Issues
-
-## No Sound
-
-You don't have audio set to go out the 3.5mm jack.  This is set in RetroCRT's config.txt, it must have been overwritten.

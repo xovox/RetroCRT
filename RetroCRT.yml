@@ -30,6 +30,11 @@
 
   pre_tasks:
 
+    - name: "Ensure /boot/retrocrt Exists"
+      file:
+        path: "/boot/retrocrt"
+        state: "directory"
+
     - name: "Reading ~/.retrocrtrc"
       set_fact:
         tv_region: "{{ lookup('env', 'tv_region') }}"
