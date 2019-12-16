@@ -17,8 +17,6 @@
 # along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
 ##############################################################################
 
-retrocrt_divider="# RetroCRT: Do not add or edit anything below this line"
-
 source $HOME/.retrocrtrc
 
 squishy() {
