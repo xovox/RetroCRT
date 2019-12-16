@@ -126,8 +126,6 @@ You have three choices on how to handle these games.
 
 #video_smooth = "false"
 
-#rotate_tv="$(dialog --title "$retrocrt_title :: Large Screen Games" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
-
 ##############################################################################
 # are we being run in the ight dir?
 ##############################################################################
@@ -190,26 +188,26 @@ fi
 # v	2	2	180
 # <	3	1	270
 
+#rotate_tv="$(dialog --title "$retrocrt_title :: Large Screen Games" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
+
+set -x
+echo $rotate_tv
 rotate_tv=${rotate_tv:-0}
 
-if [[ "$rotate_tv" = "0" ]]; then
-    rotate_tv_default="--defaultno"
-fi
-
-rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
+export rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
 
 if [[ "$rotate_tv" = "0" ]]; then
-    rotate_es="0"
-    rotate_ra="0"
+    export rotate_es="0"
+    export rotate_ra="0"
 elif [[ "$rotate_tv" = "90" ]]; then
-    rotate_es="3"
-    rotate_ra="1"
+    export rotate_es="3"
+    export rotate_ra="1"
 elif [[ "$rotate_tv" = "180" ]]; then
-    rotate_es="2"
-    rotate_ra="2"
+    export rotate_es="2"
+    export rotate_ra="2"
 elif [[ "$rotate_tv" = "270" ]]; then
-    rotate_es="1"
-    rotate_ra="3"
+    export rotate_es="1"
+    export rotate_ra="3"
 fi
 
 ##############################################################################
@@ -273,52 +271,6 @@ dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$
 clear
 
 ##############################################################################
-# install ansible
-##############################################################################
-
-if ! (dpkg -l $req_packages > /dev/null); then
-    if [[ "$network_up" = "true" ]]; then
-        sudo apt update
-        sudo apt -y install $req_packages
-    else
-        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
-        exit
-    fi
-fi
-
-if [[ ! -f $retrocrt_venv/bin/activate ]]; then
-	echo "########################################"
-    echo "Generating Python 3 Virtual Env"
-	echo "########################################"
-	virtualenv --python=python3 $HOME/.virtualenv/retrocrt
-fi
-
-for rcfile in $retrocrt_config $retrocrt_venv/bin/activate ; do
-	if [[ -f "$rcfile" ]]; then
-		source "$rcfile"
-	fi
-done
-
-if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
-	echo "########################################"
-    echo "Ensuring Virtual Env has Ansible $ansible_ver"
-	echo "########################################"
-	pip install ansible==$ansible_ver
-fi
-
-##############################################################################
-# make a dos happy backup file template
-##############################################################################
-
-ansible_basic_py="$HOME/.virtualenv/retrocrt/lib/python3.5/site-packages/ansible/module_utils/basic.py"
-ansible_basic_py="$(find /home/pi/.virtualenv/retrocrt/ | grep "ansible/module_utils/basic.py$")"
-
-if grep -wq "$bad_backup_string" $ansible_basic_py ; then
-    sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
-        $ansible_basic_py
-fi
-
-##############################################################################
 # write our config
 ##############################################################################
 
@@ -355,6 +307,52 @@ CONFIG
 ##############################################################################
 
 source $retrocrt_config
+
+
+##############################################################################
+# install ansible
+##############################################################################
+
+if ! (dpkg -l $req_packages > /dev/null); then
+    if [[ "$network_up" = "true" ]]; then
+        sudo apt update
+        sudo apt -y install $req_packages
+    else
+        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
+        exit
+    fi
+fi
+
+if [[ ! -f $retrocrt_venv/bin/activate ]]; then
+	echo "########################################"
+    echo "Generating Python 3 Virtual Env"
+	echo "########################################"
+	virtualenv --python=python3 $retrocrt_venv
+fi
+
+for rcfile in $retrocrt_config $retrocrt_venv/bin/activate ; do
+	if [[ -f "$rcfile" ]]; then
+		source "$rcfile"
+	fi
+done
+
+if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
+	echo "########################################"
+    echo "Ensuring Virtual Env has Ansible $ansible_ver"
+	echo "########################################"
+	pip install ansible==$ansible_ver
+fi
+
+##############################################################################
+# make a dos happy backup file template
+##############################################################################
+
+ansible_basic_py="$(find $retrocrt_venv | grep "ansible/module_utils/basic.py$")"
+
+if grep -wq "$bad_backup_string" $ansible_basic_py ; then
+    sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
+        $ansible_basic_py
+fi
 
 ##############################################################################
 # Run our configuration playbook
