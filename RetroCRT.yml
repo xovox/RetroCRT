@@ -301,9 +301,10 @@
         src: "templates/{{ item.src }}"
         dest: "{{ item.dest }}"
         backup: "yes"
+        mode: "{{ item.mode }}"
       with_items:
-        - { src: "cmdline.txt.j2", dest: "/boot/cmdline.txt" }
-        - { src: "autostart.sh.j2", dest: "/opt/retropie/configs/all/autostart.sh" }
+        - { src: "cmdline.txt.j2", dest: "/boot/cmdline.txt", mode: "755" }
+        - { src: "autostart.sh.j2", dest: "/opt/retropie/configs/all/autostart.sh", mode: "755" }
 
     - name: "Update /boot/config.txt"
       lineinfile:
@@ -332,6 +333,7 @@
         dest: "{{ item.dest }}"
         owner: "{{ item.owner }}"
         group: "{{ item.group }}"
+        mode: "{{ item.mode }}"
       with_items:
         - { src: "retrocrt.conf.txt",         dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
         - { src: "wpa_supplicant.conf.txt",   dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
