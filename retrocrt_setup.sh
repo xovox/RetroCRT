@@ -199,7 +199,7 @@ fi
 
 rotate_tv=${rotate_tv:-0}
 
-export rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
+export rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?  This can be changed later." 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
 
 if [[ "$rotate_tv" = "0" ]]; then
     export rotate_es="0"
