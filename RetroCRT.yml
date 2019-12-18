@@ -280,8 +280,8 @@
         repo: "https://github.com/{{ item.repo }}"
         dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
-        - { theme: "RetroCRT-240p", repo: "xovox/es-theme-retrocrt-240p" }
-        - { theme: "RetroCRT-240p-Vertical", repo: "xovox/es-theme-retrocrt-240p-Vertical" }
+        - { theme: "RetroCRT-240p", repo: "xovox/es-theme-RetroCRT-240p" }
+        - { theme: "RetroCRT-240p-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
 
     - name: "Theme: Optional Install/Update"
       git:
