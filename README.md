@@ -34,14 +34,18 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 * Raspberry Pi
   * 3 B & B+ are the only ones tested
 
-* [RetroTink Ultimate](http://www.retrotink.com)
+* TV: [RetroTink Ultimate](http://www.retrotink.com)
   * Component & RGB only, for now
   * NTSC only, for now
-* [pi2jamma](http://arcadeforge.net/Pi2Jamma-Pi2SCART/Pi2Jamma::248.html)
+* JAMMA Arcade: [pi2jamma](http://arcadeforge.net/Pi2Jamma-Pi2SCART/Pi2Jamma::248.html)
   * JAMMA controls are currently unsupported, but will be
-* [pi2scart](http://arcadeforge.net/Pi2Jamma-Pi2SCART/PI2SCART::264.html)
-* [GERT VGA 666](https://github.com/PiSupply/Gert-VGA-666)
+* RGB: [pi2scart](http://arcadeforge.net/Pi2Jamma-Pi2SCART/PI2SCART::264.html)
+* RGB/VGA: [GERT VGA 666](https://github.com/PiSupply/Gert-VGA-666)
   * You can buy it on [Amazon](amazon.com/Raspberry-Adapter-Board-Atomic-Market/dp/B075DM4C5V)
+
+# Download
+
+[Download the latest pre-built image](https://github.com/xovox/RetroCRT/releases) & then refer to [the manual](https://github.com/xovox/RetroCRT/MANUAL.md).
 
 # What You Get
 
@@ -61,35 +65,11 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 
 # Installation
 
-## Images
-
-[Download the pre-built image](https://github.com/xovox/RetroCRT/releases).
-
-## DIY
-
-I'm assuming you're able to SSH in, or have a monitor & keyboard. I typically connect my Pi via Ethernet when I'm first configuring it for ease.
-
-You can also do the initial configuration with a monitor hooked up to HDMI.
-
-* [Enabling SSH](https://www.raspberrypi.org/documentation/remote-access/ssh/) on the official Raspbian docs.
-  * This is best solved by putting your SD card in another machine and creating an empty file called 'ssh' in the boot partition.
-* [Wireless Connectivity](https://www.raspberrypi.org/documentation/configuration/wireless/README.md) is an option, but I prefer wired for simplicity.
-* SSH Clients
-  * [Windows](https://www.raspberrypi.org/documentation/remote-access/ssh/windows.md)
-  * [Linux & macOS](https://www.raspberrypi.org/documentation/remote-access/ssh/unix.md)
-
-You can cut & paste this into your terminal.
-
-```
-cd &&
-git clone https://github.com/xovox/RetroCRT &&
-cd RetroCRT &&
-/bin/bash ./retrocrt_setup.sh
-```
+See [the manual](https://github.com/xovox/RetroCRT/MANUAL.md).
 
 # TV Compatibility
 
-This should work for all NTSC TVs, but these are ones that have been tested.
+Strictly NTSC TVs at this time
 
 # Troubleshooting
 
@@ -98,7 +78,7 @@ See the [troubleshooting doc](TROUBLESHOOTING.md).
 
 # Footnotes
 
-I am not affiliated with Mike Chi, RetroTink, pi2jamma, or anyone else.  I'm doing this as a personal project.
+I am not affiliated with RetroPie, Mike Chi, RetroTink, pi2jamma, or anyone else.  I'm doing this as a personal project.
 
 Shout out to [Vykran](https://github.com/Vykyan/retroTINK-setup) for the initial groundwork, though he seems to be PAL & I'm NTSC... which brought us to where we are now.
 

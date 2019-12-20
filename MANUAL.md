@@ -19,32 +19,56 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Installation
 
-[The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
+## Pre-Built SD Images
+
+* Download the latest version of RetroCRT on [the release page](https://github.com/xovox/RetroCRT/releases)
+* Using my image, follow the [RetroPie Installation Guide](https://retropie.org.uk/docs/First-Installation/).
+
+## Manual Installation
+
+## DIY
+
+I'm assuming you're able to SSH in, or have a monitor & keyboard. I typically connect my Pi via Ethernet when I'm first
+
+You can also do the initial configuration with a monitor hooked up to HDMI.
+
+* [Enabling SSH](https://www.raspberrypi.org/documentation/remote-access/ssh/) on the official Raspbian docs.
+  * This is best solved by putting your SD card in another machine and creating an empty file called 'ssh' in the boot
+* [Wireless Connectivity](https://www.raspberrypi.org/documentation/configuration/wireless/README.md) is an option, but
+* SSH Clients
+  * [Windows](https://www.raspberrypi.org/documentation/remote-access/ssh/windows.md)
+  * [Linux & macOS](https://www.raspberrypi.org/documentation/remote-access/ssh/unix.md)
+
+You can cut & paste this into your terminal.
+
+```
+cd &&
+git clone https://github.com/xovox/RetroCRT &&
+cd RetroCRT &&
+./retrocrt_setup.sh
+```
 
 # Customizing
 
 ## Splash Images
 
+Currently broken!  See [issue #29](https://github.com/xovox/RetroCRT/issues/29) in our issue tracker.
+
 We check for several images to display as a splash before loading our game.  In my example, we're loading mspacman.zip under FBA/FBN.  These are all in descending order of preference.
 
 ```
-/home/pi/RetroPie/fba/images/mspacman-splash.png    <- custom splash image
-/home/pi/RetroPie/fba/images/mspacman-splash.jpg    <- custom splash image
-/home/pi/RetroPie/fba/images/mspacman-image.png     <- typical thumbnail image from scrapers
-/home/pi/RetroPie/fba/images/mspacman-image.jpg     <- typical thumbnail image from scrapers
+/home/pi/RetroPie/media/fba/images/mspacman-splash.png    <- custom splash image
+/home/pi/RetroPie/media/fba/images/mspacman-splash.jpg    <- custom splash image
+[preview image from gamelist.xml]
 /home/pi/RetroPie/fba/images/default-splash.png     <- platform-wide splash
 /home/pi/RetroPie/fba/images/default-splash.jpg     <- platform-wide splash
 /home/pi/RetroPie/splashscreens/default-splash.png  <- system-wide splash
 /home/pi/RetroPie/splashscreens/default-splash.jpg  <- system-wide splash
 ```
 
-## Dynamic Marquee
-
-My GitHub project [RetroPie Marquee](https://github.com/xovox/RetroPieMarquee) may be of some help.
-
 # How Everything Works
 
-## Installation/Updating
+## Setup/Installation/Configuration
 
 This happens in two stages
 
@@ -52,6 +76,12 @@ This happens in two stages
   * This prompts the user for information & then generates our configuration file
 * RetroCRT.yml
   * This is an Ansible playbook that reads the configuration & applies changes
+
+## Upgrading
+
+Browse to the RetroPie screen in EmulationStation & select RetroCRT where it will prompt you to upgrade..
+
+This is currently *not* inside of RetroPie-Setup!
 
 ## Configuration Files
 
@@ -64,9 +94,13 @@ This happens in two stages
 
 ## Scripts
 
-files/runcommand-onstart.d/01-splash.sh
-files/runcommand-onstart.d/99-retrocrtdebug.sh
-files/runcommand-onstart.d/75-set_screen_resolution.sh
+* /home/pi/scripts/runcommand-onstart.d/
+  * files/runcommand-onstart.d/01-splash.sh
+    * This displays a splash screen
+  * files/runcommand-onstart.d/75-set_screen_resolution.sh
+    * This changes the screen resolution, typically to 1920x240
+  * files/runcommand-onstart.d/99-retrocrtdebug.sh
+    * This logs debug info to /dev/shm
 
 ### Changing Screen Resolution
 
