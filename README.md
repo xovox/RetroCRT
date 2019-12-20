@@ -36,7 +36,11 @@ Compared to every distro I've seen out there, one of the biggest advantages of u
 
 [The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
 
-![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/NES_Mockup.png)
+![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg)
+
+# Installation
+
+See [the manual](https://github.com/xovox/RetroCRT/MANUAL.md).
 
 # Supported Hardware
 
@@ -69,10 +73,6 @@ Compared to every distro I've seen out there, one of the biggest advantages of u
 * No system messages on boot/shutdown/reboot!
 * No annoying EmulationStation yellow text!
 * My unbridled enthusiasm about building this project!
-
-# Installation
-
-See [the manual](https://github.com/xovox/RetroCRT/MANUAL.md).
 
 # TV Compatibility
 
