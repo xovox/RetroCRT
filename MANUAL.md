@@ -17,12 +17,38 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# Always Run RetroCRT Setup after RetroPie-Setup or OS Updates!
+
+This could help avoid bricking your RetroPie installation!
+
 # Installation
 
 ## Pre-Built SD Images
 
-* Download the latest version of RetroCRT on [the release page](https://github.com/xovox/RetroCRT/releases)
-* Using my image, follow the [RetroPie Installation Guide](https://retropie.org.uk/docs/First-Installation/).
+* Download & Write the Image
+  * Download the latest version of RetroCRT on [the release page](https://github.com/xovox/RetroCRT/releases)
+  * Using my image, follow the [RetroPie Installation Guide](https://retropie.org.uk/docs/First-Installation/).
+
+* Expand the Filesystem
+  * Run raspi-config from the RetroPie screen in EmulationStation
+  * Option #7 "Advanced Options"
+  * Option #1 "Expand Filesystem"
+  * Reboot, this may take a while
+
+* Update RetroPie
+  * Run RetroPie Setup from the RetroPie screen in EmulationStation
+  * Option U "Update"
+  * "Yes" to update installed packages
+  * Update underlying OS packages
+  * Wait for everything to finish
+  * DO NOT REBOOT
+
+* Update RetroCRT
+  * Run RetroCRT from the RetroPie screen in EmulationStation
+  * Select 'Yes' on the update screen to ensure you have the latest changes
+  * The installer will restart, follow the prompts & it will run through its steps
+
+* Reboot
 
 ## Manual Installation
 
@@ -158,7 +184,137 @@ git clone https://github.com/xovox/RetroCRT &&
 cd RetroCRT &&
 /bin/bash ./retrocrt_setup.sh
 ```
+# Hardware Compatibility
 
+If you're looking to connect your Raspberry Pi running RetroPie to an old school CRT set.  You're going to need a few things.
+
+# Resources
+
+* Facebook
+  * [RetroPie CRT Gamers](https://www.facebook.com/groups/RetroPieCRT/) is a group I started for this very purpose
+  * [The CRT Collective](https://www.facebook.com/groups/444560212348840/) is an excellent resource on TV repair, buying, and general knowledge
+
+# Lowest End, Composite (Not Currently Supported)
+
+NOTE: This method isn't yet supported by RetroCRT, but it will be.
+
+You're going to need a cable with a 3.5mm (1/8th in) connector cable on one end and video/sound connectors on the other end.  There are many cables that look exactly the same on the outside, but are wired differently on the inside.
+
+* OS Configuration Required
+  * Standard Raspberry Pi distros support it out of the box, with configuration
+  * RetroCRT will support this out of the box in the future
+
+* Software That Supports Connection
+  * All Raspberry Pi distros
+
+* Hardware Required
+  * CRT with composite input
+  * [Zune A/V Output Cable](https://www.amazon.com/Zune-Output-Cable-Discontinued-Manufacturer/dp/B000IXLHOM)
+  * [Generic Pi AV Cable](https://thepihut.com/products/av-composite-cable-3-5mm-to-3-x-rca-3m)
+
+* Advantages
+  * Low cost of entry
+  * You can use 480i for menus
+  * You can use 240p for games
+  * Looks decent on small screens
+  * Incredibly common on most CRTs
+
+* Disadvantages
+  * Luma (light) and Chroma (color) are both carried on the same signal, so they interfere with each other
+  * This is the lowest quality video output you can get on the Pi
+  * This is prone to [dot crawl](https://en.wikipedia.org/wiki/Dot_crawl)
+
+# Mid-Range, S-Video (Not Currently Supported)
+
+[S-Video](https://en.wikipedia.org/wiki/S-Video) is a decent step up from Composite.  You're separating Luma and Chroma which gives you far less interference, and better color depth.
+
+* OS Configuration Required
+  * Customized Raspberry Pi OSs with specific timings set for S-Video, as well as setting video output over GPIO
+
+* OS Support
+  * [RetroTink Ultimate](http://www.retrotink.com)'s LAKKA image.
+  * RetroCRT will support this in the future
+
+* Hardware
+  * CRT with S-Video input
+  * [RetroTink Ultimate](http://www.retrotink.com) gives you 16,777,216 colors.
+
+* Advantages
+  * Better colors than composite
+  * Less interference
+  * Better clarity than component
+  * Fairly common on CRTs
+
+* Disadvantages
+  * Not natively supported by a Raspberry Pi
+  * Additional hardware is required
+
+# Lower High-Range, Component/YPbPr
+
+[Component video](https://en.wikipedia.org/wiki/Component_video) actually encompases *many* video formats, but in NA it typically refers to a specific type of video called [YPb/Pr](https://en.wikipedia.org/wiki/YPbPr)... sort of the way we call all facial tissue Kleenex.
+
+This format separates the red and blue signals from luma, and derives the green signal based on the red, blue, and luma signals.
+
+* OS Configuration Required
+  * Customized Raspberry Pi OS with specific timings set for component, as well as setting video output over GPIO
+
+* OS Support
+  * [RetroCRT](https://github.com/xovox/RetroCRT)'s RetroPie image
+  * [RetroTink Ultimate](http://www.retrotink.com)'s LAKKA image.
+
+* Hardware Required
+  * CRT with Component/YPbPr input
+  * [RetroTink Ultimate](http://www.retrotink.com) gives you 16,777,216 colors.
+
+* Advantages
+  * Output at 240p
+  * Output at 480p, or 720p possible on HDTVs
+  * Very high color depth and clarity
+  * Fairly common on higher-end CRTs, which are very cheap/free by now
+  * Cheap cables
+
+* Disadvantages
+  * Requires moderately expensive hardware
+  * Stuck at 240p or lower on standard CRTs
+  * Fairly pricy hardware is required
+
+# Upper High-Range, RGB
+
+* Software Required
+  * Customized Raspberry Pi OS with specific timings set for RGB, as well as setting video output over GPIO
+
+* OS Support
+  * [RetroCRT](https://github.com/xovox/RetroCRT)'s RetroPie image
+  * [RetroTink Ultimate](http://www.retrotink.com)'s LAKKA image.
+
+* Hardware Required
+  * Not region specific
+  * RGB SCART CRT TV
+  * RGB monitor (typical VGA)
+  * RGB modded CRT TV
+  * Professional RGB CRTs, typically used in media creation
+  * The affordable Gert/VGA 666 gives you 18-bit (262,144) color.
+    * [North America](https://www.amazon.com/Raspberry-Adapter-Board-Atomic-Market/dp/B075DM4C5V)
+    * [Europe](https://uk.pi-supply.com/products/gert-vga-666-hardware-vga-raspberry-pi)
+  * The more expensive [RetroTink Ultimate](http://www.retrotink.com) gives you 24-bit (16,777,216) color.
+  * The awesome [pi2jamma](http://pi2jamma.info/) for a drop-in solution for RGB arcade cabinets
+  * The awesome [pi2jscart](http://pi2jamma.info/) for RGB scart connections
+
+* Advantages
+  * Fairly cheap hardware available
+  * Incredible color depth, accuracy, and clarity.  At, or near, arcade quality.
+  * Inexpensive and open-sourced hardware is required
+  * SCART is common in many countries
+  * Many CRTs can be modded to accept this signal
+  * Not affected by PAL/NTSC/SECAM regions
+  * Can be used with a VGA CRT
+
+* Disadvantages
+  * CRTs with OEM RGB support can be very expensive in the Americas
+  * Full 24-bit color depth requires moderately expensive hardwwre
+  * SCART isn't generally available in the Americas
+  * Can be difficult to find and modify a CRT
+  *
 # Troubleshooting
 
 See the [troubleshooting doc](TROUBLESHOOTING.md).

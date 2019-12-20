@@ -21,6 +21,17 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk) gaming on CRTs easy and user friendly.
 
+Compared to every distro I've seen out there, one of the biggest advantages of using RetroCRT is that we're only updating configuration files instead of overwriting everything.  This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running..
+
+# Resources
+
+* [The manual](https://github.com/xovox/RetroCRT/MANUAL.md) has a ton of info
+
+
+* Facebook
+  * [RetroPie CRT Gamers](https://www.facebook.com/groups/RetroPieCRT/) is a group I started for this very purpose
+  * [The CRT Collective](https://www.facebook.com/groups/444560212348840/) is an excellent resource on TV repair, buying, and general knowledge
+
 # Downloads
 
 [The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
@@ -42,10 +53,6 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 * RGB: [pi2scart](http://arcadeforge.net/Pi2Jamma-Pi2SCART/PI2SCART::264.html)
 * RGB/VGA: [GERT VGA 666](https://github.com/PiSupply/Gert-VGA-666)
   * You can buy it on [Amazon](amazon.com/Raspberry-Adapter-Board-Atomic-Market/dp/B075DM4C5V)
-
-# Download
-
-[Download the latest pre-built image](https://github.com/xovox/RetroCRT/releases) & then refer to [the manual](https://github.com/xovox/RetroCRT/MANUAL.md).
 
 # What You Get
 
