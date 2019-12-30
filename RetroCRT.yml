@@ -305,9 +305,9 @@
         - { theme: "Bubble Gum", repo: "xovox/es-theme-bubblegum" }
         - { theme: "Honey", repo: "xovox/es-theme-honey" }
         - { theme: "Pixel Heaven", repo: "skeletoooooor/es-pixel-heaven" }
-      when:
-        - install_optional_themes == "yes"
       become: "yes"
+      #when:
+      #  - install_optional_themes == "yes"
 
     - name: "Populate Templates"
       template:
