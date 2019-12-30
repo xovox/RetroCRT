@@ -28,6 +28,12 @@
       shell: setupcon --save-only
       listen: "setupcon"
 
+    - name: "Restart WiFi"
+      service:
+        name: networking
+        state: restarted
+      listen: "wifi_restart"
+
   pre_tasks:
 
     - name: "Ensure /boot/retrocrt Exists"
@@ -74,6 +80,11 @@
       stat:
         path: "{{home_dir}}/RetroPie/roms/.240p_copied"
       register: roms_copied
+
+    - name: "Check For /boot/retrocrt/wpa_supplicant.conf"
+      stat:
+        path: "/boot/retrocrt/wpa_supplicant.conf"
+      register: wifi_copy
 
 #    - name: "Resolution: Handheld Multiplier"
 #      set_fact:
@@ -259,6 +270,13 @@
           - "--exclude=README.md"
       when: roms_copied.stat.exists == False
 
+    - name: "Copy WiFi Configuration"
+      copy:
+        src: "/boot/retrocrt/wpa_supplicant.conf"
+        dest: "/etc/wpa_supplicant/wpa_supplicant.conf"
+      when: wifi_copy.stat.exists == True
+      notify: "wifi_restart"
+
     - name: "Auto-Login Symlink"
       file:
         src: "/etc/systemd/system/autologin@.service"
@@ -338,7 +356,6 @@
         group: "{{ item.group }}"
         mode: "{{ item.mode }}"
       with_items:
-        - { src: "retrocrt.conf.txt",         dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
         - { src: "wpa_supplicant.conf.txt",   dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
         - { src: "RetroCRT.png",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi" }
         - { src: "RetroCRT.mp4",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi" }
