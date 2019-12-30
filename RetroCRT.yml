@@ -406,15 +406,15 @@
       become: "yes"
       notify: "setupcon"
 
-    - name: "Fix Permissions"
-      file:
-        path: "{{ item }}"
-        state: "directory"
-        owner: "pi"
-        group: "pi"
-        recurse: "yes"
-      with_items:
-        - "/etc/emulationstation/themes"
-        - "/opt/retropie"
-        - "{{home_dir}}"
-      become: "yes"
+#    - name: "Fix Permissions"
+#      file:
+#        path: "{{ item }}"
+#        state: "directory"
+#        owner: "pi"
+#        group: "pi"
+#        recurse: "yes"
+#      with_items:
+#        - "/etc/emulationstation/themes"
+#        - "/opt/retropie"
+#        - "{{home_dir}}"
+#      become: "yes"
