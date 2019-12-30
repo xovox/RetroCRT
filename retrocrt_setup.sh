@@ -23,18 +23,22 @@ license="
 # pull in our config
 ##############################################################################
 
-retrocrt_config="$HOME/.retrocrtrc"
+retrocrt_config="/boot/retrocrt.txt"
+eval "$(dos2unix < "$retrocrt_config")"
+
+#retrocrt_config="$HOME/.retrocrtrc"
+#source $retrocrt_config
 retrocrt_title="RetroCRT"
-source $retrocrt_config
 
 # lock in the ansible version we're running
 ansible_ver="2.9.2"
 
 req_packages="
 	dialog
+	dos2unix
 	git
-    python3-apt
-    python3-dev
+	python3-apt
+	python3-dev
 	virtualenv
 "
 
@@ -189,28 +193,37 @@ fi
 # do we want to rotate our screen?
 ##############################################################################
 
-# up	es	ra	degrees
-# ^	0	0	0
-# >	1	3	90
-# v	2	2	180
-# <	3	1	270
+# up  es  ra  degrees
+# ^   0   0   0
+# >   1   3   90
+# v   2   2   180
+# <   3   1   270
 
-#rotate_tv="$(dialog --title "$retrocrt_title :: Large Screen Games" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
 
-rotate_tv=${rotate_tv:-0}
+rotate_crt=${rotate_crt:-0}
 
-export rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?  This can be changed later." 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
+export rotate_crt="$(dialog \
+	--title "$retrocrt_title :: Screen Orientation" \
+	--stdout \
+	--default-item "$rotate_crt" \
+	--menu "Which way is up?  This can be changed later." \
+	0 0 0 \
+		0 "^" \
+		90 "<" \
+		180 "v" \
+		270 ">"
+)"
 
-if [[ "$rotate_tv" = "0" ]]; then
+if [[ "$rotate_crt" = "0" ]]; then
     export rotate_es="0"
     export rotate_ra="0"
-elif [[ "$rotate_tv" = "90" ]]; then
+elif [[ "$rotate_crt" = "90" ]]; then
     export rotate_es="3"
     export rotate_ra="1"
-elif [[ "$rotate_tv" = "180" ]]; then
+elif [[ "$rotate_crt" = "180" ]]; then
     export rotate_es="2"
     export rotate_ra="2"
-elif [[ "$rotate_tv" = "270" ]]; then
+elif [[ "$rotate_crt" = "270" ]]; then
     export rotate_es="1"
     export rotate_ra="3"
 fi
@@ -219,53 +232,64 @@ fi
 # our crt connection
 ##############################################################################
 
-retrocrt_hardware="${retrocrt_hardware:-15khz}"
-#retrocrt_hardware="$(dialog --title "$retrocrt_title :: Hardware Used" --stdout --default-item "$retrocrt_hardware" --menu "What CRT Connection?" 0 0 0 rt_rgb "RetroTink: RGB/Component" rt_svid "RetroTink: S-Video" rt_comp "RetroTink: Composite" 35 "3.5mm Jack")"
+export dpi_output_format=${dpi_output_format:-0}
+export retrocrt_video_hardware=${retrocrt_video_hardware:-vga666}
 
-retrocrt_hardware_list='
-  lo18 "240p VGA/GERT666, pi2jamma, pi2scart"
-  hi18 "480p VGA/GERT666, pi2jamma, pi2scart"
-  lo24 "240p RetroTink Ultimate RGB & VGA
-  hi24 "480p RetroTink Ultimate RGB & VGA
-  ntsc24 "240p NTSC RetroTink Component"
-  pal24 "240p PAL RetroTink Component"
-  35n "NTSC Built-In Composite"
-  35p "PAL Built-In Composite"
-'
+export retrocrt_video_hardware="$(dialog \
+	--title "$retrocrt_title :: Video Hardware" \
+	--stdout \
+	--default-item "$retrocrt_video_hardware" \
+	--menu "What CRT Connection?" \
+	0 0 0 \
+		vga666 "VGA666, PI2JAMMA, PI2SCART" \
+		rtrgb "RetroTink: RGB/Component"
+)"
 
-retrocrt_hardware="${retrocrt_hardware:-lo18}"
-
-if [[ "$retrocrt_platform" = "lo18" ]]; then
-    retrocrt_timings="rgb/15khz"
-    retrocrt_depth="18"
-elif [[ "$retrocrt_platform" = "hi18" ]]; then
-    retrocrt_timings="rgb/31khz"
-    retrocrt_depth="18"
-elif [[ "$retrocrt_platform" = "lo24" ]]; then
-    retrocrt_timings="rgb/15khz"
-    retrocrt_depth="24"
-elif [[ "$retrocrt_platform" = "hi24" ]]; then
-    retrocrt_timings="rgb/31khz"
-    retrocrt_depth="24"
-elif [[ "$retrocrt_platform" = "ntsc24" ]]; then
-    retrocrt_timings="ntsc/15khz"
-    retrocrt_depth="24"
-elif [[ "$retrocrt_platform" = "pal24" ]]; then
-    retrocrt_timings="pal/15khz"
-    retrocrt_depth="24"
-elif [[ "$retrocrt_platform" = "35n" ]]; then
-    retrocrt_timings="35/ntscp"
-    retrocrt_depth="18"
-elif [[ "$retrocrt_platform" = "35p" ]]; then
-    retrocrt_timings="35/pal"
-    retrocrt_depth="18"
+if [ "$retrocrt_video_hardware" = "vga666" ]; then
+	export retrocrt_timings="rgb/15khz"
+	export dpi_output_format="0"
+elif [ "$retrocrt_video_hardware" = "rtrgb" ]; then
+	export retrocrt_timings="rgb/15khz"
+	export dpi_output_format="519"
 fi
+
+##############################################################################
+# our controller connection
+##############################################################################
+
+export retrocrt_ctrl_hardware=${retrocrt_ctrl_hardware:-usb}
+
+disabled_section() {
+
+export retrocrt_ctrl_hardware="$(dialog \
+	--title "$retrocrt_title :: Controller Hardware" \
+	--stdout \
+	--default-item "$retrocrt_ctrl_hardware" \
+	--menu "Choose Controller Connection" \
+	0 0 0 \
+		usb "USB" \
+		pi2jamma "PI2JAMMA" \
+)"
+}
+
 ##############################################################################
 # choose a tv region
 ##############################################################################
 
-tv_region=${tv_region:-rgb}
-#tv_region"$(dialog --stdout --default-item "$tv_region --menu "What region are you?" 0 0 0 NTSC "NTSC" PAL "PAL" SECAM "SECAM")"
+tv_region=${tv_region:-ntsc}
+
+disabled_section() {
+export tv_region="$(dialog \
+	--title "$retrocrt_title :: Controller Hardware" \
+	--stdout \
+	--default-item "$tv_region" \
+	--menu "Choose Controller Connection" \
+	0 0 0 \
+		ntsc "NTSC" \
+		pal "PAL" \
+		secam "SECAM" \
+)"
+}
 
 ##############################################################################
 # one last chance to bail
@@ -279,39 +303,97 @@ clear
 # write our config
 ##############################################################################
 
-cat << CONFIG > $retrocrt_config
+cat << CONFIG | unix2dos | sudo dd of=$retrocrt_config
 #!/bin/bash
 $license
 
-# the resolution our pi will output, platforms work within this constraint
-physical_viewport_width=1920
-physical_viewport_height=240
+##############################################################################
+# Where RetroCRT is Installed
+##############################################################################
 
-# where we keep everything
 export retrocrt_install="$retrocrt_install"
 
-export tv_region="$tv_region"
+##############################################################################
+# Configure Video Output, Typically Handled by RetroCRT TUI
+##############################################################################
 
-export rotate_tv="$rotate_tv"
+# valid settings:
+#	vga666	- Most hardware
+#	 rtrgb	- RetroTink Ultimate
+
+export retrocrt_video_hardware="$retrocrt_video_hardware"
+
+# This handles our color depth
+
+# valid settings:
+#	0	- 18-bit, Most Hardware
+#	519	- 24-bit, RetroTink Ultimate
+
+export dpi_output_format="$dpi_output_format"
+
+##############################################################################
+# Screen Rotation, Typically Handled by RetroCRT TUI
+##############################################################################
+
+# up  es  ra  degrees
+# ^   0   0   0
+# >   1   3   90
+# v   2   2   180
+# <   3   1   270
+
+export rotate_crt="$rotate_crt"
 export rotate_es="$rotate_es"
 export rotate_ra="$rotate_ra"
 
-export retrocrt_hardware="$retrocrt_hardware"
+##############################################################################
+# Configure Our Controller
+##############################################################################
 
-# our per-system video modes
-export retrocrt_timings="\$retrocrt_install/retrocrt_timings/\$tv_region/\$retrocrt_hardware"
+# valid settings:
+#	usb			- USB/BlueTooth connected controller
+#	pi2jamma	- JAMMA controls
+
+export retrocrt_ctrl_hardware="$retrocrt_ctrl_hardware"
+
+##############################################################################
+# Our HDMI Timings
+##############################################################################
+
+export retrocrt_timings="$retrocrt_timings"
+export retrocrt_timings="\$retrocrt_install/retrocrt_timings/\$retrocrt_timings"
+
+##############################################################################
+# Our System PATH
+##############################################################################
 
 export PATH="\$retrocrt_install/bin:\$PATH"
 
-# keep ansible from creating ugly .retry files
+##############################################################################
+# Ansible Configuration
+##############################################################################
+
 export ANSIBLE_RETRY_FILES_ENABLED=0
+
+##############################################################################
+# Emulation Resolution, Currently Unused
+##############################################################################
+
+physical_viewport_width=1920
+physical_viewport_height=240
+
+##############################################################################
+# TV Region, Currently Unused
+##############################################################################
+
+export tv_region="$tv_region"
 CONFIG
 
 ##############################################################################
 # pull in our config
 ##############################################################################
 
-source $retrocrt_config
+#source $retrocrt_config
+eval "$(dos2unix < "$retrocrt_config")"
 
 ##############################################################################
 # install ansible
@@ -336,7 +418,8 @@ fi
 
 for rcfile in $retrocrt_config $retrocrt_venv/bin/activate ; do
 	if [[ -f "$rcfile" ]]; then
-		source "$rcfile"
+		#source "$rcfile"
+		eval "$(dos2unix < "$rcfile")"
 	fi
 done
 
@@ -368,6 +451,6 @@ echo "########################################"
 echo
 
 set -x
-ansible-playbook RetroCRT.yml -i localhost,
+#ansible-playbook RetroCRT.yml -i localhost,
 
 sleep 5

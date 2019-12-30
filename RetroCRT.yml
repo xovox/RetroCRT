@@ -39,9 +39,10 @@
       set_fact:
         tv_region: "{{ lookup('env', 'tv_region') }}"
         retrocrt_timings: "{{ lookup('env', 'retrocrt_timings') }}"
-        rotate_tv: "{{ lookup('env', 'rotate_tv') }}"
+        rotate_crt: "{{ lookup('env', 'rotate_crt') }}"
         rotate_es: "{{ lookup('env', 'rotate_es') }}"
         rotate_ra: "{{ lookup('env', 'rotate_ra') }}"
+        dpi_output_format: "{{ lookup('env', 'dpi_output_format') }}"
         home_dir: "{{ lookup('env', 'HOME') }}"
         physical_viewport_width: 1920
         physical_viewport_height: 240
