@@ -24,8 +24,7 @@ license="
 ##############################################################################
 
 retrocrt_config="/boot/retrocrt/retrocrt.txt"
-mkdir -pv /boot/retrocrt
-eval "$(dos2unix < "$retrocrt_config")"
+sudo mkdir -pv /boot/retrocrt
 
 #retrocrt_config="$HOME/.retrocrtrc"
 #source $retrocrt_config
@@ -34,6 +33,7 @@ retrocrt_title="RetroCRT"
 # lock in the ansible version we're running
 ansible_ver="2.9.2"
 
+retrocrt_venv="$HOME/.virtualenv/retrocrt"
 req_packages="
 	dialog
 	dos2unix
@@ -42,12 +42,6 @@ req_packages="
 	python3-dev
 	virtualenv
 "
-
-bad_backup_string="%Y-%m-%d@%H:%M:%S~"
-good_backup_string="%Y%m%d_%H%M%S"
-retrocrt_venv="$HOME/.virtualenv/retrocrt"
-retrocrt_install=${retrocrt_install:-$PWD}
-	
 
 export PS4="\[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
 
@@ -136,18 +130,6 @@ You have three choices on how to handle these games.
 - Scale down to 240p, but use bilinear filtering to smooth some of the rough edges.  Some lines will look slightly strange.
 "
 
-#video_smooth = "false"
-
-##############################################################################
-# are we being run in the ight dir?
-##############################################################################
-
-if [[ "$PWD" != "$retrocrt_install" ]]; then
-    echo -e "Please move the installer directory to \"$retrocrt_install\"\n"
-    exit
-        errorExit="true"
-fi
-
 ##############################################################################
 # can we hit the internet?
 ##############################################################################
@@ -156,6 +138,34 @@ if ping -c 1 -w 1 8.8.8.8 > /dev/null 2>&1; then
     network_up=true
 else
     network_up=false
+fi
+
+##############################################################################
+# Install Required Packages
+##############################################################################
+
+if ! (dpkg -l $req_packages > /dev/null); then
+    if [[ "$network_up" = "true" ]]; then
+        sudo apt update
+        sudo apt -y install $req_packages
+    else
+        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
+        exit
+    fi
+fi
+
+sudo touch "$retrocrt_config"
+eval "$(dos2unix < "$retrocrt_config")"
+
+##############################################################################
+# are we being run in the right dir?
+##############################################################################
+
+retrocrt_install=${retrocrt_install:-$PWD}
+
+if [[ "$PWD" != "$retrocrt_install" ]]; then
+    echo -e "Please move the installer directory to \"$retrocrt_install\"\n"
+    exit
 fi
 
 ##############################################################################
@@ -393,20 +403,6 @@ CONFIG
 #source $retrocrt_config
 eval "$(dos2unix < "$retrocrt_config")"
 
-##############################################################################
-# install ansible
-##############################################################################
-
-if ! (dpkg -l $req_packages > /dev/null); then
-    if [[ "$network_up" = "true" ]]; then
-        sudo apt update
-        sudo apt -y install $req_packages
-    else
-        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
-        exit
-    fi
-fi
-
 if [[ ! -f $retrocrt_venv/bin/activate ]]; then
 	echo "########################################"
     echo "Generating Python 3 Virtual Env"
@@ -432,6 +428,8 @@ fi
 # make a dos happy backup file template
 ##############################################################################
 
+bad_backup_string="%Y-%m-%d@%H:%M:%S~"
+good_backup_string="%Y%m%d_%H%M%S"
 ansible_basic_py="$(find $retrocrt_venv | grep "ansible/module_utils/basic.py$")"
 
 if grep -wq "$bad_backup_string" $ansible_basic_py ; then
