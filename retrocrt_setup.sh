@@ -23,7 +23,8 @@ license="
 # pull in our config
 ##############################################################################
 
-retrocrt_config="/boot/retrocrt.txt"
+retrocrt_config="/boot/retrocrt/retrocrt.txt"
+mkdir -pv /boot/retrocrt
 eval "$(dos2unix < "$retrocrt_config")"
 
 #retrocrt_config="$HOME/.retrocrtrc"

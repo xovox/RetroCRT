@@ -1,6 +1,6 @@
 #!/bin/bash
 
-eval "$(dos2unix < "/boot/retrocrt.txt")"
+eval "$(dos2unix < "/boot/retrocrt/retrocrt.txt")"
 
 cd $retrocrt_install
 
