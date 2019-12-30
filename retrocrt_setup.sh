@@ -318,16 +318,16 @@ export retrocrt_install="$retrocrt_install"
 ##############################################################################
 
 # valid settings:
-#	vga666	- Most Hardware: vga666, Pi2JAMMA, Pi2SCART
-#	 rtrgb	- RetroTink Ultimate
+#    vga666  - Most Hardware: vga666, Pi2JAMMA, Pi2SCART
+#     rtrgb  - RetroTink Ultimate
 
 export retrocrt_video_hardware="$retrocrt_video_hardware"
 
 # This handles our color depth
 
 # valid settings:
-#	0	- 18-bit, Most Hardware
-#	519	- 24-bit, RetroTink Ultimate
+#    0      - 18-bit, Most Hardware
+#    519    - 24-bit, RetroTink Ultimate
 
 export dpi_output_format="$dpi_output_format"
 
@@ -350,8 +350,7 @@ export rotate_ra="$rotate_ra"
 ##############################################################################
 
 # valid settings:
-#	usb			- USB/BlueTooth connected controller
-#	pi2jamma	- JAMMA controls
+#    usb    - USB/BlueTooth connected controller
 
 export retrocrt_ctrl_hardware="$retrocrt_ctrl_hardware"
 
