@@ -19,19 +19,21 @@
 
 - hosts: "localhost"
   connection: "local"
-  become: "yes"
   become_user: "root"
+#  become: "yes"
 
   handlers:
 
     - name: "Save Console Font"
       shell: setupcon --save-only
+      become: "yes"
       listen: "setupcon"
 
     - name: "Restart WiFi"
       service:
         name: networking
         state: restarted
+      become: "yes"
       listen: "wifi_restart"
 
   pre_tasks:
@@ -40,6 +42,7 @@
       file:
         path: "/boot/retrocrt"
         state: "directory"
+      become: "yes"
 
     - name: "Reading RetroCRT Env Vars"
       set_fact:
@@ -71,10 +74,12 @@
     - name: "Find / UUID"
       command: "findmnt --noheadings --output PARTUUID /"
       register: root_uuid
+      become: "yes"
 
     - name: "Find / Filesystem Type"
       command: "findmnt --noheadings --output FSTYPE /"
       register: root_fstype
+      become: "yes"
 
     - name: "Check State of Test ROMS"
       stat:
@@ -275,6 +280,7 @@
         src: "/boot/retrocrt/wpa_supplicant.conf"
         dest: "/etc/wpa_supplicant/wpa_supplicant.conf"
       when: wifi_copy.stat.exists == True
+      become: "yes"
       notify: "wifi_restart"
 
     - name: "Auto-Login Symlink"
@@ -285,6 +291,7 @@
         group: "root"
         state: "link"
         force: "yes"
+      become: "yes"
 
     - name: "Themes: Delete Non-Supported"
       file:
@@ -292,6 +299,7 @@
         state: "absent"
       with_items:
         - { theme: "carbon" }
+      become: "yes"
 
     - name: "Theme: RetroCRT Install/Update"
       git:
@@ -301,6 +309,7 @@
       with_items:
         - { theme: "RetroCRT-240p", repo: "xovox/es-theme-RetroCRT-240p" }
         - { theme: "RetroCRT-240p-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
+      become: "yes"
 
     - name: "Theme: Optional Install/Update"
       git:
@@ -315,7 +324,8 @@
         - { theme: "Honey", repo: "xovox/es-theme-honey" }
         - { theme: "Pixel Heaven", repo: "skeletoooooor/es-pixel-heaven" }
       when:
-        - install_optional_themes == "yes"
+        - {{ install_optional_themes }} == "yes"
+      become: "yes"
 
     - name: "Populate Templates"
       template:
@@ -326,6 +336,7 @@
       with_items:
         - { src: "cmdline.txt.j2", dest: "/boot/cmdline.txt", mode: "755" }
         - { src: "autostart.sh.j2", dest: "/opt/retropie/configs/all/autostart.sh", mode: "755" }
+      become: "yes"
 
     - name: "Update /boot/config.txt"
       lineinfile:
@@ -347,8 +358,9 @@
         - { variable: "disable_splash", value: "1" }
         - { variable: "hdmi_timings", value: "{{ default_timings }}" }
         - { variable: "dpi_output_format", value: "{{ dpi_output_format }}" }
+      become: "yes"
 
-    - name: "Copy Files from /files"
+    - name: "Copy Files from ./files"
       copy:
         force: "{{ item.force }}"
         src: "files/{{ item.src }}"
@@ -361,6 +373,7 @@
         - { src: "RetroCRT.png",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi" }
         - { src: "RetroCRT.mp4",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi" }
         - { src: "RetroCRT.sh",               dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755",  owner: "pi",    group: "pi" }
+      become: "yes"
 
     - name: "Create Save States Directories"
       shell: /usr/bin/find . -mindepth 1 -maxdepth 1 -type d -exec mkdir -p /home/pi/RetroPie/savestates/{} \;
@@ -377,6 +390,7 @@
         name: [ 'bc', 'dos2unix', 'p7zip-full', 'vim' ]
         update_cache: true
         state: present
+      become: "yes"
 
     - name: "Console Font: Write Configuration"
       lineinfile:
@@ -389,6 +403,7 @@
       with_items:
         - { variable: "FONTFACE", value: "Terminus" }
         - { variable: "FONTSIZE", value: "6x12" }
+      become: "yes"
       notify: "setupcon"
 
     - name: "Fix Permissions"
@@ -402,3 +417,4 @@
         - "/etc/emulationstation/themes"
         - "/opt/retropie"
         - "{{home_dir}}"
+      become: "yes"
