@@ -451,6 +451,5 @@ echo "########################################"
 echo
 
 set -x
-#ansible-playbook RetroCRT.yml -i localhost,
-
+ansible-playbook RetroCRT.yml -i localhost,
 sleep 5
