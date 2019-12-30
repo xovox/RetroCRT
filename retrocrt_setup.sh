@@ -359,8 +359,7 @@ export retrocrt_ctrl_hardware="$retrocrt_ctrl_hardware"
 # Our HDMI Timings
 ##############################################################################
 
-export retrocrt_timings="$retrocrt_timings"
-export retrocrt_timings="\$retrocrt_install/retrocrt_timings/\$retrocrt_timings"
+export retrocrt_timings="\$retrocrt_install/retrocrt_timings/$retrocrt_timings"
 
 ##############################################################################
 # Our System PATH
