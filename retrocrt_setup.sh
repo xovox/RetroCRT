@@ -31,7 +31,7 @@ sudo mkdir -pv /boot/retrocrt
 retrocrt_title="RetroCRT"
 
 # lock in the ansible version we're running
-ansible_ver="2.9.2"
+ansible_ver="2.9.1"
 
 retrocrt_venv="$HOME/.virtualenv/retrocrt"
 req_packages="
