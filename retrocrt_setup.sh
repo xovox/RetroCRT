@@ -249,7 +249,7 @@ export retrocrt_video_hardware="$(dialog \
 	--title "$retrocrt_title :: Video Hardware" \
 	--stdout \
 	--default-item "$retrocrt_video_hardware" \
-	--menu "What CRT Connection?" \
+	--menu "What Video Connection?" \
 	0 0 0 \
 		vga666 "VGA666, Pi2JAMMA, Pi2SCART" \
 		rtrgb "RetroTink: RGB/Component"
