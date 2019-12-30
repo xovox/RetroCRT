@@ -241,7 +241,7 @@ export retrocrt_video_hardware="$(dialog \
 	--default-item "$retrocrt_video_hardware" \
 	--menu "What CRT Connection?" \
 	0 0 0 \
-		vga666 "VGA666, PI2JAMMA, PI2SCART" \
+		vga666 "VGA666, Pi2JAMMA, Pi2SCART" \
 		rtrgb "RetroTink: RGB/Component"
 )"
 
@@ -268,7 +268,7 @@ export retrocrt_ctrl_hardware="$(dialog \
 	--menu "Choose Controller Connection" \
 	0 0 0 \
 		usb "USB" \
-		pi2jamma "PI2JAMMA" \
+		pi2jamma "Pi2JAMMA" \
 )"
 }
 
@@ -318,7 +318,7 @@ export retrocrt_install="$retrocrt_install"
 ##############################################################################
 
 # valid settings:
-#	vga666	- Most hardware
+#	vga666	- Most Hardware: vga666, Pi2JAMMA, Pi2SCART
 #	 rtrgb	- RetroTink Ultimate
 
 export retrocrt_video_hardware="$retrocrt_video_hardware"
