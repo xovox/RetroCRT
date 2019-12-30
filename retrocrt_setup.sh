@@ -179,7 +179,6 @@ dialog --title "$retrocrt_title :: Warning"		--colors	--defaultno	--yesno "$warn
 
 #if dialog --title "$retrocrt_title :: Check Updates"	--colors	--defaultno	--yesno "$checkupdates"		25 36 ; then
 if [[ "$network_up" = "true" ]]; then
-    git fetch
     if dialog --title "$retrocrt_title :: Update Status" --colors --defaultno --yesno "$updategit" 25 36 ; then
 		clear ; reset ; clear
 		set -x
