@@ -346,6 +346,7 @@
         - { variable: "dpi_mode", value: "87" }
         - { variable: "disable_splash", value: "1" }
         - { variable: "hdmi_timings", value: "{{ default_timings }}" }
+        - { variable: "dpi_output_format", value: "{{ dpi_output_format }}" }
 
     - name: "Copy Files from /files"
       copy:
