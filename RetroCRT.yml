@@ -275,24 +275,6 @@
           - "--exclude=README.md"
       when: roms_copied.stat.exists == False
 
-    - name: "Copy WiFi Configuration"
-      copy:
-        src: "/boot/retrocrt/wpa_supplicant.conf"
-        dest: "/etc/wpa_supplicant/wpa_supplicant.conf"
-      when: wifi_copy.stat.exists == True
-      become: "yes"
-      notify: "wifi_restart"
-
-    - name: "Auto-Login Symlink"
-      file:
-        src: "/etc/systemd/system/autologin@.service"
-        dest: "/etc/systemd/system/getty.target.wants/getty@tty1.service"
-        owner: "root"
-        group: "root"
-        state: "link"
-        force: "yes"
-      become: "yes"
-
     - name: "Themes: Delete Non-Supported"
       file:
         path: "/etc/emulationstation/themes/{{ item.theme }}"
@@ -384,6 +366,24 @@
       shell: /usr/bin/find . -mindepth 1 -maxdepth 1 -type d -exec mkdir -p /home/pi/RetroPie/savefiles/{} \;
       args:
         chdir: /home/pi/RetroPie/roms
+
+    - name: "Copy WiFi Configuration"
+      copy:
+        src: "/boot/retrocrt/wpa_supplicant.conf"
+        dest: "/etc/wpa_supplicant/wpa_supplicant.conf"
+      when: wifi_copy.stat.exists == True
+      become: "yes"
+      notify: "wifi_restart"
+
+    - name: "Auto-Login Symlink"
+      file:
+        src: "/etc/systemd/system/autologin@.service"
+        dest: "/etc/systemd/system/getty.target.wants/getty@tty1.service"
+        owner: "root"
+        group: "root"
+        state: "link"
+        force: "yes"
+      become: "yes"
 
     - name: "Install Required Packages"
       apt:
