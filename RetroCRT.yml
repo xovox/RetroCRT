@@ -324,7 +324,7 @@
         - { theme: "Honey", repo: "xovox/es-theme-honey" }
         - { theme: "Pixel Heaven", repo: "skeletoooooor/es-pixel-heaven" }
       when:
-        - {{ install_optional_themes }} == "yes"
+        - "{{ install_optional_themes }}" == "yes"
       become: "yes"
 
     - name: "Populate Templates"
