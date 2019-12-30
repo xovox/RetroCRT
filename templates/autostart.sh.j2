@@ -1,5 +1,8 @@
-{% if rotate_es >= "1" %}
-emulationstation --no-splash --screenrotate {{ rotate_es }} #auto
+#!/bin/bash
+{% if rotate_es == "1" or rotate_es == "3" %}
+    {% set es_resolution = "240 320" %}
 {% else %}
-emulationstation --no-splash #auto
+    {% set es_resolution = "320 240" %}
 {% endif %}
+
+emulationstation --no-splash --screenrotate {{ rotate_es }} --resolution {{ es_resolution }} #auto
