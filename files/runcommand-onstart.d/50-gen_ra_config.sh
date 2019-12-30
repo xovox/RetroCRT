@@ -17,7 +17,7 @@
 # along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
 ##############################################################################
 
-source $HOME/.retrocrtrc
+eval "$(dos2unix < "/boot/retrocrt.txt")"
 
 squishy() {
 cat << SQUISHY

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $HOME/.retrocrtrc
+eval "$(dos2unix < "/boot/retrocrt.txt")"
 
 if ! (grep -wq "$1" $retrocrt_install/retrocrt_timings/no_per_rom_timings.txt); then
     rom_settings="$(egrep "^$ra_rom_basename," $retrocrt_install/retrocrt_resolutions.csv)"

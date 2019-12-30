@@ -17,7 +17,7 @@
 # along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
 ##############################################################################
 
-source ~/.retrocrtrc
+eval "$(dos2unix < "/boot/retrocrt.txt")"
 
 system_timings="$retrocrt_timings/$ra_system"
 rom_timings="${rom_timings:-"$retrocrt_timings/roms/$ra_rom_basename"}"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $HOME/.retrocrtrc
+eval "$(dos2unix < "/boot/retrocrt.txt")"
 
 framebuffer=/dev/fb0
 rom_image_dir="$HOME/RetroPie/roms/$ra_system/images"
