@@ -317,7 +317,6 @@
         mode: "{{ item.mode }}"
       with_items:
         - { src: "cmdline.txt.j2", dest: "/boot/cmdline.txt", mode: "755" }
-        - { src: "autostart.sh.j2", dest: "/opt/retropie/configs/all/autostart.sh", mode: "755" }
       become: "yes"
 
     - name: "Update /boot/config.txt"
@@ -351,10 +350,11 @@
         group: "{{ item.group }}"
         mode: "{{ item.mode }}"
       with_items:
-        - { src: "wpa_supplicant.conf.txt",   dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
-        - { src: "RetroCRT.png",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi" }
-        - { src: "RetroCRT.mp4",              dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi" }
-        - { src: "RetroCRT.sh",               dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755",  owner: "pi",    group: "pi" }
+        - { src: "wpa_supplicant.conf.txt",  dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
+        - { src: "RetroCRT.png",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
+        - { src: "RetroCRT.mp4",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
+        - { src: "RetroCRT.sh",              dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
+        - { src: "autostart.sh",             dest: "/opt/retropie/configs/all/autostart.sh",  force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
       become: "yes"
 
     - name: "Create Save States Directories"
@@ -405,6 +405,13 @@
         - { variable: "FONTSIZE", value: "6x12" }
       become: "yes"
       notify: "setupcon"
+
+    - name: "Disable Swap File"
+      service:
+        name: "dphys-swapfile"
+        enabled: "no"
+        state: stopped
+      become: "yes"
 
 #    - name: "Fix Permissions"
 #      file:
