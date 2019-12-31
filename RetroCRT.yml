@@ -224,7 +224,7 @@
           savestate_directory = /home/pi/RetroPie/savestate/{{ item.sys }}
       with_items:
         - { sys: "atarilynx",        y: "{{ atarilynx_height }}",        x: "{{ atarilynx_width }}"       }
-        - { sys: "gamegear"          y: "{{ gamegear_height }}",         x: "{{ gamegear_width }}"        }
+        - { sys: "gamegear",         y: "{{ gamegear_height }}",         x: "{{ gamegear_width }}"        }
         - { sys: "gba",              y: "{{ gba_height }}",              x: "{{ gba_width }}"             }
         - { sys: "gbc",              y: "{{ gbc_height }}",              x: "{{ gbc_width }}"             }
         - { sys: "gb",               y: "{{ gb_height }}",               x: "{{ gb_width }}"              }
