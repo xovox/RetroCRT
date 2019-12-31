@@ -154,6 +154,38 @@ if ! (dpkg -l $req_packages > /dev/null); then
     fi
 fi
 
+if [[ ! -f $retrocrt_venv/bin/activate ]]; then
+	echo "########################################"
+    echo "Generating Python 3 Virtual Env"
+	echo "########################################"
+	virtualenv --python=python3 $retrocrt_venv
+fi
+
+if [[ -f $retrocrt_venv/bin/activate ]]; then
+	source $retrocrt_venv/bin/activate
+fi
+
+if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
+	echo "########################################"
+    echo "Ensuring Virtual Env has Ansible $ansible_ver"
+	echo "########################################"
+	pip install ansible==$ansible_ver
+fi
+
+##############################################################################
+# make a dos happy backup file template
+##############################################################################
+
+bad_backup_string="%Y-%m-%d@%H:%M:%S~"
+good_backup_string="%Y%m%d_%H%M%S"
+ansible_basic_py="$(find $retrocrt_venv | grep "ansible/module_utils/basic.py$")"
+
+if grep -wq "$bad_backup_string" $ansible_basic_py ; then
+    sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
+        $ansible_basic_py
+fi
+
+
 sudo touch "$retrocrt_config"
 eval "$(dos2unix < "$retrocrt_config")"
 
@@ -402,40 +434,6 @@ CONFIG
 
 #source $retrocrt_config
 eval "$(dos2unix < "$retrocrt_config")"
-
-if [[ ! -f $retrocrt_venv/bin/activate ]]; then
-	echo "########################################"
-    echo "Generating Python 3 Virtual Env"
-	echo "########################################"
-	virtualenv --python=python3 $retrocrt_venv
-fi
-
-for rcfile in $retrocrt_config $retrocrt_venv/bin/activate ; do
-	if [[ -f "$rcfile" ]]; then
-		#source "$rcfile"
-		eval "$(dos2unix < "$rcfile")"
-	fi
-done
-
-if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
-	echo "########################################"
-    echo "Ensuring Virtual Env has Ansible $ansible_ver"
-	echo "########################################"
-	pip install ansible==$ansible_ver
-fi
-
-##############################################################################
-# make a dos happy backup file template
-##############################################################################
-
-bad_backup_string="%Y-%m-%d@%H:%M:%S~"
-good_backup_string="%Y%m%d_%H%M%S"
-ansible_basic_py="$(find $retrocrt_venv | grep "ansible/module_utils/basic.py$")"
-
-if grep -wq "$bad_backup_string" $ansible_basic_py ; then
-    sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
-        $ansible_basic_py
-fi
 
 ##############################################################################
 # Run our configuration playbook
