@@ -261,13 +261,13 @@ if [[ "$rotate_crt" = "0" ]]; then
     export rotate_ra="0"
 elif [[ "$rotate_crt" = "90" ]]; then
     export rotate_es="1"
-    export rotate_ra="1"
+    export rotate_ra="3"
 elif [[ "$rotate_crt" = "180" ]]; then
     export rotate_es="2"
     export rotate_ra="2"
 elif [[ "$rotate_crt" = "270" ]]; then
     export rotate_es="3"
-    export rotate_ra="3"
+    export rotate_ra="1"
 fi
 
 ##############################################################################
