@@ -9,11 +9,11 @@
 ```
 rpimage="retropie-4.5.1-rpi2_rpi3.img"
 loopback="$(sudo losetup -Pf --show $rpimage)"
-rootmnt="$(mktemp -d)
-bootmnt="$(mktemp -d)
+rootmnt="$(mktemp -d)"
+bootmnt="$(mktemp -d)"
 sudo mount ${loopback}p1 $bootmnt
 sudo mount ${loopback}p2 $rootmnt
-sed -i '/END INIT INFO/a exit 0 # RetroCRT' $rootmnt/etc/init.d/resize2fs_once
+sudo sed -i '/END INIT INFO/a exit 0 # RetroCRT' $rootmnt/etc/init.d/resize2fs_once
 sudo touch $bootmnt/ssh
 
 cat << EOF | sudo tee -a $bootmnt/config.txt
@@ -33,6 +33,27 @@ EOF
 sudo umount $bootmnt
 sudo umount $rootmnt
 sudo losetup -D $loopback
+```
+
+# Writing Image
+
+* We zero-out the first 1MB of the SD card to remove all metadata/boot/etc
+* 'sync' is called several times to ensure we've written everything in cache
+* partprobe is called to inform the kernel of partition changes
+* pv gives us a progress bar
+
+```
+image=retropie-4.5.1-rpi2_rpi3.img
+block=/dev/sdb
+test -b $block &&
+sudo dd if=/dev/zero bs=1M count=1 of=$block &&
+sudo sync &&
+sleep 2 &&
+sudo partprobe $block &&
+sleep 2 &&
+pv -cN "$image -> $block" $image | sudo dd bs=1M of=$block &&
+sleep 2 &&
+sudo sync
 ```
 
 # Installed Image Work
