@@ -1,0 +1,4 @@
+Dir{Cache /dev/shm}
+Dir::Cache /dev/shm;
+Dir::Cache{Archives /dev/shm/}
+Dir::Cache::Archives /dev/shm;
