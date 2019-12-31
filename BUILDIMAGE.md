@@ -39,11 +39,35 @@ sudo losetup -D $loopback
 
 * Grow / to 3.5G
 * Upgrade installed packages
-* Clone RetroCRT
 
 ```
 sudo resize2fs $(findmnt / -o source -n) 3500M &&
 sudo apt update &&
 sudo apt -y dist-upgrade &&
+```
+
+* Run RetroPie-Setup upgrade
+
+```
+cd $HOME/RetroPie-Setup
+git pull
+sudo ./retropie_setup.sh
+```
+
+* Clone RetroCRT
+* Configure RetroCRT
+
+```
+cd $HOME
 git clone https://github.com/xovox/RetroCRT
+cd RetroCRT
+./retrocrt_setup.sh
+```
+
+# Re-Running RetroCRT Playbook
+
+```
+eval "$(dos2unix < "/boot/retrocrt/retrocrt.txt")" &&
+source ~/.virtualenv/retrocrt/bin/activate &&
+ansible-playbook RetroCRT.yml -i localhost
 ```
