@@ -59,10 +59,19 @@ sudo sync
 # Installed Image Work
 
 * Grow / to 3.5G
-* Upgrade installed packages
 
 ```
 sudo resize2fs $(findmnt / -o source -n) 3500M &&
+```
+
+```
+cat << CACHE | sudo dd of=/etc/apt/apt.conf.d/01-cache
+Dir{Cache /dev/shm}
+Dir::Cache /dev/shm;
+Dir::Cache{Archives /dev/shm/}
+Dir::Cache::Archives /dev/shm;
+CACHE
+
 sudo apt update &&
 sudo apt -y dist-upgrade
 ```
