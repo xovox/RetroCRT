@@ -64,7 +64,7 @@ sudo sync
 ```
 sudo resize2fs $(findmnt / -o source -n) 3500M &&
 sudo apt update &&
-sudo apt -y dist-upgrade &&
+sudo apt -y dist-upgrade
 ```
 
 * Run RetroPie-Setup upgrade
@@ -83,6 +83,12 @@ cd $HOME
 git clone https://github.com/xovox/RetroCRT
 cd RetroCRT
 ./retrocrt_setup.sh
+```
+
+# Re-Enable resizing on next boot
+
+```
+sudo sed -i '/RetroCRT/d' /etc/init.d/resize2fs_once
 ```
 
 # Re-Running RetroCRT Playbook
