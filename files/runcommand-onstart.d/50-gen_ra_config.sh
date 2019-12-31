@@ -66,6 +66,7 @@ fi
 cat << GLOBAL
 video_allow_rotate = "true"
 video_rotation = "$rotate_ra"
+video_scale_integer = "false"
 GLOBAL
 
 if [[ "$rom_monitor_orientation" = "V" ]] && [[ "$rotate_ra" =~ [02] ]]; then
