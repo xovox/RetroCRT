@@ -219,22 +219,22 @@ export rotate_crt="$(dialog \
 	--menu "Which way is up?  This can be changed later." \
 	0 0 0 \
 		0 "^" \
-		90 "<" \
+		90 "> (Currently Buggy)" \
 		180 "v" \
-		270 ">"
+		270 "<"
 )"
 
 if [[ "$rotate_crt" = "0" ]]; then
     export rotate_es="0"
     export rotate_ra="0"
 elif [[ "$rotate_crt" = "90" ]]; then
-    export rotate_es="3"
+    export rotate_es="1"
     export rotate_ra="1"
 elif [[ "$rotate_crt" = "180" ]]; then
     export rotate_es="2"
     export rotate_ra="2"
 elif [[ "$rotate_crt" = "270" ]]; then
-    export rotate_es="1"
+    export rotate_es="3"
     export rotate_ra="3"
 fi
 
@@ -347,7 +347,7 @@ export dpi_output_format="$dpi_output_format"
 
 # up  es  ra  degrees
 # ^   0   0   0
-# >   1   3   90
+# >   1   3   90 (Currently Buggy in ES)
 # v   2   2   180
 # <   3   1   270
 
