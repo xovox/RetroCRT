@@ -300,10 +300,6 @@
         dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
         - { theme: "GBZ35 Dark",      repo: "rxbrad/es-theme-gbz35-dark"    }
-        - { theme: "Push A",          repo: "asche76/es-theme-push-a"       }
-        - { theme: "Push A Vertical", repo: "asche76/es-theme-push-a-v"     }
-        - { theme: "Bubble Gum",      repo: "xovox/es-theme-bubblegum"      }
-        - { theme: "Honey",           repo: "xovox/es-theme-honey"          }
         - { theme: "Pixel Heaven",    repo: "skeletoooooor/es-pixel-heaven" }
       become: "yes"
       #when:
