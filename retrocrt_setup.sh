@@ -219,7 +219,7 @@ export rotate_crt="$(dialog \
 	--menu "Which way is up?  This can be changed later." \
 	0 0 0 \
 		0 "^" \
-		90 "> (Currently Buggy)" \
+		90 "> (Currently Buggy in ES)" \
 		180 "v" \
 		270 "<"
 )"
