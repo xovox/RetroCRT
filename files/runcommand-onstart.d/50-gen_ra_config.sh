@@ -17,7 +17,7 @@
 # along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
 ##############################################################################
 
-source $HOME/.retrocrtrc
+eval "$(dos2unix < "/boot/retrocrt/retrocrt.txt")"
 
 squishy() {
 cat << SQUISHY
@@ -66,6 +66,7 @@ fi
 cat << GLOBAL
 video_allow_rotate = "true"
 video_rotation = "$rotate_ra"
+video_scale_integer = "false"
 GLOBAL
 
 if [[ "$rom_monitor_orientation" = "V" ]] && [[ "$rotate_ra" =~ [02] ]]; then

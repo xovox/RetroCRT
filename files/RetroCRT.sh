@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /home/pi/.retrocrtrc
+eval "$(dos2unix < "/boot/retrocrt/retrocrt.txt")"
 
 cd $retrocrt_install
 
