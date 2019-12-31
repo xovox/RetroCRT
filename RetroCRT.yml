@@ -192,24 +192,24 @@
           savefile_directory = /home/pi/RetroPie/savefile/{{ item.sys }}
           savestate_directory = /home/pi/RetroPie/savestate/{{ item.sys }}
       with_items:
-        - { sys: "arcade", y: "{{ arcade_height }}", x: "{{ arcade_width }}" }
-        - { sys: "atari2600", y: "{{ atari2600_height }}", x: "{{ atari2600_width }}" }
-        - { sys: "atari5200", y: "{{ atari5200_height }}", x: "{{ atari5200_width }}" }
-        - { sys: "atari7800", y: "{{ atari7800_height }}", x: "{{ atari7800_width }}" }
-        - { sys: "fba", y: "{{ fba_height }}", x: "{{ fba_width }}" }
-        - { sys: "fds", y: "{{ fds_height }}", x: "{{ fds_width }}" }
+        - { sys: "arcade",        y: "{{ arcade_height }}",        x: "{{ arcade_width }}"        }
+        - { sys: "atari2600",     y: "{{ atari2600_height }}",     x: "{{ atari2600_width }}"     }
+        - { sys: "atari5200",     y: "{{ atari5200_height }}",     x: "{{ atari5200_width }}"     }
+        - { sys: "atari7800",     y: "{{ atari7800_height }}",     x: "{{ atari7800_width }}"     }
+        - { sys: "fba",           y: "{{ fba_height }}",           x: "{{ fba_width }}"           }
+        - { sys: "fds",           y: "{{ fds_height }}",           x: "{{ fds_width }}"           }
         - { sys: "mame-libretro", y: "{{ mame_libretro_height }}", x: "{{ mame_libretro_width }}" }
-        - { sys: "mastersystem", y: "{{ mastersystem_height }}", x: "{{ mastersystem_width }}" }
-        - { sys: "megadrive", y: "{{ megadrive_height }}", x: "{{ megadrive_width }}" }
-        - { sys: "msx", y: "{{ msx_height }}", x: "{{ msx_width }}" }
-        - { sys: "n64", y: "{{ n64_height }}", x: "{{ n64_width }}" }
-        - { sys: "neogeo", y: "{{ neogeo_height }}", x: "{{ neogeo_width }}" }
-        - { sys: "nes", y: "{{ nes_height }}", x: "{{ nes_width }}" }
-        - { sys: "pcengine", y: "{{ pcengine_height }}", x: "{{ pcengine_width }}" }
-        - { sys: "psx", y: "{{ psx_height }}", x: "{{ psx_width }}" }
-        - { sys: "sega32x", y: "{{ sega32x_height }}", x: "{{ sega32x_width }}" }
-        - { sys: "segacd", y: "{{ segacd_height }}", x: "{{ segacd_width }}" }
-        - { sys: "snes", y: "{{ snes_height }}", x: "{{ snes_width }}" }
+        - { sys: "mastersystem",  y: "{{ mastersystem_height }}",  x: "{{ mastersystem_width }}"  }
+        - { sys: "megadrive",     y: "{{ megadrive_height }}",     x: "{{ megadrive_width }}"     }
+        - { sys: "msx",           y: "{{ msx_height }}",           x: "{{ msx_width }}"           }
+        - { sys: "n64",           y: "{{ n64_height }}",           x: "{{ n64_width }}"           }
+        - { sys: "neogeo",        y: "{{ neogeo_height }}",        x: "{{ neogeo_width }}"        }
+        - { sys: "nes",           y: "{{ nes_height }}",           x: "{{ nes_width }}"           }
+        - { sys: "pcengine",      y: "{{ pcengine_height }}",      x: "{{ pcengine_width }}"      }
+        - { sys: "psx",           y: "{{ psx_height }}",           x: "{{ psx_width }}"           }
+        - { sys: "sega32x",       y: "{{ sega32x_height }}",       x: "{{ sega32x_width }}"       }
+        - { sys: "segacd",        y: "{{ segacd_height }}",        x: "{{ segacd_width }}"        }
+        - { sys: "snes",          y: "{{ snes_height }}",          x: "{{ snes_width }}"          }
 
     - name: "Handheld: Write Configuration"
       blockinfile:
@@ -223,16 +223,16 @@
           savefile_directory = /home/pi/RetroPie/savefile/{{ item.sys }}
           savestate_directory = /home/pi/RetroPie/savestate/{{ item.sys }}
       with_items:
-        - { sys: "atarilynx", y: "{{ atarilynx_height }}", x: "{{ atarilynx_width }}" }
-        - { sys: "gamegear", y: "{{ gamegear_height }}", x: "{{ gamegear_width }}" }
-        - { sys: "gba", y: "{{ gba_height }}", x: "{{ gba_width }}" }
-        - { sys: "gbc", y: "{{ gbc_height }}", x: "{{ gbc_width }}" }
-        - { sys: "gb", y: "{{ gb_height }}", x: "{{ gb_width }}" }
-        - { sys: "ngpc", y: "{{ ngpc_height }}", x: "{{ ngpc_width }}" }
-        - { sys: "ngp", y: "{{ ngp_height }}", x: "{{ ngp_width }}" }
-        - { sys: "virtualboy", y: "{{ virtualboy_height }}", x: "{{ virtualboy_width }}" }
-        - { sys: "wonderswancolor", y: "{{ wonderswancolor_height }}", x: "{{ wonderswancolor_width }}" }
-        - { sys: "wonderswan", y: "{{ wonderswan_height }}", x: "{{ wonderswan_width }}" }
+        - { sys: "atarilynx",        y: "{{ atarilynx_height }}",        x: "{{ atarilynx_width }}"       }
+        - { sys: "gamegear"          y: "{{ gamegear_height }}",         x: "{{ gamegear_width }}"        }
+        - { sys: "gba",              y: "{{ gba_height }}",              x: "{{ gba_width }}"             }
+        - { sys: "gbc",              y: "{{ gbc_height }}",              x: "{{ gbc_width }}"             }
+        - { sys: "gb",               y: "{{ gb_height }}",               x: "{{ gb_width }}"              }
+        - { sys: "ngpc",             y: "{{ ngpc_height }}",             x: "{{ ngpc_width }}"            }
+        - { sys: "ngp",              y: "{{ ngp_height }}",              x: "{{ ngp_width }}"             }
+        - { sys: "virtualboy",       y: "{{ virtualboy_height }}",       x: "{{ virtualboy_width }}"      }
+        - { sys: "wonderswancolor",  y: "{{ wonderswancolor_height }}",  x: "{{ wonderswancolor_width }}" }
+        - { sys: "wonderswan",       y: "{{ wonderswan_height }}",       x: "{{ wonderswan_width }}"      }
 
     - name: "RetroArch: Write Configuration"
       lineinfile:
@@ -243,17 +243,17 @@
         regexp: "^{{ item.variable }}.*"
         line: "{{ item.variable }} = {{ item.value }}"
       with_items:
-        - { variable: "custom_viewport_width", value: "{{ physical_viewport_width }}" }
+        - { variable: "custom_viewport_width",  value: "{{ physical_viewport_width }}"  }
         - { variable: "custom_viewport_height", value: "{{ physical_viewport_height }}" }
-        - { variable: "aspect_ratio_index", value: "23" }
-        - { variable: "video_font_enable", value: "false" }
-        - { variable: "video_fullscreen", value: "true" }
-        - { variable: "video_hard_sync", value: "true" }
-        - { variable: "video_refresh_rate", value: "59.73" }
-        - { variable: "video_scale_integer", value: "true" }
-        - { variable: "video_smooth", value: "false" }
-        - { variable: "video_threaded", value: "true" }
-        - { variable: "video_vsync", value: "true" }
+        - { variable: "aspect_ratio_index",     value: "23"                             }
+        - { variable: "video_font_enable",      value: "false"                          }
+        - { variable: "video_fullscreen",       value: "true"                           }
+        - { variable: "video_hard_sync",        value: "true"                           }
+        - { variable: "video_refresh_rate",     value: "59.73"                          }
+        - { variable: "video_scale_integer",    value: "true"                           }
+        - { variable: "video_smooth",           value: "false"                          }
+        - { variable: "video_threaded",         value: "true"                           }
+        - { variable: "video_vsync",            value: "true"                           }
 
     - name: "Sync Directories"
       synchronize:
@@ -263,9 +263,9 @@
           - "--backup"
           - "--suffix=.{{ansible_date_time.epoch}}"
       with_items:
-        - { src: "files/runcommand-onstart.d", dest: "{{home_dir}}/scripts" }
-        - { src: "files/runcommand-onend.d", dest: "{{home_dir}}/scripts" }
-        - { src: "files/retropie/", dest: "/opt/retropie/configs/" }
+        - { src: "files/runcommand-onstart.d", dest: "{{home_dir}}/scripts"   }
+        - { src: "files/runcommand-onend.d",   dest: "{{home_dir}}/scripts"   }
+        - { src: "files/retropie/",            dest: "/opt/retropie/configs/" }
 
     - name: "Copy 240p Test Suite"
       synchronize:
@@ -289,7 +289,7 @@
         repo: "https://github.com/{{ item.repo }}"
         dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
-        - { theme: "RetroCRT-240p", repo: "xovox/es-theme-RetroCRT-240p" }
+        - { theme: "RetroCRT-240p",          repo: "xovox/es-theme-RetroCRT-240p"          }
         - { theme: "RetroCRT-240p-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
       become: "yes"
 
@@ -299,12 +299,12 @@
         repo: "https://github.com/{{ item.repo }}"
         dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
-        - { theme: "GBZ35 Dark", repo: "rxbrad/es-theme-gbz35-dark" }
-        - { theme: "Push A", repo: "asche76/es-theme-push-a" }
-        - { theme: "Push A Vertical", repo: "asche76/es-theme-push-a-v" }
-        - { theme: "Bubble Gum", repo: "xovox/es-theme-bubblegum" }
-        - { theme: "Honey", repo: "xovox/es-theme-honey" }
-        - { theme: "Pixel Heaven", repo: "skeletoooooor/es-pixel-heaven" }
+        - { theme: "GBZ35 Dark",      repo: "rxbrad/es-theme-gbz35-dark"    }
+        - { theme: "Push A",          repo: "asche76/es-theme-push-a"       }
+        - { theme: "Push A Vertical", repo: "asche76/es-theme-push-a-v"     }
+        - { theme: "Bubble Gum",      repo: "xovox/es-theme-bubblegum"      }
+        - { theme: "Honey",           repo: "xovox/es-theme-honey"          }
+        - { theme: "Pixel Heaven",    repo: "skeletoooooor/es-pixel-heaven" }
       become: "yes"
       #when:
       #  - install_optional_themes == "yes"
@@ -328,17 +328,17 @@
         regexp: "^{{ item.variable }}.*"
         line: "{{ item.variable }}={{ item.value }}"
       with_items:
-        - { variable: "force_turbo", value: "0" }
-        - { variable: "disable_audio_dither", value: "1" }
-        - { variable: "audio_pwm_mode", value: "0" }
-        - { variable: "dtoverlay", value: "dpi24" }
-        - { variable: "enable_dpi_lcd", value: "1" }
-        - { variable: "display_default_lcd", value: "1" }
-        - { variable: "dpi_group", value: "2" }
-        - { variable: "dpi_mode", value: "87" }
-        - { variable: "disable_splash", value: "1" }
-        - { variable: "hdmi_timings", value: "{{ default_timings }}" }
-        - { variable: "dpi_output_format", value: "{{ dpi_output_format }}" }
+        - { variable: "force_turbo",          value: "0"                       }
+        - { variable: "disable_audio_dither", value: "1"                       }
+        - { variable: "audio_pwm_mode",       value: "0"                       }
+        - { variable: "dtoverlay",            value: "dpi24"                   }
+        - { variable: "enable_dpi_lcd",       value: "1"                       }
+        - { variable: "display_default_lcd",  value: "1"                       }
+        - { variable: "dpi_group",            value: "2"                       }
+        - { variable: "dpi_mode",             value: "87"                      }
+        - { variable: "disable_splash",       value: "1"                       }
+        - { variable: "hdmi_timings",         value: "{{ default_timings }}"   }
+        - { variable: "dpi_output_format",    value: "{{ dpi_output_format }}" }
       become: "yes"
 
     - name: "Copy Files from ./files"
@@ -402,7 +402,7 @@
         line: '{{ item.variable }}="{{ item.value }}"'
       with_items:
         - { variable: "FONTFACE", value: "Terminus" }
-        - { variable: "FONTSIZE", value: "6x12" }
+        - { variable: "FONTSIZE", value: "6x12"     }
       become: "yes"
       notify: "setupcon"
 
