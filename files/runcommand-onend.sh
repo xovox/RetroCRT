@@ -1,7 +1,8 @@
 export runcommand_onend_log="/dev/shm/runcommand-onend.log"
 (
 set -x
-export rpie_onend_script_dir="$HOME/scripts/runcommand-onend.d"
+eval "$(dos2unix < "/boot/retrocrt/retrocrt.txt")"
+export rpie_onend_script_dir="$retrocrt_install/scripts/runcommand-onstart.d"
 for rpie_onend_script in $rpie_onend_script_dir/*.{sh,pl,py} ; do
     if [ -f "$rpie_onend_script" ]; then
         echo "##############################################################################"
