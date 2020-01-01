@@ -18,7 +18,7 @@ RetroCRT is a suite of tools to simplify the use of CRTs with a Raspberry Pi run
 
 This is achieved via non-destructive updating of configuration files & custom scripts to manage resolutions, including per-rom.
 
-Submit bugs at github.com/xovox/RetroCRT/issues
+Bugs: github.com/xovox/RetroCRT/issues
 
 E-Mail me at xovoxgit gmail com
 
