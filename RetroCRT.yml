@@ -83,7 +83,7 @@
 
     - name: "Check State of Test ROMS"
       stat:
-        path: "{{home_dir}}/RetroPie/roms/.240p_copied"
+        path: "{{home_dir}}/RetroPie/roms/.roms_copied"
       register: roms_copied
 
     - name: "Check For /boot/retrocrt/wpa_supplicant.conf"
@@ -267,7 +267,7 @@
         - { src: "files/runcommand-onend.d",   dest: "{{home_dir}}/scripts"   }
         - { src: "files/retropie/",            dest: "/opt/retropie/configs/" }
 
-    - name: "Copy 240p Test Suite"
+    - name: "Copy ROMs"
       synchronize:
         src: "files/roms/"
         dest: "{{home_dir}}/RetroPie/roms/"
