@@ -17,12 +17,12 @@ introtext=(
 RetroCRT is a suite of tools to simplify the use of CRTs with a Raspberry Pi running RetroPie.
 
 This is achieved via non-destructive updating of configuration files & custom scripts to manage resolutions, including per-rom.
-" "
+
 Submit bugs at github.com/xovox/RetroCRT/issues
 
 E-Mail me at xovoxgit gmail com
 
-Find developers, users, and support in our official Facebook group: \"RetroPie CRT Gamers\".
+Find devs, users, and support in our Facebook group: \"RetroPie CRT Gamers\".
 "
 )
 
