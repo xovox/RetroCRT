@@ -346,12 +346,14 @@
         group: "{{ item.group }}"
         mode: "{{ item.mode }}"
       with_items:
-        - { src: "wpa_supplicant.conf.txt",  dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
-        - { src: "RetroCRT.png",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
-        - { src: "RetroCRT.mp4",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
-        - { src: "RetroCRT.sh",              dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
+        - { src: "01-cache",                 dest: "/etc/apt/apt.conf.d/",                    force: "yes",  mode: "755",  owner: "root",  group: "root" }
         - { src: "autostart.sh",             dest: "/opt/retropie/configs/all/autostart.sh",  force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
-        - { src: "01-cache",                 dest: "/etc/apt/apt.conf.d/01-cache",            force: "yes",  mode: "755",  owner: "root",  group: "root" }
+        - { src: "RetroCRT.mp4",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
+        - { src: "RetroCRT.png",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
+        - { src: "RetroCRT.sh",              dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
+        - { src: "runcommand-onstart.sh",    dest: "/opt/retropie/configs/all/",              force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
+        - { src: "runcommand-onend.sh",      dest: "/opt/retropie/configs/all/",              force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
+        - { src: "wpa_supplicant.conf.txt",  dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
       become: "yes"
 
     - name: "Create Save States Directories"
