@@ -61,8 +61,11 @@ sudo sync
 * Grow / to 3.5G
 
 ```
-sudo resize2fs $(findmnt / -o source -n) 3500M &&
+sudo resize2fs $(findmnt / -o source -n) 3500M
 ```
+
+* Configure APT
+* Update System
 
 ```
 cat << CACHE | sudo dd of=/etc/apt/apt.conf.d/01-cache
@@ -105,5 +108,5 @@ sudo sed -i '/RetroCRT/d' /etc/init.d/resize2fs_once
 ```
 eval "$(dos2unix < "/boot/retrocrt/retrocrt.txt")" &&
 source ~/.virtualenv/retrocrt/bin/activate &&
-ansible-playbook RetroCRT.yml -i localhost
+ansible-playbook RetroCRT.yml -i localhost,
 ```
