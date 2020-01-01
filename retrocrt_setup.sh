@@ -31,7 +31,7 @@ hardwaretext=(
 RetroCRT requires specialized hardware:
 
 - RetroTink over component & RGB
-- VGA666 over RGB
+- VGA666 over RGB (not to VGA monitors)
 - Pi2JAMMA over RGB JAMMA harness
 - Pi2SCART over RGB SCART
 
