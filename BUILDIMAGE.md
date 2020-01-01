@@ -95,6 +95,7 @@ cd $HOME
 git clone https://github.com/xovox/RetroCRT
 cd RetroCRT
 ./retrocrt_setup.sh
+echo $HOME/RetroPie/splashscreens/RetroCRT.mp4 | sudo tee /etc/splashscreen.list
 ```
 
 # Re-Enable resizing on next boot
