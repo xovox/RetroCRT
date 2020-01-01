@@ -349,8 +349,9 @@
         - { src: "RetroCRT.mp4",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
         - { src: "RetroCRT.png",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
         - { src: "RetroCRT.sh",              dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
-        - { src: "wpa_supplicant.conf.txt",  dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
       become: "yes"
+
+#        - { src: "wpa_supplicant.conf.txt",  dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
 
     - name: "Create Save States Directories"
       shell: /usr/bin/find . -mindepth 1 -maxdepth 1 -type d -exec mkdir -p /home/pi/RetroPie/savestates/{} \;
