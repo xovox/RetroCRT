@@ -1,7 +1,7 @@
+export runcommand_onstart_log="/dev/shm/retrocrt-onstart.log"
 (
 set -x
 eval "$(dos2unix < "/boot/retrocrt/retrocrt.txt")"
-export runcommand_onstart_log="/dev/shm/retrocrt-onstart.log"
 
 export rpie_onstart_script_dir="$HOME/RetroCRT/scripts/runcommand-onstart.d"
 export ra_system="$1"
