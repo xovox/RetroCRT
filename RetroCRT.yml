@@ -263,8 +263,6 @@
           - "--backup"
           - "--suffix=.{{ansible_date_time.epoch}}"
       with_items:
-        - { src: "files/runcommand-onstart.d", dest: "{{home_dir}}/scripts"   }
-        - { src: "files/runcommand-onend.d",   dest: "{{home_dir}}/scripts"   }
         - { src: "files/retropie/",            dest: "/opt/retropie/configs/" }
 
     - name: "Copy ROMs"
