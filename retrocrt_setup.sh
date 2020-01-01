@@ -1,8 +1,7 @@
 #!/bin/bash
 
-license="
-##############################################################################
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
+<<<<<<< HEAD
 #
 # RetroCRT is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -32,62 +31,79 @@ if [[ -f "$retrocrt_config" ]]; then
 fi
 
 retrocrt_install=${retrocrt_install:-$PWD}
+=======
+>>>>>>> 2019.12
 
-retrocrt_title="RetroCRT"
-
-licensea="
-RetroCRT :: Configure RetroPie for an analog CRT
-
-Copyright (C) 2019 Duncan Brown (\Zb\Z4https://github.com/xovox\Zn)
-
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-(Continued on next screen)
+licensetext=(
 "
+RetroCRT is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
-licenseb="
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see \Zb\Z4https://www.gnu.org/licenses/\Zn
+RetroCRT is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+" "
+You should have received a copy of the GNU General Public License along with RetroCRT.  If not, see gnu.org/licenses/.
 "
+)
 
-description="
-RetroCRT is a suite of tools and configurations put together to enable the use of CRTs with the a Raspberry Pi running RetroPie.
-
-It achieves this by switching resolutions on the fly based on what platform or arcade rom you're currently using.
-
-Find developers, users, and support in our official Facebook group: \"RetroPie CRT Gamers\".
+introtext=(
 "
+RetroCRT is a suite of tools to simplify the use of CRTs with a Raspberry Pi running RetroPie.
 
-hardware="
-This software requires specialized hardware.
+This is achieved via non-destructive updating of configuration files & custom scripts to manage resolutions & orientation per-rom/core.
 
-The currently tested hardware is:
+Bugs: github.com/xovox/RetroCRT/issues
+
+E-Mail: xovox git gmail com
+
+Facebook: facebook.com/groups/RetroPieCRT
+"
+)
+
+hardwaretext=(
+"
+RetroCRT requires specialized hardware:
 
 - RetroTink over component & RGB
+- VGA666 over RGB (not to VGA monitors)
+- Pi2JAMMA over RGB JAMMA harness
+- Pi2SCART over RGB SCART
+
 Future supported hardware:
 
 - RetroTink S-Video & composite
 - Internal 3.5mm composite
-- VGA666 over RGB
-- pi2scart over RGB SCART
+"
+)
 
+##############################################################################
+# pull in our config
+##############################################################################
 
-If you don't have the required hardware, this will not work.
+retrocrt_config="/boot/retrocrt/retrocrt.txt"
+sudo mkdir -pv /boot/retrocrt
+
+#retrocrt_config="$HOME/.retrocrtrc"
+#source $retrocrt_config
+retrocrt_title="RetroCRT"
+
+# lock in the ansible version we're running
+ansible_ver="2.9.1"
+
+retrocrt_venv="$HOME/.virtualenv/retrocrt"
+req_packages="
+	dialog
+	dos2unix
+	git
+	python3-apt
+	python3-dev
+	virtualenv
 "
 
-warning="
-\Zb\Z1THIS WILL OVERWRITE MANY MANY THINGS!\Zn
-
-Please be sure to have run a full RetroPie upgrade as well as update all of your system packages first!
-
-Are you actually ready?
-"
+export PS4="   \[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
 
 finalwarning="
-\Zb\Z1LAST CHANCE!!! BACKUP YOUR INSTALLATION!!!\Zn
+\Zb\Z1LAST CHANCE TO ABORT!!!\Zn
 
-This installer overwrites many critical configs.  This is best run on a clean RetroPie installation.
+This suite has been tested, but does update *many* things on your system.  It makes backups of *everything* before overwriting, so reverting is possible.
 
 Last chance, are you sure you wish to continue?
 "
@@ -96,9 +112,6 @@ updategit="
 Update RetroCRT installer and configs before we continue?
 
 This will restart the installer.
-
---------------------------------
-
 "
 
 rotation="
@@ -123,18 +136,8 @@ You have three choices on how to handle these games.
 - Scale down to 240p, but use bilinear filtering to smooth some of the rough edges.  Some lines will look slightly strange.
 "
 
-#video_smooth = "false"
-
-#rotate_tv="$(dialog --title "$retrocrt_title :: Large Screen Games" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 ">" 180 "v" 270 "<")"
-
-##############################################################################
-# are we being run in the ight dir?
-##############################################################################
-
-if [[ "$PWD" != "$retrocrt_install" ]]; then
-    echo -e "Please move the installer directory to \"$retrocrt_install\"\n"
-    exit
-        errorExit="true"
+if [ -f $HOME/RetroCRT/files/dialogrc ]; then
+	export DIALOGRC=$HOME/RetroCRT/files/dialogrc
 fi
 
 ##############################################################################
@@ -148,29 +151,124 @@ else
 fi
 
 ##############################################################################
+# Install Required Packages
+##############################################################################
+
+if ! (dpkg -l $req_packages > /dev/null); then
+    if [[ "$network_up" = "true" ]]; then
+        sudo apt update
+        sudo apt -y install $req_packages
+    else
+        dialog \
+			--no-shadow \
+			--title "$retrocrt_title :: Fatal Error" \
+			--colors \
+			--msgbox \
+			"$fatalquit" \
+			20 46
+        exit
+    fi
+fi
+
+if [[ ! -f $retrocrt_venv/bin/activate ]]; then
+    echo
+	echo "########################################"
+    echo "Generating Python 3 Virtual Env"
+	echo "########################################"
+	virtualenv --python=python3 $retrocrt_venv
+fi
+
+if [[ -f $retrocrt_venv/bin/activate ]]; then
+	source $retrocrt_venv/bin/activate
+fi
+
+if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
+	echo
+	echo "########################################"
+    echo "Ensuring Virtual Env has Ansible $ansible_ver"
+	echo "########################################"
+    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible==$ansible_ver
+fi
+
+##############################################################################
+# make a dos happy backup file template
+##############################################################################
+
+bad_backup_string="%Y-%m-%d@%H:%M:%S~"
+good_backup_string="%Y%m%d_%H%M%S"
+ansible_basic_py="$(find $retrocrt_venv | grep "ansible/module_utils/basic.py$")"
+
+if grep -wq "$bad_backup_string" $ansible_basic_py ; then
+    sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
+        $ansible_basic_py
+fi
+
+
+sudo touch "$retrocrt_config"
+eval "$(dos2unix < "$retrocrt_config")"
+
+if [ -f $retrocrt_install/files/dialogrc ]; then
+	export DIALOGRC=$retrocrt_install/files/dialogrc
+fi
+
+##############################################################################
+# are we being run in the right dir?
+##############################################################################
+
+retrocrt_install=${retrocrt_install:-$PWD}
+
+if [[ "$PWD" != "$retrocrt_install" ]]; then
+    echo -e "Please move the installer directory to \"$retrocrt_install\"\n"
+    exit
+fi
+
+##############################################################################
 # license & about the project
 ##############################################################################
 
-dialog --title "$retrocrt_title :: License & Warranty"	--colors			--msgbox "$licensea"		25 36
-dialog --title "$retrocrt_title :: License & Warranty"	--colors			--msgbox "$licenseb"		25 36
-dialog --title "$retrocrt_title :: About"		--colors			--msgbox "$description"		25 36
-dialog --title "$retrocrt_title :: Supported Hardware"	--colors			--msgbox "$hardware"		25 36
+textpage="0"
+for text in "${licensetext[@]}"; do
+	textpage=$[ $textpage + 1 ]
+	dialog \
+		--no-shadow \
+		--title "$retrocrt_title :: License & Warranty ($textpage/${#licensetext[@]})"  \
+		--colors  \
+		--msgbox "$text" \
+		20 46
+done
 
-##############################################################################
-# first warning
-##############################################################################
+textpage="0"
+for text in "${introtext[@]}"; do
+	textpage=$[ $textpage + 1 ]
+	dialog \
+		--no-shadow \
+		--title "$retrocrt_title :: Introduction ($textpage/${#introtext[@]})"  \
+		--colors  \
+		--msgbox "$text" \
+		20 46
+done
 
-dialog --title "$retrocrt_title :: Warning"		--colors	--defaultno	--yesno "$warning"		25 36 || exit
+textpage="0"
+for text in "${hardwaretext[@]}"; do
+	textpage=$[ $textpage + 1 ]
+	dialog \
+		--no-shadow \
+		--title "$retrocrt_title :: Hardware ($textpage/${#hardwaretext[@]})"  \
+		--colors  \
+		--msgbox "$text" \
+		20 46
+done
 
 ##############################################################################
 # update before proceding?
 ##############################################################################
 
-#if dialog --title "$retrocrt_title :: Check Updates"	--colors	--defaultno	--yesno "$checkupdates"		25 36 ; then
 if [[ "$network_up" = "true" ]]; then
-    git fetch
-    if dialog --title "$retrocrt_title :: Update Status" --colors --defaultno --yesno "$updategit$(git status -u no)" 25 36 ; then
+    if dialog --no-shadow --title "$retrocrt_title :: Update RetroCRT" --colors --defaultno --yesno "$updategit" 20 46 ; then
+		clear ; reset ; clear
+		set -x
         git pull
+		sleep 5
         $0
         exit
     fi
@@ -180,95 +278,196 @@ fi
 # do we want to rotate our screen?
 ##############################################################################
 
-# up	es	ra	degrees
-# ^	0	0	0
-# >	1	3	90
-# v	2	2	180
-# <	3	1	270
+# up  es  ra  degrees
+# ^   0   0   0
+# >   1   3   90
+# v   2   2   180
+# <   3   1   270
 
-rotate_tv=${rotate_tv:-0}
 
-if [[ "$rotate_tv" = "0" ]]; then
-    rotate_tv_default="--defaultno"
-fi
+rotate_crt=${rotate_crt:-0}
 
-if dialog --title "$retrocrt_title :: Screen Orientation" --colors $rotate_tv_default --yesno "$rotation" 25 36 ; then
-    rotate_tv="$(dialog --title "$retrocrt_title :: Screen Orientation" --stdout --default-item "$rotate_tv" --menu "Which way is up?" 0 0 0 0 "^" 90 "<" 180 "v" 270 ">")"
-else
-    rotate_tv=0
-fi
+export rotate_crt="$(dialog --no-shadow \
+	--title "$retrocrt_title :: Screen Orientation" \
+	--stdout \
+	--default-item "$rotate_crt" \
+	--menu "Which way is up?  This can be changed later." \
+	0 0 0 \
+		0 "^" \
+		90 "> (Currently Buggy in ES)" \
+		180 "v" \
+		270 "<"
+)"
 
-if [[ "$rotate_tv" = "0" ]]; then
-    rotate_es="0"
-    rotate_ra="1"
-elif [[ "$rotate_tv" = "90" ]]; then
-    rotate_es="3"
-    rotate_ra="1"
-elif [[ "$rotate_tv" = "180" ]]; then
-    rotate_es="2"
-    rotate_ra="1"
-elif [[ "$rotate_tv" = "270" ]]; then
-    rotate_es="1"
-    rotate_ra="3"
+if [[ "$rotate_crt" = "0" ]]; then
+    export rotate_es="0"
+    export rotate_ra="0"
+elif [[ "$rotate_crt" = "90" ]]; then
+    export rotate_es="1"
+    export rotate_ra="3"
+elif [[ "$rotate_crt" = "180" ]]; then
+    export rotate_es="2"
+    export rotate_ra="2"
+elif [[ "$rotate_crt" = "270" ]]; then
+    export rotate_es="3"
+    export rotate_ra="1"
 fi
 
 ##############################################################################
 # our crt connection
 ##############################################################################
 
-retrocrt_hardware="${retrocrt_hardware:-rt_rgb}"
-#retrocrt_hardware="$(dialog --title "$retrocrt_title :: Hardware Used" --stdout --default-item "$retrocrt_hardware" --menu "What CRT Connection?" 0 0 0 rt_rgb "RetroTink: RGB/Component" rt_svid "RetroTink: S-Video" rt_comp "RetroTink: Composite" 35 "3.5mm Jack")"
+export dpi_output_format=${dpi_output_format:-0}
+export retrocrt_video_hardware=${retrocrt_video_hardware:-vga666}
+
+export retrocrt_video_hardware="$(dialog --no-shadow \
+	--title "$retrocrt_title :: Video Hardware" \
+	--stdout \
+	--default-item "$retrocrt_video_hardware" \
+	--menu "What Video Connection?" \
+	0 0 0 \
+		vga666 "VGA666, Pi2JAMMA, Pi2SCART" \
+		rtrgb "RetroTink: RGB/Component"
+)"
+
+if [ "$retrocrt_video_hardware" = "vga666" ]; then
+	export retrocrt_timings="rgb/15khz"
+	export dpi_output_format="0"
+elif [ "$retrocrt_video_hardware" = "rtrgb" ]; then
+	export retrocrt_timings="rgb/15khz"
+	export dpi_output_format="519"
+fi
+
+##############################################################################
+# our controller connection
+##############################################################################
+
+export retrocrt_ctrl_hardware=${retrocrt_ctrl_hardware:-usb}
+
+disabled_section() {
+export retrocrt_ctrl_hardware="$(dialog --no-shadow \
+	--title "$retrocrt_title :: Controller Hardware" \
+	--stdout \
+	--default-item "$retrocrt_ctrl_hardware" \
+	--menu "Choose Controller Connection" \
+	0 0 0 \
+		usb "USB" \
+		pi2jamma "Pi2JAMMA" \
+)"
+}
 
 ##############################################################################
 # choose a tv region
 ##############################################################################
 
 tv_region=${tv_region:-ntsc}
-#tv_region"$(dialog --stdout --default-item "$tv_region --menu "What region are you?" 0 0 0 NTSC "NTSC" PAL "PAL" SECAM "SECAM")"
+
+disabled_section() {
+export tv_region="$(dialog --no-shadow \
+	--title "$retrocrt_title :: Controller Hardware" \
+	--stdout \
+	--default-item "$tv_region" \
+	--menu "Choose Controller Connection" \
+	0 0 0 \
+		ntsc "NTSC" \
+		pal "PAL" \
+		secam "SECAM" \
+)"
+}
 
 ##############################################################################
 # one last chance to bail
 ##############################################################################
 
-dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 25 36 || exit
+dialog --no-shadow --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 20 46 || exit
+
+clear
 
 ##############################################################################
 # write our config
 ##############################################################################
 
-cat << CONFIG > $retrocrt_config
+cat << CONFIG | unix2dos | sudo dd of=$retrocrt_config
 #!/bin/bash
 $license
-# where we keep everything
+
+##############################################################################
+# Where RetroCRT is Installed
+##############################################################################
+
 export retrocrt_install="$retrocrt_install"
 
-export tv_region="$tv_region"
+##############################################################################
+# Configure Video Output, Typically Handled by RetroCRT TUI
+##############################################################################
 
-export rotate_tv="$rotate_tv"
+# valid settings:
+#    vga666  - Most Hardware: vga666, Pi2JAMMA, Pi2SCART
+#     rtrgb  - RetroTink Ultimate
+
+export retrocrt_video_hardware="$retrocrt_video_hardware"
+
+# This handles our color depth
+
+# valid settings:
+#    0      - 18-bit, Most Hardware
+#    519    - 24-bit, RetroTink Ultimate
+
+export dpi_output_format="$dpi_output_format"
+
+##############################################################################
+# Screen Rotation, Typically Handled by RetroCRT TUI
+##############################################################################
+
+# up  es  ra  degrees
+# ^   0   0   0
+# >   1   3   90 (Currently Buggy in ES)
+# v   2   2   180
+# <   3   1   270
+
+export rotate_crt="$rotate_crt"
 export rotate_es="$rotate_es"
 export rotate_ra="$rotate_ra"
 
-export retrocrt_hardware="$retrocrt_hardware"
+##############################################################################
+# Configure Our Controller
+##############################################################################
 
-# our per-system video modes
-export retrocrt_timings="\$retrocrt_install/retrocrt_timings/\$tv_region/\$retrocrt_hardware"
+# valid settings:
+#    usb    - USB/BlueTooth connected controller
 
-export PATH="\$retrocrt_install/bin:\$PATH"
+export retrocrt_ctrl_hardware="$retrocrt_ctrl_hardware"
 
-# keep ansible from creating ugly .retry files
+##############################################################################
+# Our HDMI Timings
+##############################################################################
+
+export retrocrt_timings="\$retrocrt_install/retrocrt_timings/$retrocrt_timings"
+
+##############################################################################
+# Our System PATH
+##############################################################################
+
+export PATH="\$retrocrt_install/scripts:\$PATH"
+
+##############################################################################
+# Ansible Configuration
+##############################################################################
+
 export ANSIBLE_RETRY_FILES_ENABLED=0
-CONFIG
 
 ##############################################################################
-# pull in our config
+# Emulation Resolution, Currently Unused
 ##############################################################################
 
-source $retrocrt_config
+physical_viewport_width=1920
+physical_viewport_height=240
 
 ##############################################################################
-# install ansible
+# TV Region, Currently Unused
 ##############################################################################
 
+<<<<<<< HEAD
 if ! (dpkg -l $req_packages > /dev/null); then
     if [[ "$network_up" = "true" ]]; then
         sudo apt update
@@ -278,9 +477,27 @@ if ! (dpkg -l $req_packages > /dev/null); then
         exit
     fi
 fi
+=======
+export tv_region="$tv_region"
+CONFIG
+
+##############################################################################
+# pull in our config
+##############################################################################
+
+#source $retrocrt_config
+eval "$(dos2unix < "$retrocrt_config")"
+>>>>>>> 2019.12
 
 ##############################################################################
 # Run our configuration playbook
 ##############################################################################
 
+echo "########################################"
+echo "Running RetroCRT Ansible Playbook"
+echo "########################################"
+echo
+
+set -x
 ansible-playbook RetroCRT.yml -i localhost,
+sleep 5

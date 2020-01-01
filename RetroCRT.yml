@@ -17,133 +17,439 @@
 # along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
 ##############################################################################
 
-- hosts: "all"
+- hosts: "localhost"
   connection: "local"
-  become: "yes"
   become_user: "root"
+#  become: "yes"
 
   handlers:
 
-    - name: "Install Updated /boot Configs"
-      copy:
-        src: "/{{ item }}"
-        dest: "/boot/{{ item }}"
-      with_items:
-        - "cmdline.txt"
-        - "config.txt"
-      listen: "copyboot"
+    - name: "Save Console Font"
+      shell: setupcon --save-only
+      become: "yes"
+      listen: "setupcon"
+
+    - name: "Restart WiFi"
+      service:
+        name: networking
+        state: restarted
+      become: "yes"
+      listen: "wifi_restart"
 
   pre_tasks:
 
-    - name: "Reading Configs"
+    - name: "Ensure /boot/retrocrt Exists"
+      file:
+        path: "/boot/retrocrt"
+        state: "directory"
+      become: "yes"
+
+    - name: "Reading RetroCRT Env Vars"
       set_fact:
         tv_region: "{{ lookup('env', 'tv_region') }}"
         retrocrt_timings: "{{ lookup('env', 'retrocrt_timings') }}"
-        rotate_tv: "{{ lookup('env', 'rotate_tv') }}"
+        rotate_crt: "{{ lookup('env', 'rotate_crt') }}"
         rotate_es: "{{ lookup('env', 'rotate_es') }}"
         rotate_ra: "{{ lookup('env', 'rotate_ra') }}"
+        dpi_output_format: "{{ lookup('env', 'dpi_output_format') }}"
+        home_dir: "{{ lookup('env', 'HOME') }}"
+        physical_viewport_width: 1920
+        physical_viewport_height: 240
+        virtual_viewport_width: 320
+        handheld_multiplier: 6
+        install_optional_themes: "yes"
+        #physical_viewport_width: "{{ lookup('env', 'physical_viewport_width') }}"
+        #physical_viewport_height: "{{ lookup('env', 'physical_viewport_height') }}"
+        #physical_viewport_width: "{{ lookup('env', 'physical_viewport_width') }}"
+
+    - name: "Read /boot/retrocrt/retrocrt.yml"
+      include_vars:
+        dir: "/boot/retrocrt"
+        files_matching: "retrocrt.yaml"
 
     - name: "Set Default Timings"
       set_fact:
         default_timings: "{{ lookup('file', '{{ retrocrt_timings }}/default') }}"
-        
+
     - name: "Find / UUID"
       command: "findmnt --noheadings --output PARTUUID /"
       register: root_uuid
+      become: "yes"
 
     - name: "Find / Filesystem Type"
       command: "findmnt --noheadings --output FSTYPE /"
       register: root_fstype
-
-  tasks:
-
-    - name: "Update /boot Configs"
-      template:
-        src: "templates/{{ item }}.j2"
-        dest: "/{{ item }}"
-      with_items:
-        - "cmdline.txt"
-        - "config.txt"
-      notify: "copyboot"
-
-    - name: "Update EmulationStation Startup"
-      template:
-        src: "templates/autostart.sh.j2"
-        dest: "/opt/retropie/configs/all/autostart.sh"
-
-    - name: "Menu Item"
-      copy:
-        src: "bin/RetroCRT.sh"
-        dest: "/home/pi/RetroPie/retropiemenu/RetroCRT.sh"
-        mode: 0755
-        owner: "pi"
-        group: "pi"
-
-    - name: "Menu Item Icon"
-      copy:
-        src: "files/RetroCRT.png"
-        dest: "/home/pi/RetroPie/retropiemenu/icons/RetroCRT.png"
-        mode: 0644
-        owner: "pi"
-        group: "pi"
-
-    - name: "Copy RetroArch Configs"
-      synchronize:
-        src: "configs/retropie/"
-        dest: "/opt/retropie/configs/"
-        rsync_opts:
-          - "--backup"
-          - "--suffix .{{ansible_date_time.epoch}}"
-
-    - name: "Copy On Start/End Scripts"
-      synchronize:
-        src: "files/{{ item }}/"
-        dest: '/home/pi/RetroPie/{{ item }}/'
-        rsync_opts:
-          - "--backup"
-          - "--suffix .{{ansible_date_time.epoch}}"
-      with_items:
-        - "runcommand-onstart.d"
-        - "runcommand-onend.d"
-
-    - name: "Disable RetroArch Notifications"
-      lineinfile:
-        dest: "/opt/retropie/configs/all/retroarch.cfg"
-        backup: "yes"
-        regexp: '^video_font_enable ='
-        line: 'video_font_enable = "false"'
+      become: "yes"
 
     - name: "Check State of Test ROMS"
       stat:
-        path: "/home/pi/RetroPie/roms/.240p_copied"
+        path: "{{home_dir}}/RetroPie/roms/.roms_copied"
       register: roms_copied
 
-    - name: "240p Test Suite"
+    - name: "Check For /boot/retrocrt/wpa_supplicant.conf"
+      stat:
+        path: "/boot/retrocrt/wpa_supplicant.conf"
+      register: wifi_copy
+
+#    - name: "Resolution: Handheld Multiplier"
+#      set_fact:
+#        handheld_multiplier: "{{ (physical_viewport_width / virtual_viewport_width) | int }}"
+
+    - name: "Resolution: Get Info"
+      set_fact:
+        arcade_height: 240
+        atari2600_height: 210
+        atari5200_height: 240
+        atari7800_height: 240
+        fba_height: 240
+        fds_height: 224
+        mame_libretro_height: 240
+        mastersystem_height: 192
+        megadrive_height: 224
+        msx_height: 240
+        n64_height: 240
+        neogeo_height: 224
+        nes_height: 224
+        pcengine_height: 240
+        psx_height: 240
+        sega32x_height: 224
+        segacd_height: 224
+        snes_height: 224
+        atarilynx_width: "{{ 160 * handheld_multiplier }}"
+        atarilynx_height: 102
+        gamegear_width: "{{ 160 * handheld_multiplier }}"
+        gamegear_height: 144
+        gba_width: "{{ 240 * handheld_multiplier }}"
+        gba_height: 160
+        gbc_width: "{{ 160 * handheld_multiplier }}"
+        gbc_height: 144
+        gb_width: "{{ 160 * handheld_multiplier }}"
+        gb_height: 144
+        ngpc_width: "{{ 160 * handheld_multiplier }}"
+        ngpc_height: 152
+        ngp_width: "{{ 160 * handheld_multiplier }}"
+        ngp_height: 152
+        virtualboy_width: 1920
+        virtualboy_height: 224
+        wonderswancolor_width: "{{ 224 * handheld_multiplier }}"
+        wonderswancolor_height: 144
+        wonderswan_width: "{{ 224 * handheld_multiplier }}"
+        wonderswan_height: 144
+
+    - name: "Resolution: Console/Arcade Multiplier"
+      set_fact:
+        arcade_percentage: "{{ arcade_height / physical_viewport_height | float }}"
+        atari2600_percentage: "{{ atari2600_height / physical_viewport_height | float }}"
+        atari5200_percentage: "{{ atari5200_height / physical_viewport_height | float }}"
+        atari7800_percentage: "{{ atari7800_height / physical_viewport_height | float }}"
+        fba_percentage: "{{ fba_height / physical_viewport_height | float }}"
+        fds_percentage: "{{ fds_height / physical_viewport_height | float }}"
+        mame_libretro_percentage: "{{ mame_libretro_height / physical_viewport_height | float }}"
+        mastersystem_percentage: "{{ mastersystem_height / physical_viewport_height | float }}"
+        megadrive_percentage: "{{ megadrive_height / physical_viewport_height | float }}"
+        msx_percentage: "{{ msx_height / physical_viewport_height | float }}"
+        n64_percentage: "{{ n64_height / physical_viewport_height | float }}"
+        neogeo_percentage: "{{ neogeo_height / physical_viewport_height | float }}"
+        nes_percentage: "{{ nes_height / physical_viewport_height | float }}"
+        pcengine_percentage: "{{ pcengine_height / physical_viewport_height | float }}"
+        psx_percentage: "{{ psx_height / physical_viewport_height | float }}"
+        sega32x_percentage: "{{ sega32x_height / physical_viewport_height | float }}"
+        segacd_percentage: "{{ segacd_height / physical_viewport_height | float }}"
+        snes_percentage: "{{ snes_height / physical_viewport_height | float }}"
+
+    - name: "Resolution: Calc Console/Arcade X"
+      set_fact:
+        arcade_width: "{{ (physical_viewport_width * arcade_percentage | float) | int}}"
+        atari2600_width: "{{ (physical_viewport_width * atari2600_percentage | float) | int}}"
+        atari5200_width: "{{ (physical_viewport_width * atari5200_percentage | float) | int}}"
+        atari7800_width: "{{ (physical_viewport_width * atari7800_percentage | float) | int}}"
+        fba_width: "{{ (physical_viewport_width * fba_percentage | float) | int}}"
+        fds_width: "{{ (physical_viewport_width * fds_percentage | float) | int}}"
+        mame_libretro_width: "{{ (physical_viewport_width * mame_libretro_percentage | float) | int}}"
+        mastersystem_width: "{{ (physical_viewport_width * mastersystem_percentage | float) | int}}"
+        megadrive_width: "{{ (physical_viewport_width * megadrive_percentage | float) | int}}"
+        msx_width: "{{ (physical_viewport_width * msx_percentage | float) | int}}"
+        n64_width: "{{ (physical_viewport_width * n64_percentage | float) | int}}"
+        neogeo_width: "{{ (physical_viewport_width * neogeo_percentage | float) | int}}"
+        nes_width: "{{ (physical_viewport_width * nes_percentage | float) | int}}"
+        pcengine_width: "{{ (physical_viewport_width * pcengine_percentage | float) | int}}"
+        psx_width: "{{ (physical_viewport_width * psx_percentage | float) | int}}"
+        sega32x_width: "{{ (physical_viewport_width * sega32x_percentage | float) | int}}"
+        segacd_width: "{{ (physical_viewport_width * segacd_percentage | float) | int}}"
+        snes_width: "{{ (physical_viewport_width * snes_percentage | float) | int}}"
+
+  tasks:
+
+    - name: "Console/Arcade: Write Configuration"
+      blockinfile:
+        path: "/opt/retropie/configs/{{ item.sys }}/retroarch.cfg"
+        create: "yes"
+        backup: "yes"
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_height = {{ item.y }}
+          custom_viewport_width = {{ item.x }}
+          savefile_directory = /home/pi/RetroPie/savefile/{{ item.sys }}
+          savestate_directory = /home/pi/RetroPie/savestate/{{ item.sys }}
+      with_items:
+        - { sys: "arcade",        y: "{{ arcade_height }}",        x: "{{ arcade_width }}"        }
+        - { sys: "atari2600",     y: "{{ atari2600_height }}",     x: "{{ atari2600_width }}"     }
+        - { sys: "atari5200",     y: "{{ atari5200_height }}",     x: "{{ atari5200_width }}"     }
+        - { sys: "atari7800",     y: "{{ atari7800_height }}",     x: "{{ atari7800_width }}"     }
+        - { sys: "fba",           y: "{{ fba_height }}",           x: "{{ fba_width }}"           }
+        - { sys: "fds",           y: "{{ fds_height }}",           x: "{{ fds_width }}"           }
+        - { sys: "mame-libretro", y: "{{ mame_libretro_height }}", x: "{{ mame_libretro_width }}" }
+        - { sys: "mastersystem",  y: "{{ mastersystem_height }}",  x: "{{ mastersystem_width }}"  }
+        - { sys: "megadrive",     y: "{{ megadrive_height }}",     x: "{{ megadrive_width }}"     }
+        - { sys: "msx",           y: "{{ msx_height }}",           x: "{{ msx_width }}"           }
+        - { sys: "n64",           y: "{{ n64_height }}",           x: "{{ n64_width }}"           }
+        - { sys: "neogeo",        y: "{{ neogeo_height }}",        x: "{{ neogeo_width }}"        }
+        - { sys: "nes",           y: "{{ nes_height }}",           x: "{{ nes_width }}"           }
+        - { sys: "pcengine",      y: "{{ pcengine_height }}",      x: "{{ pcengine_width }}"      }
+        - { sys: "psx",           y: "{{ psx_height }}",           x: "{{ psx_width }}"           }
+        - { sys: "sega32x",       y: "{{ sega32x_height }}",       x: "{{ sega32x_width }}"       }
+        - { sys: "segacd",        y: "{{ segacd_height }}",        x: "{{ segacd_width }}"        }
+        - { sys: "snes",          y: "{{ snes_height }}",          x: "{{ snes_width }}"          }
+
+    - name: "Handheld: Write Configuration"
+      blockinfile:
+        path: "/opt/retropie/configs/{{ item.sys }}/retroarch.cfg"
+        create: "yes"
+        backup: "yes"
+        insertbefore: "^#include"
+        block: |
+          custom_viewport_height = {{ item.y }}
+          custom_viewport_width = {{ item.x }}
+          savefile_directory = /home/pi/RetroPie/savefile/{{ item.sys }}
+          savestate_directory = /home/pi/RetroPie/savestate/{{ item.sys }}
+      with_items:
+        - { sys: "atarilynx",        y: "{{ atarilynx_height }}",        x: "{{ atarilynx_width }}"       }
+        - { sys: "gamegear",         y: "{{ gamegear_height }}",         x: "{{ gamegear_width }}"        }
+        - { sys: "gba",              y: "{{ gba_height }}",              x: "{{ gba_width }}"             }
+        - { sys: "gbc",              y: "{{ gbc_height }}",              x: "{{ gbc_width }}"             }
+        - { sys: "gb",               y: "{{ gb_height }}",               x: "{{ gb_width }}"              }
+        - { sys: "ngpc",             y: "{{ ngpc_height }}",             x: "{{ ngpc_width }}"            }
+        - { sys: "ngp",              y: "{{ ngp_height }}",              x: "{{ ngp_width }}"             }
+        - { sys: "virtualboy",       y: "{{ virtualboy_height }}",       x: "{{ virtualboy_width }}"      }
+        - { sys: "wonderswancolor",  y: "{{ wonderswancolor_height }}",  x: "{{ wonderswancolor_width }}" }
+        - { sys: "wonderswan",       y: "{{ wonderswan_height }}",       x: "{{ wonderswan_width }}"      }
+
+    - name: "RetroArch: Write Configuration"
+      lineinfile:
+        dest: "/opt/retropie/configs/all/retroarch.cfg"
+        create: "yes"
+        backup: "yes"
+        state: "present"
+        regexp: "^{{ item.variable }}.*"
+        line: "{{ item.variable }} = {{ item.value }}"
+      with_items:
+        - { variable: "custom_viewport_width",  value: "{{ physical_viewport_width }}"  }
+        - { variable: "custom_viewport_height", value: "{{ physical_viewport_height }}" }
+        - { variable: "aspect_ratio_index",     value: "23"                             }
+        - { variable: "video_font_enable",      value: "false"                          }
+        - { variable: "video_fullscreen",       value: "true"                           }
+        - { variable: "video_hard_sync",        value: "true"                           }
+        - { variable: "video_refresh_rate",     value: "59.73"                          }
+        - { variable: "video_scale_integer",    value: "true"                           }
+        - { variable: "video_smooth",           value: "false"                          }
+        - { variable: "video_threaded",         value: "true"                           }
+        - { variable: "video_vsync",            value: "true"                           }
+
+    - name: "Sync Directories"
+      synchronize:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        rsync_opts:
+          - "--backup"
+          - "--suffix=.{{ansible_date_time.epoch}}"
+      with_items:
+        - { src: "files/retropie/",            dest: "/opt/retropie/configs/" }
+
+    - name: "Copy ROMs"
       synchronize:
         src: "files/roms/"
-        dest: "/home/pi/RetroPie/roms/"
+        dest: "{{home_dir}}/RetroPie/roms/"
         rsync_opts:
-          - "--exclude README.md"
+          - "--exclude=README.md"
       when: roms_copied.stat.exists == False
 
-    - name: "Theme: Delete Carbon"
+    - name: "Themes: Delete Non-Supported"
       file:
-        path: "/etc/emulationstation/themes/carbon"
+        path: "/etc/emulationstation/themes/{{ item.theme }}"
         state: "absent"
+      with_items:
+        - { theme: "carbon" }
+      become: "yes"
 
-    - name: "Theme: Install GBZ35 Dark"
+    - name: "Theme: RetroCRT Install/Update"
       git:
         depth: 1
-        repo: "https://github.com/rxbrad/es-theme-gbz35-dark"
-        dest: "/etc/emulationstation/themes/GBZ35-Dark"
-
-    - name: "Fix Permissions"
-      file:
-        path: "{{ item }}"
-        state: "directory"
-        owner: "pi"
-        group: "pi"
-        recurse: "yes"
+        repo: "https://github.com/{{ item.repo }}"
+        dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
-        - "/opt/retropie"
-        - "/home/pi"
+        - { theme: "RetroCRT-240p",          repo: "xovox/es-theme-RetroCRT-240p"          }
+        - { theme: "RetroCRT-240p-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
+      become: "yes"
+
+    - name: "Theme: Optional Install/Update"
+      git:
+        depth: 1
+        repo: "https://github.com/{{ item.repo }}"
+        dest: "/etc/emulationstation/themes/{{ item.theme }}"
+      with_items:
+        - { theme: "GBZ35 Dark",      repo: "rxbrad/es-theme-gbz35-dark"    }
+        - { theme: "Pixel Heaven",    repo: "skeletoooooor/es-pixel-heaven" }
+      become: "yes"
+      #when:
+      #  - install_optional_themes == "yes"
+
+    - name: "Populate Templates"
+      template:
+        src: "templates/{{ item.src }}"
+        dest: "{{ item.dest }}"
+        backup: "yes"
+        mode: "{{ item.mode }}"
+      with_items:
+        - { src: "cmdline.txt.j2", dest: "/boot/cmdline.txt", mode: "755" }
+      become: "yes"
+
+    - name: "Update /boot/config.txt"
+      lineinfile:
+        dest: "/boot/config.txt"
+        create: "yes"
+        backup: "yes"
+        state: "present"
+        regexp: "^{{ item.variable }}.*"
+        line: "{{ item.variable }}={{ item.value }}"
+      with_items:
+        - { variable: "force_turbo",          value: "0"                       }
+        - { variable: "disable_audio_dither", value: "1"                       }
+        - { variable: "audio_pwm_mode",       value: "0"                       }
+        - { variable: "dtoverlay",            value: "dpi24"                   }
+        - { variable: "enable_dpi_lcd",       value: "1"                       }
+        - { variable: "display_default_lcd",  value: "1"                       }
+        - { variable: "dpi_group",            value: "2"                       }
+        - { variable: "dpi_mode",             value: "87"                      }
+        - { variable: "disable_splash",       value: "1"                       }
+        - { variable: "hdmi_timings",         value: "{{ default_timings }}"   }
+        - { variable: "dpi_output_format",    value: "{{ dpi_output_format }}" }
+      become: "yes"
+
+    - name: "Copy Files from ./files"
+      copy:
+        force: "{{ item.force }}"
+        src: "files/{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: "{{ item.owner }}"
+        group: "{{ item.group }}"
+        mode: "{{ item.mode }}"
+      with_items:
+        - { src: "01-cache",                 dest: "/etc/apt/apt.conf.d/",                    force: "yes",  mode: "755",  owner: "root",  group: "root" }
+        - { src: "autostart.sh",             dest: "/opt/retropie/configs/all/autostart.sh",  force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
+        - { src: "RetroCRT.mp4",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
+        - { src: "RetroCRT.png",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
+        - { src: "RetroCRT.sh",              dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
+      become: "yes"
+
+#        - { src: "wpa_supplicant.conf.txt",  dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
+
+    - name: "Create Save States Directories"
+      shell: /usr/bin/find . -mindepth 1 -maxdepth 1 -type d -exec mkdir -p /home/pi/RetroPie/savestates/{} \;
+      args:
+        chdir: /home/pi/RetroPie/roms
+
+    - name: "Create Save Files Directories"
+      shell: /usr/bin/find . -mindepth 1 -maxdepth 1 -type d -exec mkdir -p /home/pi/RetroPie/savefiles/{} \;
+      args:
+        chdir: /home/pi/RetroPie/roms
+
+    - name: "Ensure runcommand scripts exist"
+      lineinfile:
+        path:  "/opt/retropie/configs/all/runcommand-on{{ item.scriptname }}.sh"
+        state: "present"
+        line:  "#!/bin/bash"
+        owner: "root"
+        group: "root"
+        mode:  "755"
+        create: "yes"
+      with_items:
+        - { scriptname: "start" }
+        - { scriptname: "end"   }
+      become: "yes"
+
+    - name: Update runcommand-onstart.sh
+      blockinfile:
+        block: "{{ lookup('file', './files/runcommand-onstart.sh') }}"
+        dest: /opt/retropie/configs/all/runcommand-onstart.sh
+        backup: "yes"
+        marker: "# {mark} RetroCRT Scripting LEAVE AT END"
+        insertafter: "EOF"
+      become: "yes"
+
+    - name: Update runcommand-onend.sh
+      blockinfile:
+        block: "{{ lookup('file', './files/runcommand-onend.sh') }}"
+        dest: /opt/retropie/configs/all/runcommand-onend.sh
+        backup: "yes"
+        marker: "# {mark} RetroCRT Scripting LEAVE AT END"
+        insertafter: "EOF"
+      become: "yes"
+
+    - name: "Copy WiFi Configuration"
+      copy:
+        src: "/boot/retrocrt/wpa_supplicant.conf"
+        dest: "/etc/wpa_supplicant/wpa_supplicant.conf"
+      when: wifi_copy.stat.exists == True
+      become: "yes"
+      notify: "wifi_restart"
+
+    - name: "Auto-Login Symlink"
+      file:
+        src: "/etc/systemd/system/autologin@.service"
+        dest: "/etc/systemd/system/getty.target.wants/getty@tty1.service"
+        owner: "root"
+        group: "root"
+        state: "link"
+        force: "yes"
+      become: "yes"
+
+    - name: "Install Required Packages"
+      apt:
+        name: [ 'bc', 'dos2unix', 'p7zip-full', 'vim' ]
+        update_cache: true
+        state: present
+      become: "yes"
+
+    - name: "Console Font: Write Configuration"
+      lineinfile:
+        dest: "/etc/default/console-setup"
+        create: "no"
+        backup: "yes"
+        state: "present"
+        regexp: "^{{ item.variable }}.*"
+        line: '{{ item.variable }}="{{ item.value }}"'
+      with_items:
+        - { variable: "FONTFACE", value: "Terminus" }
+        - { variable: "FONTSIZE", value: "6x12"     }
+      become: "yes"
+      notify: "setupcon"
+
+    - name: "Disable Swap File"
+      service:
+        name: "dphys-swapfile"
+        enabled: "no"
+        state: stopped
+      become: "yes"
+
+#    - name: "Fix Permissions"
+#      file:
+#        path: "{{ item }}"
+#        state: "directory"
+#        owner: "pi"
+#        group: "pi"
+#        recurse: "yes"
+#      with_items:
+#        - "/etc/emulationstation/themes"
+#        - "/opt/retropie"
+#        - "{{home_dir}}"
+#      become: "yes"
