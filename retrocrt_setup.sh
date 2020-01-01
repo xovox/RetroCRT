@@ -5,10 +5,10 @@
 licensetext=(
 "
 RetroCRT is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-" "
+
 RetroCRT is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 " "
-You should have received a copy of the GNU General Public License along with RetroCRT.  If not, see <gnu.org/licenses/>.
+You should have received a copy of the GNU General Public License along with RetroCRT.  If not, see gnu.org/licenses/.
 "
 )
 
@@ -18,7 +18,7 @@ RetroCRT is a suite of tools to simplify the use of CRTs with a Raspberry Pi run
 
 This is achieved via non-destructive updating of configuration files & custom scripts to manage resolutions, including per-rom.
 " "
-Submit bugs at <github.com/xovox/RetroCRT/issues>
+Submit bugs at github.com/xovox/RetroCRT/issues
 
 E-Mail me at xovoxgit gmail com
 
@@ -103,6 +103,10 @@ You have three choices on how to handle these games.
 - Scale down to 240p, but use bilinear filtering to smooth some of the rough edges.  Some lines will look slightly strange.
 "
 
+if [ -f $HOME/RetroCRT/files/dialogrc ]; then
+	export DIALOGRC=$HOME/RetroCRT/files/dialogrc
+fi
+
 ##############################################################################
 # can we hit the internet?
 ##############################################################################
@@ -122,7 +126,13 @@ if ! (dpkg -l $req_packages > /dev/null); then
         sudo apt update
         sudo apt -y install $req_packages
     else
-        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
+        dialog \
+			--no-shadow \
+			--title "$retrocrt_title :: Fatal Error" \
+			--colors \
+			--msgbox \
+			"$fatalquit" \
+			20 46
         exit
     fi
 fi
@@ -164,6 +174,10 @@ fi
 sudo touch "$retrocrt_config"
 eval "$(dos2unix < "$retrocrt_config")"
 
+if [ -f $retrocrt_install/files/dialogrc ]; then
+	export DIALOGRC=$retrocrt_install/files/dialogrc
+fi
+
 ##############################################################################
 # are we being run in the right dir?
 ##############################################################################
@@ -182,28 +196,42 @@ fi
 textpage="0"
 for text in "${licensetext[@]}"; do
 	textpage=$[ $textpage + 1 ]
-	dialog --title "$retrocrt_title :: License & Warranty ($textpage/${#licensetext[@]})"  --colors  --msgbox "$text"     25 36
+	dialog \
+		--no-shadow \
+		--title "$retrocrt_title :: License & Warranty ($textpage/${#licensetext[@]})"  \
+		--colors  \
+		--msgbox "$text" \
+		20 46
 done
 
 textpage="0"
 for text in "${introtext[@]}"; do
 	textpage=$[ $textpage + 1 ]
-	dialog --title "$retrocrt_title :: Introduction ($textpage/${#introtext[@]})"  --colors  --msgbox "$text"     25 36
+	dialog \
+		--no-shadow \
+		--title "$retrocrt_title :: Introduction ($textpage/${#introtext[@]})"  \
+		--colors  \
+		--msgbox "$text" \
+		20 46
 done
 
 textpage="0"
 for text in "${hardwaretext[@]}"; do
 	textpage=$[ $textpage + 1 ]
-	dialog --title "$retrocrt_title :: Hardware ($textpage/${#hardwaretext[@]})"  --colors  --msgbox "$text"     25 36
+	dialog \
+		--no-shadow \
+		--title "$retrocrt_title :: Hardware ($textpage/${#hardwaretext[@]})"  \
+		--colors  \
+		--msgbox "$text" \
+		20 46
 done
 
 ##############################################################################
 # update before proceding?
 ##############################################################################
 
-#if dialog --title "$retrocrt_title :: Check Updates"	--colors	--defaultno	--yesno "$checkupdates"		25 36 ; then
 if [[ "$network_up" = "true" ]]; then
-    if dialog --title "$retrocrt_title :: Update RetroCRT" --colors --defaultno --yesno "$updategit" 25 36 ; then
+    if dialog --no-shadow --title "$retrocrt_title :: Update RetroCRT" --colors --defaultno --yesno "$updategit" 20 46 ; then
 		clear ; reset ; clear
 		set -x
         git pull
@@ -226,7 +254,7 @@ fi
 
 rotate_crt=${rotate_crt:-0}
 
-export rotate_crt="$(dialog \
+export rotate_crt="$(dialog --no-shadow \
 	--title "$retrocrt_title :: Screen Orientation" \
 	--stdout \
 	--default-item "$rotate_crt" \
@@ -259,7 +287,7 @@ fi
 export dpi_output_format=${dpi_output_format:-0}
 export retrocrt_video_hardware=${retrocrt_video_hardware:-vga666}
 
-export retrocrt_video_hardware="$(dialog \
+export retrocrt_video_hardware="$(dialog --no-shadow \
 	--title "$retrocrt_title :: Video Hardware" \
 	--stdout \
 	--default-item "$retrocrt_video_hardware" \
@@ -284,7 +312,7 @@ fi
 export retrocrt_ctrl_hardware=${retrocrt_ctrl_hardware:-usb}
 
 disabled_section() {
-export retrocrt_ctrl_hardware="$(dialog \
+export retrocrt_ctrl_hardware="$(dialog --no-shadow \
 	--title "$retrocrt_title :: Controller Hardware" \
 	--stdout \
 	--default-item "$retrocrt_ctrl_hardware" \
@@ -302,7 +330,7 @@ export retrocrt_ctrl_hardware="$(dialog \
 tv_region=${tv_region:-ntsc}
 
 disabled_section() {
-export tv_region="$(dialog \
+export tv_region="$(dialog --no-shadow \
 	--title "$retrocrt_title :: Controller Hardware" \
 	--stdout \
 	--default-item "$tv_region" \
@@ -318,7 +346,7 @@ export tv_region="$(dialog \
 # one last chance to bail
 ##############################################################################
 
-dialog --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 25 36 || exit
+dialog --no-shadow --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 20 46 || exit
 
 clear
 
