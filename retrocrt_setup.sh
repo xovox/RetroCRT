@@ -408,7 +408,7 @@ export retrocrt_timings="\$retrocrt_install/retrocrt_timings/$retrocrt_timings"
 # Our System PATH
 ##############################################################################
 
-export PATH="\$retrocrt_install/bin:\$PATH"
+export PATH="\$retrocrt_install/scripts:\$PATH"
 
 ##############################################################################
 # Ansible Configuration
