@@ -1,23 +1,45 @@
 #!/bin/bash
 
-license="
-##############################################################################
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
-#
-# RetroCRT is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# RetroCRT is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
-##############################################################################
+
+licensetext=(
 "
+RetroCRT is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+" "
+RetroCRT is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+" "
+You should have received a copy of the GNU General Public License along with RetroCRT.  If not, see <gnu.org/licenses/>.
+"
+)
+
+introtext=(
+"
+RetroCRT is a suite of tools to simplify the use of CRTs with a Raspberry Pi running RetroPie.
+
+This is achieved via non-destructive updating of configuration files & custom scripts to manage resolutions, including per-rom.
+" "
+Submit bugs at <github.com/xovox/RetroCRT/issues>
+
+E-Mail me at xovoxgit gmail com
+
+Find developers, users, and support in our official Facebook group: \"RetroPie CRT Gamers\".
+"
+)
+
+hardwaretext=(
+"
+RetroCRT requires specialized hardware:
+
+- RetroTink over component & RGB
+- VGA666 over RGB
+- pi2scart over RGB SCART
+
+Future supported hardware:
+
+- RetroTink S-Video & composite
+- Internal 3.5mm composite
+"
+)
 
 ##############################################################################
 # pull in our config
@@ -45,59 +67,10 @@ req_packages="
 
 export PS4="   \[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
 
-licensea="
-RetroCRT :: Configure RetroPie for an analog CRT
-
-Copyright (C) 2019 Duncan Brown (\Zb\Z4https://github.com/xovox\Zn)
-
-This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
-
-(Continued on next screen)
-"
-
-licenseb="
-This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License along with this program.  If not, see \Zb\Z4https://www.gnu.org/licenses/\Zn
-"
-
-description="
-RetroCRT is a suite of tools and configurations put together to enable the use of CRTs with the a Raspberry Pi running RetroPie.
-
-It achieves this by switching resolutions on the fly based on what platform or arcade rom you're currently using.
-
-Find developers, users, and support in our official Facebook group: \"RetroPie CRT Gamers\".
-"
-
-hardware="
-This software requires specialized hardware.
-
-The currently tested hardware is:
-
-- RetroTink over component & RGB
-- VGA666 over RGB
-- pi2scart over RGB SCART
-
-Future supported hardware:
-
-- RetroTink S-Video & composite
-- Internal 3.5mm composite
-
-If you don't have the required hardware, this will not work.
-"
-
-warning="
-\Zb\Z1THIS WILL OVERWRITE MANY MANY THINGS!\Zn
-
-Please be sure to have run a full RetroPie upgrade as well as update all of your system packages first!
-
-Are you actually ready?
-"
-
 finalwarning="
-\Zb\Z1LAST CHANCE!!! BACKUP YOUR INSTALLATION!!!\Zn
+\Zb\Z1LAST CHANCE TO ABORT!!!\Zn
 
-This installer overwrites many critical configs.  This is best run on a clean RetroPie installation.
+This suite has been tested, but does update *many* things on your system.  It makes backups of *everything* before overwriting, so reverting is possible.
 
 Last chance, are you sure you wish to continue?
 "
@@ -206,16 +179,23 @@ fi
 # license & about the project
 ##############################################################################
 
-dialog --title "$retrocrt_title :: License & Warranty"  --colors  --msgbox "$licensea"     25 36
-dialog --title "$retrocrt_title :: License & Warranty"  --colors  --msgbox "$licenseb"     25 36
-dialog --title "$retrocrt_title :: About"               --colors  --msgbox "$description"  25 36
-dialog --title "$retrocrt_title :: Supported Hardware"  --colors  --msgbox "$hardware"     25 36
+textpage="0"
+for text in "${licensetext[@]}"; do
+	textpage=$[ $textpage + 1 ]
+	dialog --title "$retrocrt_title :: License & Warranty ($textpage/${#licensetext[@]})"  --colors  --msgbox "$text"     25 36
+done
 
-##############################################################################
-# first warning
-##############################################################################
+textpage="0"
+for text in "${introtext[@]}"; do
+	textpage=$[ $textpage + 1 ]
+	dialog --title "$retrocrt_title :: Introduction ($textpage/${#introtext[@]})"  --colors  --msgbox "$text"     25 36
+done
 
-dialog --title "$retrocrt_title :: Warning"             --colors  --defaultno  --yesno "$warning"  25 36 || exit
+textpage="0"
+for text in "${hardwaretext[@]}"; do
+	textpage=$[ $textpage + 1 ]
+	dialog --title "$retrocrt_title :: Hardware ($textpage/${#hardwaretext[@]})"  --colors  --msgbox "$text"     25 36
+done
 
 ##############################################################################
 # update before proceding?
@@ -223,7 +203,7 @@ dialog --title "$retrocrt_title :: Warning"             --colors  --defaultno  -
 
 #if dialog --title "$retrocrt_title :: Check Updates"	--colors	--defaultno	--yesno "$checkupdates"		25 36 ; then
 if [[ "$network_up" = "true" ]]; then
-    if dialog --title "$retrocrt_title :: Update Status" --colors --defaultno --yesno "$updategit" 25 36 ; then
+    if dialog --title "$retrocrt_title :: Update RetroCRT" --colors --defaultno --yesno "$updategit" 25 36 ; then
 		clear ; reset ; clear
 		set -x
         git pull
@@ -304,7 +284,6 @@ fi
 export retrocrt_ctrl_hardware=${retrocrt_ctrl_hardware:-usb}
 
 disabled_section() {
-
 export retrocrt_ctrl_hardware="$(dialog \
 	--title "$retrocrt_title :: Controller Hardware" \
 	--stdout \
