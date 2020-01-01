@@ -43,7 +43,7 @@ req_packages="
 	virtualenv
 "
 
-export PS4="\[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
+export PS4="   \[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
 
 licensea="
 RetroCRT :: Configure RetroPie for an analog CRT
@@ -155,6 +155,7 @@ if ! (dpkg -l $req_packages > /dev/null); then
 fi
 
 if [[ ! -f $retrocrt_venv/bin/activate ]]; then
+    echo
 	echo "########################################"
     echo "Generating Python 3 Virtual Env"
 	echo "########################################"
@@ -166,10 +167,11 @@ if [[ -f $retrocrt_venv/bin/activate ]]; then
 fi
 
 if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
+	echo
 	echo "########################################"
     echo "Ensuring Virtual Env has Ansible $ansible_ver"
 	echo "########################################"
-	pip install ansible==$ansible_ver
+    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible==$ansible_ver
 fi
 
 ##############################################################################
