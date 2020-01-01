@@ -106,6 +106,8 @@ sudo sed -i '/RetroCRT/d' /etc/init.d/resize2fs_once
 # Re-Running RetroCRT Playbook
 
 ```
+cd $HOME/RetroCRT && 
+git pull &&
 eval "$(dos2unix < "/boot/retrocrt/retrocrt.txt")" &&
 source ~/.virtualenv/retrocrt/bin/activate &&
 ansible-playbook RetroCRT.yml -i localhost,
