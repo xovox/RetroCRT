@@ -206,16 +206,16 @@ fi
 # license & about the project
 ##############################################################################
 
-dialog --title "$retrocrt_title :: License & Warranty"	--colors			--msgbox "$licensea"		25 36
-dialog --title "$retrocrt_title :: License & Warranty"	--colors			--msgbox "$licenseb"		25 36
-dialog --title "$retrocrt_title :: About"		--colors			--msgbox "$description"		25 36
-dialog --title "$retrocrt_title :: Supported Hardware"	--colors			--msgbox "$hardware"		25 36
+dialog --title "$retrocrt_title :: License & Warranty"  --colors  --msgbox "$licensea"     25 36
+dialog --title "$retrocrt_title :: License & Warranty"  --colors  --msgbox "$licenseb"     25 36
+dialog --title "$retrocrt_title :: About"               --colors  --msgbox "$description"  25 36
+dialog --title "$retrocrt_title :: Supported Hardware"  --colors  --msgbox "$hardware"     25 36
 
 ##############################################################################
 # first warning
 ##############################################################################
 
-dialog --title "$retrocrt_title :: Warning"		--colors	--defaultno	--yesno "$warning"		25 36 || exit
+dialog --title "$retrocrt_title :: Warning"             --colors  --defaultno  --yesno "$warning"  25 36 || exit
 
 ##############################################################################
 # update before proceding?
