@@ -1,4 +1,6 @@
 ##############################################################################
+# NOT CURRENTLY SUPPORTED
+#
 # Update this file & rename it to wpa_supplicant.conf & it will be copied over
 # the next time you run RetroCRT's setup!
 ##############################################################################
