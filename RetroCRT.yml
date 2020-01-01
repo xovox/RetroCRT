@@ -351,8 +351,6 @@
         - { src: "RetroCRT.mp4",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
         - { src: "RetroCRT.png",             dest: "{{ home_dir }}/RetroPie/splashscreens/",  force: "yes",  mode: "644",  owner: "pi",    group: "pi"   }
         - { src: "RetroCRT.sh",              dest: "{{ home_dir }}/RetroPie/retropiemenu/",   force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
-        - { src: "runcommand-onstart.sh",    dest: "/opt/retropie/configs/all/",              force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
-        - { src: "runcommand-onend.sh",      dest: "/opt/retropie/configs/all/",              force: "yes",  mode: "755",  owner: "pi",    group: "pi"   }
         - { src: "wpa_supplicant.conf.txt",  dest: "/boot/retrocrt/",                         force: "no",   mode: "644",  owner: "root",  group: "root" }
       become: "yes"
 
@@ -365,6 +363,38 @@
       shell: /usr/bin/find . -mindepth 1 -maxdepth 1 -type d -exec mkdir -p /home/pi/RetroPie/savefiles/{} \;
       args:
         chdir: /home/pi/RetroPie/roms
+
+    - name: "Ensure runcommand scripts exist"
+      lineinfile:
+        path:  "/opt/retropie/configs/all/runcommand-on{{ item.scriptname }}.sh"
+        state: "present"
+        line:  "#!/bin/bash"
+        owner: "root"
+        group: "root"
+        mode:  "755"
+        create: "yes"
+      with_items:
+        - { scriptname: "start" }
+        - { scriptname: "end"   }
+      become: "yes"
+
+    - name: Update runcommand-onstart.sh
+      blockinfile:
+        block: "{{ lookup('file', './files/runcommand-onstart.sh') }}"
+        dest: /opt/retropie/configs/all/runcommand-onstart.sh
+        backup: "yes"
+        marker: "# {mark} RetroCRT Scripting LEAVE AT END"
+        insertafter: "EOF"
+      become: "yes"
+
+    - name: Update runcommand-onend.sh
+      blockinfile:
+        block: "{{ lookup('file', './files/runcommand-onend.sh') }}"
+        dest: /opt/retropie/configs/all/runcommand-onend.sh
+        backup: "yes"
+        marker: "# {mark} RetroCRT Scripting LEAVE AT END"
+        insertafter: "EOF"
+      become: "yes"
 
     - name: "Copy WiFi Configuration"
       copy:
