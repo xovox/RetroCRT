@@ -21,7 +21,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk) gaming on CRTs easy and user friendly.
 
-Compared to every distro I've seen out there, one of the biggest advantages of using RetroCRT is that we're only updating configuration files instead of overwriting everything.  This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running..
+Compared to every distro I've seen out there, one of the biggest advantages of using RetroCRT is that we're only updating configuration files line-by-line instead of overwriting everything.  This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running.
 
 ![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg)
 
