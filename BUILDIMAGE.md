@@ -102,12 +102,25 @@ cd RetroCRT
 echo $HOME/RetroPie/splashscreens/RetroCRT.mp4 | sudo tee /etc/splashscreen.list
 ```
 
-# Re-Enable resizing on next boot
+# Re-Enable resizing on next boot, then shutdown
 
 ```
 sudo sed -i 's|$| init=/usr/lib/raspi-config/init_resize.sh|' /boot/cmdline.txt
 sudo sed -i '/RetroCRT/d' /etc/init.d/resize2fs_once
+sudo halt
 ```
+
+# Write Changes to Disk Image
+
+```
+sdcard=/dev/sdb
+loopback=$(losetup --show -Pf $rpimage)
+for partition in 1 2 ; do
+	sudo dd if=${sdcard}${partition} bs=1M status=progress of=${loopback}${partition}
+done
+sudo losetup -D $loopback
+```
+
 
 # Re-Running RetroCRT Playbook
 

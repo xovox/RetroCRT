@@ -23,17 +23,21 @@ This could help avoid bricking your RetroPie installation!
 
 # Installation
 
+## Gotchas
+
+### Garbled Colors
+
+You'll need to update /boot/config.txt and set the following to 519 for RetroTink & 0 for all other platforms.
+
+```
+dpi_output_format=0
+```
+
 ## Pre-Built SD Images
 
 * Download & Write the Image
   * Download the latest version of RetroCRT on [the release page](https://github.com/xovox/RetroCRT/releases)
   * Using my image, follow the [RetroPie Installation Guide](https://retropie.org.uk/docs/First-Installation/).
-
-* Expand the Filesystem
-  * Run raspi-config from the RetroPie screen in EmulationStation
-  * Option #7 "Advanced Options"
-  * Option #1 "Expand Filesystem"
-  * Reboot, this may take a while
 
 * Update RetroPie
   * Run RetroPie Setup from the RetroPie screen in EmulationStation
