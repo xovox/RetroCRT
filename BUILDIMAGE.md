@@ -13,7 +13,7 @@ rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.5.1/retrop
 rpimage="$(basename "$rpurl" .gz)"
 curl -L "$rpurl" | gunzip -c > $rpimage
 
-sudo dd if=/dev/zero conv=notrunc oflag=append bs=1M count=250 of=$rpimage
+sudo dd if=/dev/zero conv=notrunc oflag=append bs=1M count=500 of=$rpimage
 
 loopback="$(sudo losetup -Pf --show $rpimage)"
 bootpart=${loopback}p1
