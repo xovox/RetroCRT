@@ -31,7 +31,7 @@ Compared to every distro I've seen out there, one of the biggest advantages of u
 
 ## Photo
 
-![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg =320x)
+* [Screenshot](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg)
 
 # Resources
 
