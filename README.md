@@ -23,6 +23,14 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 
 Compared to every distro I've seen out there, one of the biggest advantages of using RetroCRT is that we're only updating configuration files line-by-line instead of overwriting everything.  This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running.
 
+## Videos
+
+* [Fresh Install of RetroCRT](https://www.youtube.com/watch?v=nytsuaoU4R8) shows what you get out of the box
+* [RetroCRT Theme Demo](https://www.youtube.com/watch?v=6hoH16SXjr0) shows what it looks like populated with snapshots & videos
+* [RetroCRT Configuration Files](https://www.youtube.com/watch?v=zDwPPjS4E2w) shows what you have living in /boot that you can edit on your PC, macOS, & Linux computer
+
+## Photo
+
 ![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg)
 
 # Resources
