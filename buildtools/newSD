@@ -67,24 +67,6 @@ sudo mount ${block}1 $bootMount
 sudo mount ${block}2 $rootMount
 sudo touch $bootMount/ssh
 
-if [ "$ssh" ]; then
-	rsync -av --progress ~/RetroPieSD/.ssh/ $homeDir/.ssh/
-    chmod -Rc go= $homeDir/.ssh
-fi
-
-if [ "$rcrt" ]; then
-    cd $homeDir
-    git clone --depth 1 git@github.com:xovox/RetroCRT.git
-fi
-
-if [ "$splash" ]; then
-	rsync -av --progress ~/Files/splash/ $homeDir/RetroPie/splashscreens/
-fi
-
-#if [ -d $rootMount/home/pi ]; then
-	sudo chown -Rc 1000.1000 $homeDir
-#fi
-
 sleep 5
 sudo sync
 sleep 5
