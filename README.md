@@ -31,7 +31,7 @@ Compared to every distro I've seen out there, one of the biggest advantages of u
 
 ## Photo
 
-![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg)
+![alt text](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg =320x)
 
 # Resources
 
@@ -80,14 +80,15 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
 * No annoying EmulationStation yellow text!
 * My unbridled enthusiasm about building this project!
 
-# TV Compatibility
+# Consumer TV Compatibility
 
 Strictly NTSC TVs at this time
 
 # Troubleshooting
 
-Before doing anything else, update RetroCRT!  You can do this in the 
-See the [troubleshooting doc](TROUBLESHOOTING.md).
+Before doing anything else, update RetroCRT!  You can do this in the RetroPie screen in EmulationStation.
+
+If that doesn't fix it, see the [troubleshooting doc](TROUBLESHOOTING.md).
 
 # Footnotes
 
