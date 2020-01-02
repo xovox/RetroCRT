@@ -61,7 +61,6 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
 
 * My 240p EmulationStation theme, [RetroCRT 240p](https://github.com/xovox/es-theme-RetroCRT-240p)!
 * Only updates required lines in configs, preserving your personal customizations!
-  * Per-ROM configs still get overwritten. See [issue #5](https://github.com/xovox/RetroCRT/issues/5)
 * 240p test suite roms for several console platforms!
 * Easy installation!
 * Pixel-perfect console emulation!
