@@ -27,7 +27,7 @@ Compared to every distro I've seen out there, one of the biggest advantages of u
 
 # Resources
 
-* [The manual](https://github.com/xovox/RetroCRT/MANUAL.md) has a ton of info, read this to get up to speed
+* [The manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md) has a ton of info, read this to get up to speed
 
 * Facebook
   * [RetroPie CRT Gamers](https://www.facebook.com/groups/RetroPieCRT/) is a group I started for this very purpose
@@ -39,7 +39,7 @@ Compared to every distro I've seen out there, one of the biggest advantages of u
 
 # Installation
 
-See [the manual](https://github.com/xovox/RetroCRT/MANUAL.md).
+See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
 
 # Supported Hardware
 
