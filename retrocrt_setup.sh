@@ -1,38 +1,6 @@
 #!/bin/bash
 
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
-<<<<<<< HEAD
-#
-# RetroCRT is free software: you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation, either version 3 of the License, or
-# (at your option) any later version.
-#
-# RetroCRT is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
-##############################################################################
-"
-
-req_packages="
-	ansible
-	dialog
-	git
-"
-
-retrocrt_config=$HOME/.retrocrtrc
-
-if [[ -f "$retrocrt_config" ]]; then
-    source "$retrocrt_config"
-fi
-
-retrocrt_install=${retrocrt_install:-$PWD}
-=======
->>>>>>> 2019.12
 
 licensetext=(
 "
@@ -467,17 +435,6 @@ physical_viewport_height=240
 # TV Region, Currently Unused
 ##############################################################################
 
-<<<<<<< HEAD
-if ! (dpkg -l $req_packages > /dev/null); then
-    if [[ "$network_up" = "true" ]]; then
-        sudo apt update
-        sudo apt -y install $req_packages
-    else
-        dialog --title "$retrocrt_title :: Fatal Error"	--colors			--msgbox "$fatalquit"		25 36
-        exit
-    fi
-fi
-=======
 export tv_region="$tv_region"
 CONFIG
 
@@ -487,7 +444,6 @@ CONFIG
 
 #source $retrocrt_config
 eval "$(dos2unix < "$retrocrt_config")"
->>>>>>> 2019.12
 
 ##############################################################################
 # Run our configuration playbook
