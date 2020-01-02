@@ -1,7 +1,7 @@
 # RetroPie Image Prep
 
 * Download & decompress RetroPie image
-* Append 250MB of blank space to end of image
+* Append 500MB of blank space to end of image
 * Setup loopback for RetroPie image
 * Mount / & /boot in /tmp
 * Disable resize-on-boot
@@ -105,7 +105,7 @@ echo $HOME/RetroPie/splashscreens/RetroCRT.mp4 | sudo tee /etc/splashscreen.list
 # Re-Enable resizing on next boot
 
 ```
-sudo sed -i 's|$| init=/usr/lib/raspi-config/init_resize.sh|' /boot/cmndline.txt
+sudo sed -i 's|$| init=/usr/lib/raspi-config/init_resize.sh|' /boot/cmdline.txt
 sudo sed -i '/RetroCRT/d' /etc/init.d/resize2fs_once
 ```
 
