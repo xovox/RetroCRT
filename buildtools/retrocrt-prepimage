@@ -1,0 +1,87 @@
+#!/bin/bash -ex
+
+##############################################################################
+# This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
+#
+# RetroCRT is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# RetroCRT is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
+##############################################################################
+
+##############################################################################
+# retrocrt-prepimage (c) 2020 duncan brown (http://github.com/xovox)
+#
+# this script downloads a retropie image & preps it to become a RetroCRT image
+#
+# - grow / by 1000G
+# - disable automatic resize on first boot
+# - basic video config for boot
+# - moves apt cache to /dev/shm for speed & SD kindness
+# - 
+# 
+##############################################################################
+
+rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.5.1/retropie-4.5.1-rpi2_rpi3.img.gz"
+rpimage="$(basename "$rpurl")"
+rcrtimage="/tmp/retrocrt-$(basename $rpimage .gz)"
+if [ ! -f "$rpimage" ]; then
+	curl -o "$rpimage" -L "$rpurl"
+fi
+
+pv -cN "decompress" "$rpimage" | gunzip -c > $rcrtimage
+
+sudo dd if=/dev/zero conv=notrunc oflag=append bs=1M count=1000 of=$rcrtimage
+
+loopback="$(sudo losetup -Pf --show $rcrtimage)"
+bootpart=${loopback}p1
+rootpart=${loopback}p2
+
+sudo parted $loopback -- resizepart 2 100%
+sudo partprobe
+sudo e2fsck -f $rootpart
+sudo resize2fs $rootpart
+
+bootmnt="$(mktemp -d)"
+rootmnt="$(mktemp -d)"
+sudo mount $bootpart $bootmnt
+sudo mount $rootpart $rootmnt
+
+sudo sed -i.retrocrt '/END INIT INFO/a exit 0 # RetroCRT' $rootmnt/etc/init.d/resize2fs_once
+sudo sed -i.retrocrt 's| init=/usr/lib/raspi-config/init_resize.sh||' $bootmnt/cmdline.txt
+sudo touch $bootmnt/ssh
+
+git -C $rootmnt/home/pi clone https://github.com/xovox/RetroCRT
+
+cat << EOF | sudo tee -a $bootmnt/config.txt
+dtoverlay=dpi24
+enable_dpi_lcd=1
+display_default_lcd=1
+dpi_group=2
+dpi_mode=87
+disable_splash=1
+hdmi_timings=320 1 16 30 34 240 1 2 3 22 0 0 0 60 0 6400000 1
+
+# 519 for RetroTink Ultimate
+# 0 for everything else
+dpi_output_format=0
+EOF
+
+cat << CACHE | sudo dd of=$rootmnt/etc/apt/apt.conf.d/01-cache
+Dir{Cache /dev/shm}
+Dir::Cache /dev/shm;
+Dir::Cache{Archives /dev/shm/}
+Dir::Cache::Archives /dev/shm;
+CACHE
+
+sudo umount $bootmnt
+sudo umount $rootmnt
+sudo losetup -D $loopback
