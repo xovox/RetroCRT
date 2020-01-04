@@ -1,0 +1,19 @@
+---
+
+- hosts: all
+  connection: local
+
+  tasks:
+
+    - name: "Pull GitHub Repo Stats"
+      uri: url="https://api.github.com/repos/xovox/RetroCRT" return_content=yes
+      register: repo_stats
+
+    - name: "Pull GitHub Release Stats"
+      uri: url="https://api.github.com/repos/xovox/RetroCRT/releases" return_content=yes
+      register: release_stats
+
+    - name: "RetroCRT Release Stats"
+      debug:
+        msg: 
+        - "kk
