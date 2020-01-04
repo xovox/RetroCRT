@@ -1688,10 +1688,10 @@ bsuertes,256,232,H
 bsuertet,256,232,H
 bsuerteu,256,232,H
 btchamp,640,480,H
-btime,240,240,V
-btime2,240,240,V
-btime3,240,240,V
-btimem,240,240,V
+btime,240,242,V
+btime2,240,242,V
+btime3,240,242,V
+btimem,240,242,V
 btippers,256,224,H
 btlecity,256,240,H
 btlfield,256,224,V
@@ -2063,7 +2063,7 @@ cbnj,256,240,V
 cbombers,320,232,H
 cbombersj,320,232,H
 cbombersp,320,232,H
-cbtime,256,240,V
+cbtime,256,242,V
 cburnrb2,256,240,V
 cburnrub,256,240,V
 cburnrub2,240,240,V
