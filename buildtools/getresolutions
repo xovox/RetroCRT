@@ -1,0 +1,3 @@
+#!/bin/bash
+
+curl -s "https://github.com/xovox/OpenArcadeDB/blob/master/OpenArcadeDB.tsv?raw=true" 2> /dev/null | awk -F'	' '{ print $1, $18, $19, $15 }' OpenArcadeDB.tsv | sed 's/ /,/g' > $HOME/RetroCRT/retrocrt_resolutions.csv
