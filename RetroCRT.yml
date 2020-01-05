@@ -112,7 +112,7 @@
         nes_height: 224
         pcengine_height: 240
         psx_height: 240
-        sega32x_height: 224
+        sega32x_height: 240
         segacd_height: 224
         snes_height: 224
         atarilynx_width: "{{ 160 * handheld_multiplier }}"
