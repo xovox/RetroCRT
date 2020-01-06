@@ -101,6 +101,7 @@
         atari2600_height: 210
         atari5200_height: 240
         atari7800_height: 240
+        coleco_height: 192
         fba_height: 240
         fds_height: 224
         mame_libretro_height: 240
@@ -142,6 +143,7 @@
         atari2600_percentage: "{{ atari2600_height / physical_viewport_height | float }}"
         atari5200_percentage: "{{ atari5200_height / physical_viewport_height | float }}"
         atari7800_percentage: "{{ atari7800_height / physical_viewport_height | float }}"
+        coleco_percentage: "{{ coleco_height / physical_viewport_height | float }}"
         fba_percentage: "{{ fba_height / physical_viewport_height | float }}"
         fds_percentage: "{{ fds_height / physical_viewport_height | float }}"
         mame_libretro_percentage: "{{ mame_libretro_height / physical_viewport_height | float }}"
@@ -163,6 +165,7 @@
         atari2600_width: "{{ (physical_viewport_width * atari2600_percentage | float) | int}}"
         atari5200_width: "{{ (physical_viewport_width * atari5200_percentage | float) | int}}"
         atari7800_width: "{{ (physical_viewport_width * atari7800_percentage | float) | int}}"
+        coleco_width: "{{ (physical_viewport_width * coleco_percentage | float) | int}}"
         fba_width: "{{ (physical_viewport_width * fba_percentage | float) | int}}"
         fds_width: "{{ (physical_viewport_width * fds_percentage | float) | int}}"
         mame_libretro_width: "{{ (physical_viewport_width * mame_libretro_percentage | float) | int}}"
@@ -196,6 +199,7 @@
         - { sys: "atari2600",     y: "{{ atari2600_height }}",     x: "{{ atari2600_width }}"     }
         - { sys: "atari5200",     y: "{{ atari5200_height }}",     x: "{{ atari5200_width }}"     }
         - { sys: "atari7800",     y: "{{ atari7800_height }}",     x: "{{ atari7800_width }}"     }
+        - { sys: "coleco",        y: "{{ coleco_height }}",        x: "{{ coleco_width }}"        }
         - { sys: "fba",           y: "{{ fba_height }}",           x: "{{ fba_width }}"           }
         - { sys: "fds",           y: "{{ fds_height }}",           x: "{{ fds_width }}"           }
         - { sys: "mame-libretro", y: "{{ mame_libretro_height }}", x: "{{ mame_libretro_width }}" }
