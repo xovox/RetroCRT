@@ -104,6 +104,7 @@
         coleco_height: 192
         fba_height: 240
         fds_height: 224
+        intellivision_height: 192
         mame_libretro_height: 240
         mastersystem_height: 192
         megadrive_height: 224
@@ -146,6 +147,7 @@
         coleco_percentage: "{{ coleco_height / physical_viewport_height | float }}"
         fba_percentage: "{{ fba_height / physical_viewport_height | float }}"
         fds_percentage: "{{ fds_height / physical_viewport_height | float }}"
+        intellivision_percentage: "{{ intellivision_height / physical_viewport_height | float }}"
         mame_libretro_percentage: "{{ mame_libretro_height / physical_viewport_height | float }}"
         mastersystem_percentage: "{{ mastersystem_height / physical_viewport_height | float }}"
         megadrive_percentage: "{{ megadrive_height / physical_viewport_height | float }}"
@@ -168,6 +170,7 @@
         coleco_width: "{{ (physical_viewport_width * coleco_percentage | float) | int}}"
         fba_width: "{{ (physical_viewport_width * fba_percentage | float) | int}}"
         fds_width: "{{ (physical_viewport_width * fds_percentage | float) | int}}"
+        intellivision_width: "{{ (physical_viewport_width * intellivision_percentage | float) | int}}"
         mame_libretro_width: "{{ (physical_viewport_width * mame_libretro_percentage | float) | int}}"
         mastersystem_width: "{{ (physical_viewport_width * mastersystem_percentage | float) | int}}"
         megadrive_width: "{{ (physical_viewport_width * megadrive_percentage | float) | int}}"
@@ -186,34 +189,36 @@
     - name: "Console/Arcade: Write Configuration"
       blockinfile:
         path: "/opt/retropie/configs/{{ item.sys }}/retroarch.cfg"
-        create: "yes"
+        create: "no"
         backup: "yes"
         insertbefore: "^#include"
+        marker: "# {mark} RetroCRT Configuration"
         block: |
           custom_viewport_height = {{ item.y }}
           custom_viewport_width = {{ item.x }}
           savefile_directory = /home/pi/RetroPie/savefile/{{ item.sys }}
           savestate_directory = /home/pi/RetroPie/savestate/{{ item.sys }}
       with_items:
-        - { sys: "arcade",        y: "{{ arcade_height }}",        x: "{{ arcade_width }}"        }
-        - { sys: "atari2600",     y: "{{ atari2600_height }}",     x: "{{ atari2600_width }}"     }
-        - { sys: "atari5200",     y: "{{ atari5200_height }}",     x: "{{ atari5200_width }}"     }
-        - { sys: "atari7800",     y: "{{ atari7800_height }}",     x: "{{ atari7800_width }}"     }
-        - { sys: "coleco",        y: "{{ coleco_height }}",        x: "{{ coleco_width }}"        }
-        - { sys: "fba",           y: "{{ fba_height }}",           x: "{{ fba_width }}"           }
-        - { sys: "fds",           y: "{{ fds_height }}",           x: "{{ fds_width }}"           }
-        - { sys: "mame-libretro", y: "{{ mame_libretro_height }}", x: "{{ mame_libretro_width }}" }
-        - { sys: "mastersystem",  y: "{{ mastersystem_height }}",  x: "{{ mastersystem_width }}"  }
-        - { sys: "megadrive",     y: "{{ megadrive_height }}",     x: "{{ megadrive_width }}"     }
-        - { sys: "msx",           y: "{{ msx_height }}",           x: "{{ msx_width }}"           }
-        - { sys: "n64",           y: "{{ n64_height }}",           x: "{{ n64_width }}"           }
-        - { sys: "neogeo",        y: "{{ neogeo_height }}",        x: "{{ neogeo_width }}"        }
-        - { sys: "nes",           y: "{{ nes_height }}",           x: "{{ nes_width }}"           }
-        - { sys: "pcengine",      y: "{{ pcengine_height }}",      x: "{{ pcengine_width }}"      }
-        - { sys: "psx",           y: "{{ psx_height }}",           x: "{{ psx_width }}"           }
-        - { sys: "sega32x",       y: "{{ sega32x_height }}",       x: "{{ sega32x_width }}"       }
-        - { sys: "segacd",        y: "{{ segacd_height }}",        x: "{{ segacd_width }}"        }
-        - { sys: "snes",          y: "{{ snes_height }}",          x: "{{ snes_width }}"          }
+        - { sys: "arcade",          y: "{{ arcade_height }}",          x: "{{ arcade_width }}"          }
+        - { sys: "atari2600",       y: "{{ atari2600_height }}",       x: "{{ atari2600_width }}"       }
+        - { sys: "atari5200",       y: "{{ atari5200_height }}",       x: "{{ atari5200_width }}"       }
+        - { sys: "atari7800",       y: "{{ atari7800_height }}",       x: "{{ atari7800_width }}"       }
+        - { sys: "coleco",          y: "{{ coleco_height }}",          x: "{{ coleco_width }}"          }
+        - { sys: "fba",             y: "{{ fba_height }}",             x: "{{ fba_width }}"             }
+        - { sys: "fds",             y: "{{ fds_height }}",             x: "{{ fds_width }}"             }
+        - { sys: "intellivision",   y: "{{ intellivision_height }}",   x: "{{ intellivision_width }}"   }
+        - { sys: "mame-libretro",   y: "{{ mame_libretro_height }}",   x: "{{ mame_libretro_width }}"   }
+        - { sys: "mastersystem",    y: "{{ mastersystem_height }}",    x: "{{ mastersystem_width }}"    }
+        - { sys: "megadrive",       y: "{{ megadrive_height }}",       x: "{{ megadrive_width }}"       }
+        - { sys: "msx",             y: "{{ msx_height }}",             x: "{{ msx_width }}"             }
+        - { sys: "n64",             y: "{{ n64_height }}",             x: "{{ n64_width }}"             }
+        - { sys: "neogeo",          y: "{{ neogeo_height }}",          x: "{{ neogeo_width }}"          }
+        - { sys: "nes",             y: "{{ nes_height }}",             x: "{{ nes_width }}"             }
+        - { sys: "pcengine",        y: "{{ pcengine_height }}",        x: "{{ pcengine_width }}"        }
+        - { sys: "psx",             y: "{{ psx_height }}",             x: "{{ psx_width }}"             }
+        - { sys: "sega32x",         y: "{{ sega32x_height }}",         x: "{{ sega32x_width }}"         }
+        - { sys: "segacd",          y: "{{ segacd_height }}",          x: "{{ segacd_width }}"          }
+        - { sys: "snes",            y: "{{ snes_height }}",            x: "{{ snes_width }}"            }
 
     - name: "Handheld: Write Configuration"
       blockinfile:
