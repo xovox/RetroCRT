@@ -112,7 +112,7 @@ fi
 # can we hit the internet?
 ##############################################################################
 
-if ping -c 1 -w 1 8.8.8.8 > /dev/null 2>&1; then
+if ping -c 5 -w 7 8.8.8.8 > /dev/null 2>&1; then
     network_up=true
 else
     network_up=false
