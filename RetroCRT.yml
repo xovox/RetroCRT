@@ -198,6 +198,7 @@
           custom_viewport_width = {{ item.x }}
           savefile_directory = /home/pi/RetroPie/savefile/{{ item.sys }}
           savestate_directory = /home/pi/RetroPie/savestate/{{ item.sys }}
+      ignore_errors: "yes"
       with_items:
         - { sys: "arcade",          y: "{{ arcade_height }}",          x: "{{ arcade_width }}"          }
         - { sys: "atari2600",       y: "{{ atari2600_height }}",       x: "{{ atari2600_width }}"       }
