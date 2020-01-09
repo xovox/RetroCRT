@@ -77,8 +77,9 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
 * Automatic rotation for vertical games!
 * Installation of additional CRT Friendly EmulationStation themes!
 * No system messages on boot/shutdown/reboot!
-* No annoying EmulationStation yellow text!
 * My unbridled enthusiasm about building this project!
+* Simplified WiFi configuration via /boot/retrocrt/wpa_supplicant.conf.txt
+  * If you don't have this file, re-run RetroCRT configurator & it will appear
 
 # Consumer TV Compatibility
 

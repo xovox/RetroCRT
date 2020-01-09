@@ -121,6 +121,9 @@ This is currently *not* inside of RetroPie-Setup!
   * This contains per-game monitor resolution & orientation information
 * /home/pi/RetroCRT/retrocrt_timings/
   * This directory contains display resolutions that we dynamically switch to
+* /boot/retrocrt/wpa_supplicant.conf(.txt)
+  * Define your WiFi configuration & country code, then RetroCRT will enable WiFi for you
+  * If the file doesn't exist, re-run RetroCRT configurator with updates
 
 ## Scripts
 
