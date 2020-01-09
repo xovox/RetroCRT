@@ -1,8 +1,6 @@
 ##############################################################################
-# NOT CURRENTLY SUPPORTED
-#
-# Update this file & rename it to wpa_supplicant.conf & it will be copied over
-# the next time you run RetroCRT's setup!
+# Update this file & rename it to wpa_supplicant.conf & run the RetroCRT suite
+# from the RetroPie menu to bring your WiFi interface up
 ##############################################################################
 
 ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
