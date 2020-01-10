@@ -22,7 +22,7 @@
 #
 # this script downloads a retropie image & preps it to become a RetroCRT image
 #
-# - grow / by 1000G
+# - grow / by 1G
 # - disable automatic resize on first boot
 # - basic video config for boot
 # - moves apt cache to /dev/shm for speed & SD kindness
@@ -59,6 +59,7 @@ sudo sed -i.retrocrt '/END INIT INFO/a exit 0 # RetroCRT' $rootmnt/etc/init.d/re
 sudo sed -i.retrocrt 's| init=/usr/lib/raspi-config/init_resize.sh||' $bootmnt/cmdline.txt
 sudo touch $bootmnt/ssh
 
+git -C $rootmnt/home/pi/RetroPie-Setup pull
 git -C $rootmnt/home/pi clone https://github.com/xovox/RetroCRT
 
 cat << EOF | sudo tee -a $bootmnt/config.txt
