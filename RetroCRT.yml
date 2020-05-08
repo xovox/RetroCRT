@@ -312,6 +312,7 @@
       with_items:
         - { theme: "GBZ35 Dark",      repo: "rxbrad/es-theme-gbz35-dark"    }
         - { theme: "Pixel Heaven",    repo: "skeletoooooor/es-pixel-heaven" }
+        - { theme: "Arcade CRT",      repo: "andreamav/es-arcade-crt"       }
       become: "yes"
       #when:
       #  - install_optional_themes == "yes"
