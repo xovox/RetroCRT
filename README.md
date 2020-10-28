@@ -63,7 +63,7 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
   * JAMMA controls are currently unsupported, but will be
 * RGB: [pi2scart](http://arcadeforge.net/Pi2Jamma-Pi2SCART/PI2SCART::264.html)
 * RGB/VGA: [GERT VGA 666](https://github.com/PiSupply/Gert-VGA-666)
-  * You can buy it on [Amazon](amazon.com/Raspberry-Adapter-Board-Atomic-Market/dp/B075DM4C5V)
+  * You can buy it on [Amazon](https://amazon.com/Raspberry-Adapter-Board-Atomic-Market/dp/B075DM4C5V)
 
 # What You Get
 
