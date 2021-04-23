@@ -259,6 +259,7 @@
         - { variable: "custom_viewport_width",  value: "{{ physical_viewport_width }}"  }
         - { variable: "custom_viewport_height", value: "{{ physical_viewport_height }}" }
         - { variable: "aspect_ratio_index",     value: "23"                             }
+        - { variable: "menu_enable_widgets",    value: "false"                          }
         - { variable: "video_font_enable",      value: "false"                          }
         - { variable: "video_fullscreen",       value: "true"                           }
         - { variable: "video_hard_sync",        value: "true"                           }
