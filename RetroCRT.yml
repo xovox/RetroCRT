@@ -270,7 +270,8 @@
         - { variable: "video_vsync",            value: "true"                           }
 
     - name: "Sync Directories"
-      synchronize:
+      ansible.posix.synchronize:
+        mode: push
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         rsync_opts:
@@ -280,7 +281,8 @@
         - { src: "files/retropie/",            dest: "/opt/retropie/configs/" }
 
     - name: "Copy ROMs"
-      synchronize:
+      ansible.posix.synchronize:
+        mode: push
         src: "files/roms/"
         dest: "{{home_dir}}/RetroPie/roms/"
         rsync_opts:

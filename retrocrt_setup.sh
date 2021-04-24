@@ -440,5 +440,6 @@ echo "########################################"
 echo
 
 set -x
+ansible-galaxy install -r requirements.yml
 ansible-playbook RetroCRT.yml -i localhost,
 sleep 5
