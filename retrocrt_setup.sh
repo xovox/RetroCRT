@@ -2,18 +2,14 @@
 
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
 
-licensetext=(
+openingtext=(
 "
 RetroCRT is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 RetroCRT is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
 " "
 You should have received a copy of the GNU General Public License along with RetroCRT.  If not, see gnu.org/licenses/.
-"
-)
-
-introtext=(
-"
+" "
 RetroCRT is a suite of tools to simplify the use of CRTs with a Raspberry Pi running RetroPie.
 
 This is achieved via non-destructive updating of configuration files & custom scripts to manage resolutions & orientation per-rom/core.
@@ -23,11 +19,7 @@ Bugs: github.com/xovox/RetroCRT/issues
 E-Mail: xovox git gmail com
 
 Facebook: facebook.com/groups/RetroPieCRT
-"
-)
-
-hardwaretext=(
-"
+" "
 RetroCRT requires specialized hardware:
 
 - RetroTink over component & RGB
@@ -86,6 +78,10 @@ rotation="
 Would you like to rotate the screen?  This requires a reboot.
 "
 
+verticalres="
+What vertical resolution do you prefer?
+"
+
 fatalquit="
 Networking is down & we're missing the ansible package.
 
@@ -93,15 +89,15 @@ I'm unable to proceed.
 "
 
 bilinearmsg="
-RetroCRT is designed to work with ROMs greater than 240p, all the way up to 256p.  These higher resolutions will not render properly on a consumer CRT TV @ 240p.
+RetroCRT is designed to work with ROMs greater than 224/240p, all the way up to 256p.  These higher resolutions will not render properly on a consumer CRT TV @ 240p.
 
 You have three choices on how to handle these games.
 
 - Keep original display size, but vertically centered.
 
-- Scale down to 240p, dropping some lines.  On some games this will not be very noticible.
+- Scale down to 224/240p, dropping some lines.  On some games this will not be very noticible.
 
-- Scale down to 240p, but use bilinear filtering to smooth some of the rough edges.  Some lines will look slightly strange.
+- Scale down to 224/240p, but use bilinear filtering to smooth some of the rough edges.  Some lines will look slightly strange.
 "
 
 if [ -f $HOME/RetroCRT/files/dialogrc ]; then
@@ -112,7 +108,7 @@ fi
 # can we hit the internet?
 ##############################################################################
 
-if ping -c 5 -w 7 8.8.8.8 > /dev/null 2>&1; then
+if curl https://www.google.com/ > /dev/null 2>&1; then
     network_up=true
 else
     network_up=false
@@ -153,9 +149,9 @@ fi
 if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
 	echo
 	echo "########################################"
-    echo "Ensuring Virtual Env has Ansible $ansible_ver"
+	echo "Ensuring Virtual Env has Ansible $ansible_ver"
 	echo "########################################"
-    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible==$ansible_ver
+	pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible==$ansible_ver
 fi
 
 ##############################################################################
@@ -195,33 +191,11 @@ fi
 ##############################################################################
 
 textpage="0"
-for text in "${licensetext[@]}"; do
+for text in "${openingtext[@]}"; do
 	textpage=$[ $textpage + 1 ]
 	dialog \
 		--no-shadow \
-		--title "$retrocrt_title :: License & Warranty ($textpage/${#licensetext[@]})"  \
-		--colors  \
-		--msgbox "$text" \
-		20 46
-done
-
-textpage="0"
-for text in "${introtext[@]}"; do
-	textpage=$[ $textpage + 1 ]
-	dialog \
-		--no-shadow \
-		--title "$retrocrt_title :: Introduction ($textpage/${#introtext[@]})"  \
-		--colors  \
-		--msgbox "$text" \
-		20 46
-done
-
-textpage="0"
-for text in "${hardwaretext[@]}"; do
-	textpage=$[ $textpage + 1 ]
-	dialog \
-		--no-shadow \
-		--title "$retrocrt_title :: Hardware ($textpage/${#hardwaretext[@]})"  \
+		--title "$retrocrt_title :: Greetings! ($textpage/${#openingtext[@]})"  \
 		--colors  \
 		--msgbox "$text" \
 		20 46
@@ -344,12 +318,23 @@ export tv_region="$(dialog --no-shadow \
 }
 
 ##############################################################################
+# see what vertical resolutions are available and present them
+##############################################################################
+
+timing_opts="$(ls $retrocrt_timings/*_* | sed 's/.*_//;s/.*/& "Use &p vertical resolution"/')"
+export vert_res="$(echo /usr/bin/dialog --title "'$retrocrt_title :: Vertical Resolution'" --menu "'$verticalres'" 0 0 0 $timing_opts | bash 3>&1 1>&2 2>&3)"
+
+##############################################################################
 # one last chance to bail
 ##############################################################################
 
 dialog --no-shadow --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 20 46 || exit
 
 clear
+
+if [ ! -f "/boot/retrocrt/counter.svg" ]; then
+	curl -s "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxovox%2FRetroCRT%2F&count_bg=%23FF8C00&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" > /boot/retrocrt/counter.svg 2> /dev/null
+fi
 
 ##############################################################################
 # write our config
