@@ -46,9 +46,9 @@ sudo mkdir -pv /boot/retrocrt
 retrocrt_title="RetroCRT"
 
 # lock in the ansible version we're running
-ansible_ver="2.9.1"
+ansible_ver="2.10.8"
 
-retrocrt_venv="$HOME/.virtualenv/retrocrt"
+retrocrt_venv="$HOME/.virtualenv/retrocrt3"
 req_packages="
 	dialog
 	dos2unix
@@ -151,7 +151,7 @@ if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
 	echo "########################################"
 	echo "Ensuring Virtual Env has Ansible $ansible_ver"
 	echo "########################################"
-	pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible==$ansible_ver
+	pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
 fi
 
 ##############################################################################
