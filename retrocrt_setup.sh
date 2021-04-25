@@ -50,15 +50,27 @@ ansible_ver="2.10.8"
 
 retrocrt_venv="$HOME/.virtualenv/retrocrt3"
 req_packages="
-	dialog
-	dos2unix
-	git
-	python3-apt
-	python3-dev
-	virtualenv
+    dialog
+    dos2unix
+    git
+    python3-apt
+    python3-dev
+    virtualenv
 "
 
 export PS4="   \[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
+
+rotation_opts='
+        0 "^"
+        90 "> (Currently Buggy in ES)"
+        180 "v"
+        270 "<"
+'
+
+video_out='
+        vga666 "VGA666, Pi2JAMMA, Pi2SCART"
+        rtrgb "RetroTink: RGB/Component"
+'
 
 finalwarning="
 \Zb\Z1LAST CHANCE TO ABORT!!!\Zn
@@ -101,8 +113,27 @@ You have three choices on how to handle these games.
 "
 
 if [ -f $HOME/RetroCRT/files/dialogrc ]; then
-	export DIALOGRC=$HOME/RetroCRT/files/dialogrc
+    export DIALOGRC=$HOME/RetroCRT/files/dialogrc
 fi
+
+dialog_menu() {
+    default_item="$(eval "echo \${$1}")"
+    export $1="$(echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 3>&1 1>&2 2>&3)"
+}
+
+dialog_msg() {
+    dialog \
+        --no-shadow \
+        --title "$retrocrt_title :: $1" \
+        --colors \
+        --msgbox \
+        "$2" \
+        20 46
+}
+
+dialog_yesno() {
+    dialog --no-shadow --title "$retrocrt_title :: $1" --colors --defaultno --yesno "$2" 20 46
+}
 
 ##############################################################################
 # can we hit the internet?
@@ -123,35 +154,29 @@ if ! (dpkg -l $req_packages > /dev/null); then
         sudo apt update
         sudo apt -y install $req_packages
     else
-        dialog \
-			--no-shadow \
-			--title "$retrocrt_title :: Fatal Error" \
-			--colors \
-			--msgbox \
-			"$fatalquit" \
-			20 46
+    dialog_msg "Fatal Error" "$fatalquit"
         exit
     fi
 fi
 
 if [[ ! -f $retrocrt_venv/bin/activate ]]; then
     echo
-	echo "########################################"
+    echo "########################################"
     echo "Generating Python 3 Virtual Env"
-	echo "########################################"
-	virtualenv --python=python3 $retrocrt_venv
+    echo "########################################"
+    virtualenv --python=python3 $retrocrt_venv
 fi
 
 if [[ -f $retrocrt_venv/bin/activate ]]; then
-	source $retrocrt_venv/bin/activate
+    source $retrocrt_venv/bin/activate
 fi
 
 if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
-	echo
-	echo "########################################"
-	echo "Ensuring Virtual Env has Ansible $ansible_ver"
-	echo "########################################"
-	pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
+    echo
+    echo "########################################"
+    echo "Ensuring Virtual Env has Ansible $ansible_ver"
+    echo "########################################"
+    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
 fi
 
 ##############################################################################
@@ -172,7 +197,7 @@ sudo touch "$retrocrt_config"
 eval "$(dos2unix < "$retrocrt_config")"
 
 if [ -f $retrocrt_install/files/dialogrc ]; then
-	export DIALOGRC=$retrocrt_install/files/dialogrc
+    export DIALOGRC=$retrocrt_install/files/dialogrc
 fi
 
 ##############################################################################
@@ -192,13 +217,8 @@ fi
 
 textpage="0"
 for text in "${openingtext[@]}"; do
-	textpage=$[ $textpage + 1 ]
-	dialog \
-		--no-shadow \
-		--title "$retrocrt_title :: Greetings! ($textpage/${#openingtext[@]})"  \
-		--colors  \
-		--msgbox "$text" \
-		20 46
+    textpage=$[ $textpage + 1 ]
+        dialog_msg "Greetings! ($textpage/${#openingtext[@]})" "$text" 
 done
 
 ##############################################################################
@@ -206,11 +226,11 @@ done
 ##############################################################################
 
 if [[ "$network_up" = "true" ]]; then
-    if dialog --no-shadow --title "$retrocrt_title :: Update RetroCRT" --colors --defaultno --yesno "$updategit" 20 46 ; then
-		clear ; reset ; clear
-		set -x
+    if dialog_yesno "Update RetroCRT" "$updategit" ; then
+        clear ; reset ; clear
+        set -x
         git pull
-		sleep 5
+        sleep 5
         $0
         exit
     fi
@@ -226,20 +246,8 @@ fi
 # v   2   2   180
 # <   3   1   270
 
-
 rotate_crt=${rotate_crt:-0}
-
-export rotate_crt="$(dialog --no-shadow \
-	--title "$retrocrt_title :: Screen Orientation" \
-	--stdout \
-	--default-item "$rotate_crt" \
-	--menu "Which way is up?  This can be changed later." \
-	0 0 0 \
-		0 "^" \
-		90 "> (Currently Buggy in ES)" \
-		180 "v" \
-		270 "<"
-)"
+dialog_menu rotate_crt "Screen Rotation" "Which way is up?" "$rotation_opts"
 
 if [[ "$rotate_crt" = "0" ]]; then
     export rotate_es="0"
@@ -262,78 +270,64 @@ fi
 export dpi_output_format=${dpi_output_format:-0}
 export retrocrt_video_hardware=${retrocrt_video_hardware:-vga666}
 
-export retrocrt_video_hardware="$(dialog --no-shadow \
-	--title "$retrocrt_title :: Video Hardware" \
-	--stdout \
-	--default-item "$retrocrt_video_hardware" \
-	--menu "What Video Connection?" \
-	0 0 0 \
-		vga666 "VGA666, Pi2JAMMA, Pi2SCART" \
-		rtrgb "RetroTink: RGB/Component"
-)"
+dialog_menu retrocrt_video_hardware "Video Hardware" "What video connection?" "$video_out"
 
 if [ "$retrocrt_video_hardware" = "vga666" ]; then
-	export retrocrt_timings="rgb/15khz"
-	export dpi_output_format="0"
+    export retrocrt_timings="rgb/15khz"
+    export dpi_output_format="0"
 elif [ "$retrocrt_video_hardware" = "rtrgb" ]; then
-	export retrocrt_timings="rgb/15khz"
-	export dpi_output_format="519"
+    export retrocrt_timings="rgb/15khz"
+    export dpi_output_format="519"
 fi
 
 ##############################################################################
 # our controller connection
 ##############################################################################
 
-export retrocrt_ctrl_hardware=${retrocrt_ctrl_hardware:-usb}
 
 disabled_section() {
-export retrocrt_ctrl_hardware="$(dialog --no-shadow \
-	--title "$retrocrt_title :: Controller Hardware" \
-	--stdout \
-	--default-item "$retrocrt_ctrl_hardware" \
-	--menu "Choose Controller Connection" \
-	0 0 0 \
-		usb "USB" \
-		pi2jamma "Pi2JAMMA" \
-)"
+control_opts='
+        usb "USB"
+        pi2jamma "Pi2JAMMA"
+'
+export retrocrt_ctrl_hardware=${retrocrt_ctrl_hardware:-usb}
+dialog_menu retrocrt_ctrl_hardware "Controller Hardware" "Choose controller connection" "$control_opts"
 }
 
 ##############################################################################
 # choose a tv region
 ##############################################################################
 
-tv_region=${tv_region:-ntsc}
 
 disabled_section() {
-export tv_region="$(dialog --no-shadow \
-	--title "$retrocrt_title :: Controller Hardware" \
-	--stdout \
-	--default-item "$tv_region" \
-	--menu "Choose Controller Connection" \
-	0 0 0 \
-		ntsc "NTSC" \
-		pal "PAL" \
-		secam "SECAM" \
-)"
+region_opts='
+ntsc "NTSC"
+pal "PAL"
+secam "SECAM"
+'
+
+tv_region=${tv_region:-ntsc}
+dialog_menu tv_region "TV Region" "What region are you in?" "$region_opts"
 }
 
 ##############################################################################
 # see what vertical resolutions are available and present them
 ##############################################################################
-
-timing_opts="$(ls $retrocrt_timings/*_* | sed 's/.*_//;s/.*/& "Use &p vertical resolution"/')"
-export vert_res="$(echo /usr/bin/dialog --title "'$retrocrt_title :: Vertical Resolution'" --menu "'$verticalres'" 0 0 0 $timing_opts | bash 3>&1 1>&2 2>&3)"
+    
+#timing_opts="$(ls $retrocrt_timings/*_* | sed 's/.*_//;s/.*/& "Use &p vertical resolution"/')"
+resolution_opts="$(ls $retrocrt_timings/*_* | sed 's/.*\///;s/.*/& "Use & resolution"/;s/_/x/2')"
+dialog_menu game_resolution "Game Resolution" "What resolution do you wish to use?" "$resolution_opts"
 
 ##############################################################################
 # one last chance to bail
 ##############################################################################
 
-dialog --no-shadow --title "$retrocrt_title :: Last Chance!" --colors --defaultno --yesno "$finalwarning" 20 46 || exit
+dialog_yesno "Last Chance!" "$finalwarning" || exit
 
 clear
 
 if [ ! -f "/boot/retrocrt/counter.svg" ]; then
-	curl -s "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxovox%2FRetroCRT%2F&count_bg=%23FF8C00&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" > /boot/retrocrt/counter.svg 2> /dev/null
+    curl -s "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxovox%2FRetroCRT%2F&count_bg=%23FF8C00&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" > /boot/retrocrt/counter.svg 2> /dev/null
 fi
 
 ##############################################################################
