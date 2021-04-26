@@ -154,7 +154,7 @@ if ! (dpkg -l $req_packages > /dev/null); then
         sudo apt update
         sudo apt -y install $req_packages
     else
-    dialog_msg "Fatal Error" "$fatalquit"
+        dialog_msg "Fatal Error" "$fatalquit"
         exit
     fi
 fi
@@ -204,7 +204,8 @@ fi
 # are we being run in the right dir?
 ##############################################################################
 
-retrocrt_install=${retrocrt_install:-$PWD}
+export retrocrt_install=${retrocrt_install:-$PWD}
+export retrocrt_timings="$retrocrt_install/retrocrt_timings"
 
 if [[ "$PWD" != "$retrocrt_install" ]]; then
     echo -e "Please move the installer directory to \"$retrocrt_install\"\n"
@@ -273,31 +274,28 @@ export retrocrt_video_hardware=${retrocrt_video_hardware:-vga666}
 dialog_menu retrocrt_video_hardware "Video Hardware" "What video connection?" "$video_out"
 
 if [ "$retrocrt_video_hardware" = "vga666" ]; then
-    export retrocrt_timings="rgb/15khz"
+    export retrocrt_timings="$retrocrt_timings/rgb/15khz"
     export dpi_output_format="0"
 elif [ "$retrocrt_video_hardware" = "rtrgb" ]; then
-    export retrocrt_timings="rgb/15khz"
+    export retrocrt_timings="$retrocrt_timings/rgb/15khz"
     export dpi_output_format="519"
 fi
 
 ##############################################################################
-# our controller connection
+# see what vertical resolutions are available and present them
 ##############################################################################
+    
+#timing_opts="$(ls $retrocrt_timings/*_* | sed 's/.*_//;s/.*/& "Use &p vertical resolution"/')"
+export game_resolution=${game_resolution:-1920_240}
+export resolution_opts="$(ls $retrocrt_timings/*_* | sed 's/.*\///;s/.*/& "Use & resolution"/;s/_/x/2')"
+dialog_menu game_resolution "Game Resolution" "What resolution do you wish to use?" "$resolution_opts"
 
-
-disabled_section() {
-control_opts='
-        usb "USB"
-        pi2jamma "Pi2JAMMA"
-'
-export retrocrt_ctrl_hardware=${retrocrt_ctrl_hardware:-usb}
-dialog_menu retrocrt_ctrl_hardware "Controller Hardware" "Choose controller connection" "$control_opts"
-}
+export physical_viewport_width="$(cut -d'_' -f1 <<< "$game_resolution")"
+export physical_viewport_height="$(cut -d'_' -f2 <<< "$game_resolution")"
 
 ##############################################################################
 # choose a tv region
 ##############################################################################
-
 
 disabled_section() {
 region_opts='
@@ -311,14 +309,6 @@ dialog_menu tv_region "TV Region" "What region are you in?" "$region_opts"
 }
 
 ##############################################################################
-# see what vertical resolutions are available and present them
-##############################################################################
-    
-#timing_opts="$(ls $retrocrt_timings/*_* | sed 's/.*_//;s/.*/& "Use &p vertical resolution"/')"
-resolution_opts="$(ls $retrocrt_timings/*_* | sed 's/.*\///;s/.*/& "Use & resolution"/;s/_/x/2')"
-dialog_menu game_resolution "Game Resolution" "What resolution do you wish to use?" "$resolution_opts"
-
-##############################################################################
 # one last chance to bail
 ##############################################################################
 
@@ -326,8 +316,8 @@ dialog_yesno "Last Chance!" "$finalwarning" || exit
 
 clear
 
-if [ ! -f "/boot/retrocrt/counter.svg" ]; then
-    curl -s "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxovox%2FRetroCRT%2F&count_bg=%23FF8C00&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" > /boot/retrocrt/counter.svg 2> /dev/null
+if [ ! -f "$HOME/.retrocrt_counter.svg" ]; then
+    curl -s "https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fxovox%2FRetroCRT%2F&count_bg=%23FF8C00&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false" > "$HOME/.retrocrt_counter.svg" 2> /dev/null
 fi
 
 ##############################################################################
@@ -389,7 +379,7 @@ export retrocrt_ctrl_hardware="$retrocrt_ctrl_hardware"
 # Our HDMI Timings
 ##############################################################################
 
-export retrocrt_timings="\$retrocrt_install/retrocrt_timings/$retrocrt_timings"
+export retrocrt_timings="$retrocrt_timings"
 
 ##############################################################################
 # Our System PATH
@@ -407,8 +397,9 @@ export ANSIBLE_RETRY_FILES_ENABLED=0
 # Emulation Resolution, Currently Unused
 ##############################################################################
 
-physical_viewport_width=1920
-physical_viewport_height=240
+export game_resolution="$game_resolution"
+physical_viewport_width=$physical_viewport_width
+physical_viewport_height=$physical_viewport_height
 
 ##############################################################################
 # TV Region, Currently Unused

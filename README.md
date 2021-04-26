@@ -2,7 +2,7 @@
 
 RetroCRT :: Utility suite to configure RetroPie for a CRT
 
-Copyright (C) 2019 Duncan Brown (https://github.com/xovox)
+Copyright (C) 2021 Duncan Brown (https://github.com/xovox)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +60,6 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
   * Component & RGB only, for now
   * NTSC only, for now
 * JAMMA Arcade: [pi2jamma](http://arcadeforge.net/Pi2Jamma-Pi2SCART/Pi2Jamma::248.html)
-  * JAMMA controls are currently unsupported, but will be
 * RGB: [pi2scart](http://arcadeforge.net/Pi2Jamma-Pi2SCART/PI2SCART::264.html)
 * RGB/VGA: [GERT VGA 666](https://github.com/PiSupply/Gert-VGA-666)
   * You can buy it on [Amazon](https://amazon.com/Comimark-Gert-VGA-VGA666-Adapter-Raspberry/dp/B07X3GC7KW)
