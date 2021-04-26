@@ -118,7 +118,11 @@ fi
 
 dialog_menu() {
     default_item="$(eval "echo \${$1}")"
-    export $1="$(echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 3>&1 1>&2 2>&3)"
+    dialog_menu_result="$(echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 3>&1 1>&2 2>&3)"
+    if [ ! "$dialog_menu_result" ]; then
+	exit 1
+    fi
+    export $1="$dialog_menu_result"
 }
 
 dialog_msg() {
@@ -226,6 +230,7 @@ done
 # update before proceding?
 ##############################################################################
 
+disabled_section() {
 if [[ "$network_up" = "true" ]]; then
     if dialog_yesno "Update RetroCRT" "$updategit" ; then
         clear ; reset ; clear
@@ -236,6 +241,26 @@ if [[ "$network_up" = "true" ]]; then
         exit
     fi
 fi
+}
+
+##############################################################################
+# version browser!
+##############################################################################
+
+if [[ "$network_up" = "true" ]]; then
+	clear ; reset ; clear
+	git fetch --tags
+fi
+
+git_tag_latest="$(git for-each-ref --format="%(tag)" --sort=-taggerdate --count=1 refs/tags)"
+
+git_tag=${git_tag:-$git_tag_latest}
+
+git_tag_list="$(git tag -n1 | sed 's/[ ]\+/ "/;s/$/"/')"
+git_tags="$(git tag -n1 | sed 's/[ ]\+/ "/;'"s/$git_tag .*/&*/;"'s/$/"/')"
+
+echo "$git_tags"
+dialog_menu git_tag "Version Selection" "What version do you want to run?" "$git_tag_list"
 
 ##############################################################################
 # do we want to rotate our screen?
@@ -334,6 +359,8 @@ $license
 
 export retrocrt_install="$retrocrt_install"
 
+export git_tag="$git_tag"
+
 ##############################################################################
 # Configure Video Output, Typically Handled by RetroCRT TUI
 ##############################################################################
@@ -418,6 +445,11 @@ eval "$(dos2unix < "$retrocrt_config")"
 ##############################################################################
 # Run our configuration playbook
 ##############################################################################
+
+if [[ "$MACHTYPE" =~ .*x86_64.* ]]; then
+	cat "$retrocrt_config"
+	exit
+fi
 
 echo "########################################"
 echo "Running RetroCRT Ansible Playbook"
