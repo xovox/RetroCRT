@@ -81,10 +81,6 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
 * Simplified WiFi configuration via /boot/retrocrt/wpa_supplicant.conf.txt
   * If you don't have this file, re-run RetroCRT configurator & it will appear
 
-# Consumer TV Compatibility
-
-Strictly NTSC TVs at this time
-
 # Troubleshooting
 
 Before doing anything else, update RetroCRT!  You can do this in the RetroPie screen in EmulationStation.
