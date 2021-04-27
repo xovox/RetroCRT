@@ -61,15 +61,21 @@ req_packages="
 export PS4="   \[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
 
 rotation_opts='
-        0 "^"
-        90 "> (Currently Buggy in ES)"
-        180 "v"
-        270 "<"
+    0 "^"
+    90 "> (Currently Buggy in ES)"
+    180 "v"
+    270 "<"
 '
 
 video_out='
-        vga666 "VGA666, Pi2JAMMA, Pi2SCART"
-        rtrgb "RetroTink: RGB/Component"
+    vga666 "VGA666, Pi2JAMMA, Pi2SCART"
+    rtrgb "RetroTink: RGB/Component"
+'
+
+region_opts='
+    ntsc "NTSC"
+    pal "PAL"
+    secam "SECAM"
 '
 
 finalwarning="
@@ -112,10 +118,9 @@ You have three choices on how to handle these games.
 - Scale down to 224/240p, but use bilinear filtering to smooth some of the rough edges.  Some lines will look slightly strange.
 "
 
-if [ -f $HOME/RetroCRT/files/dialogrc ]; then
-    export DIALOGRC=$HOME/RetroCRT/files/dialogrc
-fi
-
+##############################################################################
+# dialog wrappers and config file
+##############################################################################
 dialog_menu() {
     default_item="$(eval "echo \${$1}")"
     dialog_menu_result="$(echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 3>&1 1>&2 2>&3)"
@@ -138,6 +143,10 @@ dialog_msg() {
 dialog_yesno() {
     dialog --no-shadow --title "$retrocrt_title :: $1" --colors --defaultno --yesno "$2" 20 46
 }
+
+if [ -f $HOME/RetroCRT/files/dialogrc ]; then
+    export DIALOGRC=$HOME/RetroCRT/files/dialogrc
+fi
 
 ##############################################################################
 # can we hit the internet?
@@ -196,13 +205,8 @@ if grep -wq "$bad_backup_string" $ansible_basic_py ; then
         $ansible_basic_py
 fi
 
-
 sudo touch "$retrocrt_config"
 eval "$(dos2unix < "$retrocrt_config")"
-
-if [ -f $retrocrt_install/files/dialogrc ]; then
-    export DIALOGRC=$retrocrt_install/files/dialogrc
-fi
 
 ##############################################################################
 # are we being run in the right dir?
@@ -322,16 +326,8 @@ export physical_viewport_height="$(cut -d'_' -f2 <<< "$game_resolution")"
 # choose a tv region
 ##############################################################################
 
-disabled_section() {
-region_opts='
-ntsc "NTSC"
-pal "PAL"
-secam "SECAM"
-'
-
 tv_region=${tv_region:-ntsc}
-dialog_menu tv_region "TV Region" "What region are you in?" "$region_opts"
-}
+#dialog_menu tv_region "TV Region" "What region are you in?" "$region_opts"
 
 ##############################################################################
 # one last chance to bail
