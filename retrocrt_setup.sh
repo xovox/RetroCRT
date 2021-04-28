@@ -260,7 +260,7 @@ git_tag_latest="$(git for-each-ref --format="%(tag)" --sort=-taggerdate --count=
 
 git_tag=${git_tag:-$git_tag_latest}
 
-git_tag_list="$(git tag -n1 | sed 's/[ ]\+/ "/;s/$/"/')"
+git_tag_list="master \"bleeding edge\" $(git tag -n1 | sed 's/[ ]\+/ "/;s/$/"/')"
 git_tags="$(git tag -n1 | sed 's/[ ]\+/ "/;'"s/$git_tag .*/&*/;"'s/$/"/')"
 
 echo "$git_tags"
