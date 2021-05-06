@@ -403,13 +403,6 @@
       become: "yes"
       notify: "setupcon"
 
-    - name: "Disable Swap File"
-      service:
-        name: "dphys-swapfile"
-        enabled: "no"
-        state: stopped
-      become: "yes"
-
 #    - name: "Fix Permissions"
 #      file:
 #        path: "{{ item }}"
