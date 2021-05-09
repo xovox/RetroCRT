@@ -23,6 +23,10 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 
 Compared to every distro I've seen out there, one of the biggest advantages of using RetroCRT is that we're only updating configuration files line-by-line instead of overwriting everything.  This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running.
 
+# RetroCRT & Libretro
+
+RetroCRT *only* supports Libretro cores!  If you find a Libretro core that's not properly configured when you launch it, please see [the issues page](https://github.com/xovox/RetroCRT/issues) and file a new issue if you don't see your platform already requested
+
 ## Videos
 
 * [Fresh Install of RetroCRT](https://www.youtube.com/watch?v=nytsuaoU4R8) shows what you get out of the box
