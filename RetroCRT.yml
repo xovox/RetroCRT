@@ -180,7 +180,7 @@
         create: "no"
         backup: "yes"
         insertbefore: "^#include"
-        marker: "# {mark} RetroCRT DO NOT TOUCH"
+        marker: "# {mark} RetroCRT Critical DO NOT TOUCH"
         block: |
           custom_viewport_height = {{ item.y }}
           custom_viewport_width = {{ item.x }}
@@ -369,7 +369,7 @@
         block: "{{ lookup('file', './files/runcommand-onstart.sh') }}"
         dest: /opt/retropie/configs/all/runcommand-onstart.sh
         backup: "yes"
-        marker: "# {mark} RetroCRT Scripting DO NOT TOUCH"
+        marker: "# {mark} RetroCRT Critical DO NOT TOUCH"
         insertafter: "EOF"
       become: "yes"
 
@@ -378,7 +378,7 @@
         block: "{{ lookup('file', './files/runcommand-onend.sh') }}"
         dest: /opt/retropie/configs/all/runcommand-onend.sh
         backup: "yes"
-        marker: "# {mark} RetroCRT Scripting DO NOT TOUCH"
+        marker: "# {mark} RetroCRT Critical DO NOT TOUCH"
         insertafter: "EOF"
       become: "yes"
 
