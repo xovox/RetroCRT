@@ -384,7 +384,7 @@
 
     - name: "Install Required Packages"
       apt:
-        name: [ 'bc', 'dos2unix', 'p7zip-full', 'vim' ]
+        name: [ 'bc', 'dos2unix', 'p7zip-full', 'sqlite3', 'vim' ]
         update_cache: true
         state: present
       become: "yes"
