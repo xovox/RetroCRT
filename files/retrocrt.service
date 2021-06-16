@@ -1,0 +1,12 @@
+[Unit] 
+Requires=network.target
+DefaultDependencies=no
+Before=shutdown.target reboot.target
+
+[Service] 
+ExecStop=/home/pi/RetroCRT/scripts/shutdown.sh
+Type=oneshot 
+RemainAfterExit=true
+
+[Install]
+WantedBy=multi-user.target
