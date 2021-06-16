@@ -122,26 +122,32 @@ You have three choices on how to handle these games.
 # dialog wrappers and config file
 ##############################################################################
 dialog_menu() {
-    default_item="$(eval "echo \${$1}")"
-    dialog_menu_result="$(echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 3>&1 1>&2 2>&3)"
-    if [ ! "$dialog_menu_result" ]; then
-	exit 1
+    if [ ! "$rcrtauto" ]; then
+        default_item="$(eval "echo \${$1}")"
+        dialog_menu_result="$(echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 3>&1 1>&2 2>&3)"
+        if [ ! "$dialog_menu_result" ]; then
+            exit 1
+        fi
+        export $1="$dialog_menu_result"
     fi
-    export $1="$dialog_menu_result"
 }
 
 dialog_msg() {
-    dialog \
-        --no-shadow \
-        --title "$retrocrt_title :: $1" \
-        --colors \
-        --msgbox \
-        "$2" \
-        20 46
+    if [ ! "$rcrtauto" ]; then
+        dialog \
+            --no-shadow \
+            --title "$retrocrt_title :: $1" \
+            --colors \
+            --msgbox \
+            "$2" \
+            20 46
+    fi
 }
 
 dialog_yesno() {
-    dialog --no-shadow --title "$retrocrt_title :: $1" --colors --defaultno --yesno "$2" 20 46
+    if [ ! "$rcrtauto" ]; then
+        dialog --no-shadow --title "$retrocrt_title :: $1" --colors --defaultno --yesno "$2" 20 46
+    fi
 }
 
 if [ -f $HOME/RetroCRT/files/dialogrc ]; then
@@ -456,3 +462,7 @@ rcrtbanner "Running RetroCRT Ansible Playbook"
 set -x
 ansible-playbook RetroCRT.yml -i localhost,
 sleep 5
+
+if [ "$rcrtauto" ]; then
+	sudo shutdown --reboot +1
+fi
