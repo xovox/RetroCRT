@@ -403,15 +403,6 @@ export rotate_es="$rotate_es"
 export rotate_ra="$rotate_ra"
 
 ##############################################################################
-# Configure Our Controller
-##############################################################################
-
-# valid settings:
-#    usb    - USB/BlueTooth connected controller
-
-export retrocrt_ctrl_hardware="$retrocrt_ctrl_hardware"
-
-##############################################################################
 # Our HDMI Timings
 ##############################################################################
 
