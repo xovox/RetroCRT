@@ -261,20 +261,20 @@ fi
 # version browser!
 ##############################################################################
 
-if [[ "$network_up" = "true" ]]; then
-	clear ; reset ; clear
-	git fetch --tags
-fi
+#if [[ "$network_up" = "true" ]]; then
+#	clear ; reset ; clear
+#	git fetch --tags
+#fi
 
-git_tag_latest="$(git for-each-ref --format="%(tag)" --sort=-taggerdate --count=1 refs/tags)"
+#git_tag_latest="$(git for-each-ref --format="%(tag)" --sort=-taggerdate --count=1 refs/tags)"
 
-git_tag=${git_tag:-$git_tag_latest}
+#git_tag=${git_tag:-$git_tag_latest}
 
-git_tag_list="master \"bleeding edge\" $(git tag -n1 | sed 's/[ ]\+/ "/;s/$/"/')"
-git_tags="$(git tag -n1 | sed 's/[ ]\+/ "/;'"s/$git_tag .*/&*/;"'s/$/"/')"
+#git_tag_list="master \"bleeding edge\" $(git tag -n1 | sed 's/[ ]\+/ "/;s/$/"/')"
+#git_tags="$(git tag -n1 | sed 's/[ ]\+/ "/;'"s/$git_tag .*/&*/;"'s/$/"/')"
 
-echo "$git_tags"
-dialog_menu git_tag "Version Selection" "What version do you want to run?" "$git_tag_list"
+#echo "$git_tags"
+#dialog_menu git_tag "Version Selection" "What version do you want to run?" "$git_tag_list"
 
 ##############################################################################
 # do we want to rotate our screen?
@@ -326,8 +326,8 @@ fi
     
 #timing_opts="$(ls $retrocrt_timings/*_* | sed 's/.*_//;s/.*/& "Use &p vertical resolution"/')"
 export game_resolution=${game_resolution:-1920_240}
-export resolution_opts="$(ls $retrocrt_timings/*_* | sed 's/.*\///;s/.*/& "Use & resolution"/;s/_/x/2')"
-dialog_menu game_resolution "Game Resolution" "What resolution do you wish to use?" "$resolution_opts"
+#export resolution_opts="$(ls $retrocrt_timings/*_* | sed 's/.*\///;s/.*/& "Use & resolution"/;s/_/x/2')"
+#dialog_menu game_resolution "Game Resolution" "What resolution do you wish to use?" "$resolution_opts"
 
 export physical_viewport_width="$(cut -d'_' -f1 <<< "$game_resolution")"
 export physical_viewport_height="$(cut -d'_' -f2 <<< "$game_resolution")"
