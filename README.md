@@ -21,11 +21,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk) gaming on CRTs easy and user friendly.
 
-Compared to every distro I've seen out there, one of the biggest advantages of using RetroCRT is that we're only updating configuration files line-by-line instead of overwriting everything.  This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running.
+Compared to every distro I've seen out there, one of the biggest advantages of using RetroCRT is that we're only updating configuration files line-by-line instead of overwriting everything.
+This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running.
 
-# RetroCRT & Libretro
+# RetroCRT Emulator Support
 
-RetroCRT *only* supports Libretro cores!  If you find a Libretro core that's not properly configured when you launch it, please see [the issues page](https://github.com/xovox/RetroCRT/issues) and file a new issue if you don't see your platform already requested
+RetroCRT *only* supports Libretro cores, with a few exceptions.
+If you find a Libretro core that's not properly configured when you launch it, please see [the issues page](https://github.com/xovox/RetroCRT/issues) and file a new issue if you don't see your platform already requested
 
 ## Videos
 
@@ -92,9 +94,11 @@ If that doesn't fix it, see the [troubleshooting doc](TROUBLESHOOTING.md).
 
 # Footnotes
 
-I am not affiliated with RetroPie, Mike Chi, RetroTink, pi2jamma, or anyone else.  I'm doing this as a personal project.
+I am not affiliated with RetroPie, Mike Chi, RetroTink, pi2jamma, or anyone else.
+I'm doing this as a personal project.
 
-Shout out to [Vykran](https://github.com/Vykyan/retroTINK-setup) for the initial groundwork, though he seems to be PAL & I'm NTSC... which brought us to where we are now.
+Shout out to [Vykran](https://github.com/Vykyan/retroTINK-setup) for the initial groundwork, though he seems to be PAL & I'm NTSC...
+which brought us to where we are now.
 
 ```
                                                        .
