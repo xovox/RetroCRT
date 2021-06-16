@@ -149,6 +149,18 @@ if [ -f $HOME/RetroCRT/files/dialogrc ]; then
 fi
 
 ##############################################################################
+# our notifications
+##############################################################################
+
+rcrtbanner() {
+	rcrtbanner="$1"
+	printf %${COLUMNS}s | tr ' ' '='
+        printf "%*s\n" $(((${#rcrtbanner}+$COLUMNS)/2)) "$rcrtbanner"
+	printf %${COLUMNS}s | tr ' ' '='
+	echo
+}
+
+##############################################################################
 # can we hit the internet?
 ##############################################################################
 
@@ -173,10 +185,7 @@ if ! (dpkg -l $req_packages > /dev/null); then
 fi
 
 if [[ ! -f $retrocrt_venv/bin/activate ]]; then
-    echo
-    echo "########################################"
-    echo "Generating Python 3 Virtual Env"
-    echo "########################################"
+    rcrtbanner "Generating Python 3 Virtual Env"
     virtualenv --python=python3 $retrocrt_venv
 fi
 
@@ -185,11 +194,12 @@ if [[ -f $retrocrt_venv/bin/activate ]]; then
 fi
 
 if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
-    echo
-    echo "########################################"
-    echo "Ensuring Virtual Env has Ansible $ansible_ver"
-    echo "########################################"
+    rcrtbanner "Ensuring Virtual Env has Ansible $ansible_ver"
     pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
+
+    rcrtbanner "Ensuring Ansible Modules are Installed"
+    ansible-galaxy install -vvvv -r requirements.yml
+
 fi
 
 ##############################################################################
@@ -345,6 +355,9 @@ fi
 # write our config
 ##############################################################################
 
+echo
+rcrtbanner "Writing $retrocrt_config"
+
 cat << CONFIG | unix2dos | sudo dd of=$retrocrt_config
 #!/bin/bash
 $license
@@ -447,12 +460,8 @@ if [[ "$MACHTYPE" =~ .*x86_64.* ]]; then
 	exit
 fi
 
-echo "########################################"
-echo "Running RetroCRT Ansible Playbook"
-echo "########################################"
-echo
+rcrtbanner "Running RetroCRT Ansible Playbook"
 
 set -x
-ansible-galaxy install -r requirements.yml
 ansible-playbook RetroCRT.yml -i localhost,
 sleep 5
