@@ -23,6 +23,21 @@ RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk
 
 Compared to every distro I've seen out there, one of the biggest advantages of using RetroCRT is that we're only updating configuration files line-by-line instead of overwriting everything.  This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running.
 
+# Bleeding Edge
+
+[RetroCRT "Dark Odyssey"](https://github.com/xovox/RetroCRT/tree/RetroCRT3) is currently under development but is *very* stable.
+You can grab a pre-built image on [the release page](https://github.com/xovox/RetroCRT/releases).
+
+Installing on top of your existing RetroPie system is also possible.
+
+Upgrading from a previous RetroCRT isn't exactly advised, but it's possible and untested.
+
+```
+git clone -b RetroCRT3 https://github.com/xovox/RetroCRT
+```
+
+# Media
+
 ## Videos
 
 * [Fresh Install of RetroCRT](https://www.youtube.com/watch?v=nytsuaoU4R8) shows what you get out of the box
