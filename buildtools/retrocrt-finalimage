@@ -1,0 +1,77 @@
+#!/bin/bash -ex
+
+##############################################################################
+# This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
+#
+# RetroCRT is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# RetroCRT is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with RetroCRT.  If not, see <https://www.gnu.org/licenses/>.
+##############################################################################
+
+##############################################################################
+# retrocrt-finalimage (c) 2020 duncan brown (http://github.com/xovox)
+#
+# this script downloads a retropie image & preps it to become a RetroCRT image
+#
+# - creates loopback device
+# - takes data from tested SD card & writes to loopback
+# - mounts loopback
+# - re-enables filesystem growth
+# - writes new image to tested SD card for final test
+# - renames image to today's date
+# - generates an HTML version of the README.md & MANUAL.md
+# - creates a 7z file with the image, HTML & LICENSE.txt
+# 
+##############################################################################
+
+rcrtimage="$1"
+blockdev="$2"
+
+loopback="$(sudo losetup -Pf --show $rcrtimage)"
+bootpart=${loopback}p1
+rootpart=${loopback}p2
+bootmnt="$(mktemp -d)"
+rootmnt="$(mktemp -d)"
+
+for i in 1 2 ; do
+	sudo dd if=${blockdev}$i bs=1M of=${loopback}p${i} status=progress
+done
+
+sudo e2fsck -f $rootpart
+
+sudo mount $bootpart $bootmnt
+sudo mount $rootpart $rootmnt
+
+sudo sed -i 's|$| init=/usr/lib/raspi-config/init_resize.sh|' $bootmnt/cmdline.txt
+sudo sed -i '/RetroCRT/d' $rootmnt/etc/init.d/resize2fs_once
+
+sudo umount $bootmnt
+sudo umount $rootmnt
+sudo losetup -D $loopback
+
+sudo dd if=$rcrtimage bs=1M of=$blockdevice status=progress
+sleep 5
+sudo sync
+
+mkdir -pv /var/www/html/RetroCRT-$(date +%Y%m%d)
+
+cp $rcrtimage /var/www/html/RetroCRT-$(date +%Y%m%d)/RetroCRT-$(date +%Y%m%d).img
+
+for i in README MANUAL; do
+	markdown $HOME/RetroCRT/$i.md > /var/www/html/RetroCRT-$(date +%Y%m%d)/$i.html
+done
+
+cp $HOME/RetroCRT/LICENSE.txt /var/www/html/RetroCRT-$(date +%Y%m%d)/
+
+cd /var/www/html/RetroCRT-$(date +%Y%m%d)
+
+7z a ../RetroCRT-$(date +%Y%m%d).7z *
