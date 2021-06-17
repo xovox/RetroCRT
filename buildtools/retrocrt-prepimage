@@ -30,38 +30,100 @@
 # 
 ##############################################################################
 
-rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.5.1/retropie-4.5.1-rpi2_rpi3.img.gz"
-rpimage="$(basename "$rpurl")"
-rcrtimage="/tmp/retrocrt-$(basename $rpimage .gz)"
+reqpackages="
+	curl
+	pigz
+	pv
+"
+
+if ! dpkg -l $reqpackages ; then
+	sudo apt update
+	sudo apt -y install $reqpackages
+fi
+
+# what branch of RetroCRT are we pulling down
+rcrtbranch="$1"
+blockout="$2"
+
+# latest version of retropie for raspberry pi 3
+rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
+
+# our two 
+rpimage="$HOME/$(basename "$rpurl")"
+rcrtimage="$HOME/nvme/retrocrt-$rcrtbranch-$(basename $rpimage .gz)"
+
+if [ ! "$rcrtbranch" ]; then
+	echo "$0 [retrocrt_branch]"
+	exit
+fi
+
+# download retropie if we don't have it
 if [ ! -f "$rpimage" ]; then
 	curl -o "$rpimage" -L "$rpurl"
 fi
 
-pv -cN "decompress" "$rpimage" | gunzip -c > $rcrtimage
+# copy our stored compressed image to a new retrocrt image
+pv -cN "compressed" "$rpimage" | pigz -dc | pv -cN "uncompressed" > $rcrtimage
 
-sudo dd if=/dev/zero conv=notrunc oflag=append bs=1M count=1000 of=$rcrtimage
+# append 1gb to the new retrocrt image
+sudo dd if=/dev/zero conv=notrunc oflag=append bs=1M count=2000 of=$rcrtimage
 
+# create loopback device from new retrocrt image
 loopback="$(sudo losetup -Pf --show $rcrtimage)"
 bootpart=${loopback}p1
 rootpart=${loopback}p2
 
+# grow out the / filesystem to fill the additional 1gb
 sudo parted $loopback -- resizepart 2 100%
 sudo partprobe
 sudo e2fsck -f $rootpart
 sudo resize2fs $rootpart
 
+# mount our filesystems
 bootmnt="$(mktemp -d)"
 rootmnt="$(mktemp -d)"
 sudo mount $bootpart $bootmnt
 sudo mount $rootpart $rootmnt
 
+# prevent automatic filesystem growth
 sudo sed -i.retrocrt '/END INIT INFO/a exit 0 # RetroCRT' $rootmnt/etc/init.d/resize2fs_once
 sudo sed -i.retrocrt 's| init=/usr/lib/raspi-config/init_resize.sh||' $bootmnt/cmdline.txt
+
+# enable ssh on boot
 sudo touch $bootmnt/ssh
 
-git -C $rootmnt/home/pi/RetroPie-Setup pull
-git -C $rootmnt/home/pi clone https://github.com/xovox/RetroCRT
+# update retropie
+sudo git -C $rootmnt/home/pi/RetroPie-Setup pull
 
+# pull down RetroCRT
+sudo git clone -b $rcrtbranch https://github.com/xovox/RetroCRT $rootmnt/opt/RetroCRT
+
+cp -v $rootmnt/opt/RetroCRT/files/RetroCRT.sh $rootmnt/home/pi/RetroPie/retropiemenu/
+
+sudo chown -Rc 1000:1000 $rootmnt/opt/RetroCRT $rootmnt/home/pi
+
+cat << EOF | sudo tee $rootmnt/opt/retropie/configs/all/autostart.sh
+#!/bin/bash -x
+sleep 60
+{
+sudo rm -rfv /var/cache/apt/archives
+sudo ln -sv /dev/shm /var/cache/apt/archives
+sudo apt update
+sudo apt -y dist-upgrade
+sudo rm /var/cache/apt/archives
+sudo mkdir /var/cache/apt/archives
+if [ -f /var/run/reboot-required ]; then
+	sudo shutdown --reboot +1
+fi
+cd /opt/RetroCRT
+export rcrtauto=true
+./retrocrt_setup.sh
+} 2>&1 | sudo tee /bootstrap.\$(date +%Y%m%d_%H%M%S).out
+EOF
+
+sudo chmod -c 755 $rootmnt/opt/retropie/configs/all/autostart.sh
+
+# enable GPIO video
 cat << EOF | sudo tee -a $bootmnt/config.txt
 dtoverlay=dpi24
 enable_dpi_lcd=1
@@ -70,19 +132,24 @@ dpi_group=2
 dpi_mode=87
 disable_splash=1
 hdmi_timings=320 1 16 30 34 240 1 2 3 22 0 0 0 60 0 6400000 1
-
+#
 # 519 for RetroTink Ultimate
 # 0 for everything else
 dpi_output_format=0
 EOF
 
-cat << CACHE | sudo dd of=$rootmnt/etc/apt/apt.conf.d/01-cache
-Dir{Cache /dev/shm}
-Dir::Cache /dev/shm;
-Dir::Cache{Archives /dev/shm/}
-Dir::Cache::Archives /dev/shm;
-CACHE
+#cat << CACHE | sudo dd of=$rootmnt/etc/apt/apt.conf.d/01-cache
+#Dir{Cache /dev/shm}
+#Dir::Cache /dev/shm;
+#Dir::Cache{Archives /dev/shm/}
+#Dir::Cache::Archives /dev/shm;
+#CACHE
 
 sudo umount $bootmnt
 sudo umount $rootmnt
 sudo losetup -D $loopback
+
+if [ "$blockout" ]; then
+	pv "$rcrtimage" | sudo dd bs=1M of=$blockout
+	sudo sync
+fi
