@@ -158,7 +158,6 @@ fi
 # our notifications
 ##############################################################################
 
-set -x
 if [ "$COLUMNS" ]; then
 	rcrtbwidth=$COLUMNS
 else
@@ -262,7 +261,7 @@ disabled_section() {
 if [[ "$network_up" = "true" ]]; then
     if dialog_yesno "Update RetroCRT" "$updategit" ; then
         clear ; reset ; clear
-        set -x
+        rcrtbanner "Updating RetroCRT and Restarting"
         git pull
         sleep 5
         $0
@@ -461,16 +460,17 @@ eval "$(dos2unix < "$retrocrt_config")"
 ##############################################################################
 
 if [[ "$MACHTYPE" =~ .*x86_64.* ]]; then
-	cat "$retrocrt_config"
-	exit
+    cat "$retrocrt_config"
+    exit
 fi
 
 rcrtbanner "Running RetroCRT Ansible Playbook"
-
-set -x
 ansible-playbook RetroCRT.yml -i localhost,
+
+rcrtbanner "Pausing for 5 Seconds"
 sleep 5
 
 if [ "$rcrtauto" ]; then
-	sudo shutdown --reboot +1
+    rcrtbanner "Shutting Down in 1 Minute"
+    sudo shutdown --halt +1
 fi
