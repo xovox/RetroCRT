@@ -46,6 +46,7 @@
         rotate_ra: "{{ lookup('env', 'rotate_ra') }}"
         dpi_output_format: "{{ lookup('env', 'dpi_output_format') }}"
         home_dir: "{{ lookup('env', 'HOME') }}"
+        retrocrt_hardware: "{{ lookup('env', 'retrocrt_hardware') }}"
         physical_viewport_width: 1920
         physical_viewport_height: 240
         virtual_viewport_width: 320

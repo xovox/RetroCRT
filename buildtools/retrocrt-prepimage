@@ -47,6 +47,7 @@ blockout="$2"
 
 # latest version of retropie for raspberry pi 3
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
+rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi4_400.img.gz"
 
 # our two 
 rpimage="$HOME/$(basename "$rpurl")"
