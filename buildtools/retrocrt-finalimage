@@ -58,7 +58,7 @@ sudo umount $bootmnt
 sudo umount $rootmnt
 sudo losetup -D $loopback
 
-sudo dd if=$rcrtimage bs=1M of=$blockdevice status=progress
+sudo dd if=$rcrtimage bs=1M of=$blockdev status=progress
 sleep 5
 sudo sync
 
@@ -67,11 +67,11 @@ mkdir -pv /var/www/html/RetroCRT-$(date +%Y%m%d)
 cp $rcrtimage /var/www/html/RetroCRT-$(date +%Y%m%d)/RetroCRT-$(date +%Y%m%d).img
 
 for i in README MANUAL; do
-	markdown $HOME/RetroCRT/$i.md > /var/www/html/RetroCRT-$(date +%Y%m%d)/$i.html
+	markdown ../$i.md > /var/www/html/RetroCRT-$(date +%Y%m%d)/$i.html
 done
 
-cp $HOME/RetroCRT/LICENSE.txt /var/www/html/RetroCRT-$(date +%Y%m%d)/
+cp ../LICENSE.txt /var/www/html/RetroCRT-$(date +%Y%m%d)/
 
-cd /var/www/html/RetroCRT-$(date +%Y%m%d)
+cd /var/www/html/
 
-7z a ../RetroCRT-$(date +%Y%m%d).7z *
+7z a RetroCRT-$(date +%Y%m%d).7z RetroCRT-$(date +%Y%m%d)
