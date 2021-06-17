@@ -344,43 +344,32 @@
         - { variable: "video_threaded",         value: "true"                           }
         - { variable: "video_vsync",            value: "true"                           }
 
-    - name: "Perform First-Run Edits"
-      ansible.builtin.replace:
-        path: "{{ item.path }}"
-        regexp: "{{ item.regexp }}"
-        replace: "{{ item.replace }}"
+    - name: "Ensure es_settings.cfg Exists"
+      lineinfile:
+        path: "/opt/retropie/configs/all/emulationstation/es_settings.cfg"
+        state: "present"
+        line:  "<?xml version=\"1.0\"?>"
+        owner: "pi"
+        group: "pi"
+        mode:  "755"
+        create: "yes"
+      become: "yes"
+
+    - name: "Perform First-Run Edits es_settings.cfg"
+      lineinfile:
+        dest: "/opt/retropie/configs/all/emulationstation/es_settings.cfg"
+        create: "yes"
+        state: "present"
+        regexp: "<{{ item.type}} name=\"{{ item.name }}\".*"
+        line: "<{{ item.type }} name=\"{{ item.name }}\" value=\"{{ item.value }}\" \/>"
         backup: "yes"
       with_items:
-        - {
-              path: "/opt/retropie/configs/all/emulationstation/es_settings.cfg",    
-              regexp: "<string name=\"ThemeSet\".*",
-              replace: "<string name=\"ThemeSet\" value=\"RetroCRT-240p\" \/>"
-          }
-        - {
-              path: "/opt/retropie/configs/all/emulationstation/es_settings.cfg",    
-              regexp: "<string name=\"TransitionStyle\".*",
-              replace: "<string name=\"TransitionStyle\" value=\"instant\" />"
-          }
-        - {
-              path: "/opt/retropie/configs/all/emulationstation/es_settings.cfg",    
-              regexp: "<bool name=\"EnableSounds\".*",
-              replace: "<bool name=\"EnableSounds\" value=\"false\" />"
-          }
-        - {
-              path: "/opt/retropie/configs/all/emulationstation/es_settings.cfg",
-              regexp: "<bool name=\"ScreenSaverVideoMute\".*",
-              replace: "<bool name=\"ScreenSaverVideoMute\" value=\"false\" />"
-          }
-        - {
-              path: "/opt/retropie/configs/all/emulationstation/es_settings.cfg",
-              regexp: "<bool name=\"VideoAudio\".*",
-              replace: "<bool name=\"VideoAudio\" value=\"false\" />"
-          }
-        - {
-              path: "/opt/retropie/configs/all/emulationstation/es_settings.cfg",
-              regexp: "<bool name=\"VideoOmxPlayer\".*",
-              replace: "<bool name=\"VideoOmxPlayer\" value=\"true\" />"
-          }
+        - { type: "string",  name: "ThemeSet",             value: "RetroCRT" }
+        - { type: "string",  name: "TransitionStyle",      value: "instant"  }
+        - { type: "bool",    name: "EnableSounds",         value: "false"    }
+        - { type: "bool",    name: "ScreenSaverVideoMute", value: "true"     }
+        - { type: "bool",    name: "VideoAudio",           value: "false"    }
+        - { type: "bool",    name: "VideoOmxPlayer",       value: "true"     }
       when: first_run.stat.exists == False
 
 
@@ -412,8 +401,8 @@
         repo: "https://github.com/{{ item.repo }}"
         dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
-        - { theme: "RetroCRT-240p",          repo: "xovox/es-theme-RetroCRT-240p"          }
-        - { theme: "RetroCRT-240p-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
+        - { theme: "RetroCRT",          repo: "xovox/es-theme-RetroCRT-240p"          }
+        - { theme: "RetroCRT-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
       ignore_errors: "yes"
       become: "yes"
 
@@ -451,25 +440,25 @@
         - { scriptname: "end"   }
       become: "yes"
 
-    - name: Update runcommand-onstart.sh
+    - name: "Update runcommand-onstart.sh"
       blockinfile:
         block: "{{ lookup('file', './files/runcommand-onstart.sh') }}"
-        dest: /opt/retropie/configs/all/runcommand-onstart.sh
+        dest: "/opt/retropie/configs/all/runcommand-onstart.sh"
         backup: "yes"
         marker: "# {mark} RetroCRT Critical DO NOT TOUCH"
         insertafter: "EOF"
       become: "yes"
 
-    - name: Update runcommand-onend.sh
+    - name: "Update runcommand-onend.sh"
       blockinfile:
         block: "{{ lookup('file', './files/runcommand-onend.sh') }}"
-        dest: /opt/retropie/configs/all/runcommand-onend.sh
+        dest: "/opt/retropie/configs/all/runcommand-onend.sh"
         backup: "yes"
         marker: "# {mark} RetroCRT Critical DO NOT TOUCH"
         insertafter: "EOF"
       become: "yes"
 
-    - name: Mark Our First Run
+    - name: "Mark Our First Run"
       ansible.builtin.file:
         path: "{{home_dir}}/.retrocrtrun"
         state: touch
