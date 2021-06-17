@@ -158,13 +158,21 @@ fi
 # our notifications
 ##############################################################################
 
+set -x
+if [ "$COLUMNS" ]; then
+	rcrtbwidth=$COLUMNS
+else
+	rcrtbwidth=40
+fi
+
 rcrtbanner() {
 	rcrtbanner="$1"
-	printf %${COLUMNS}s | tr ' ' '='
-        printf "%*s\n" $(((${#rcrtbanner}+$COLUMNS)/2)) "$rcrtbanner"
-	printf %${COLUMNS}s | tr ' ' '='
+	printf %${rcrtbwidth}s | tr ' ' '='
+        printf "%*s\n" $(((${#rcrtbanner}+$rcrtbwidth)/2)) "$rcrtbanner"
+	printf %${rcrtbwidth}s | tr ' ' '='
 	echo
 }
+set +x
 
 ##############################################################################
 # can we hit the internet?
