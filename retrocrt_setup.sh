@@ -189,8 +189,8 @@ fi
 
 if ! (dpkg -l $req_packages > /dev/null); then
     if [[ "$network_up" = "true" ]]; then
-        sudo apt update
-        sudo apt -y install $req_packages
+        sudo apt-get update --allow-releaseinfo-change
+        sudo apt-get -y install $req_packages || exit
     else
         dialog_msg "Fatal Error" "$fatalquit"
         exit
