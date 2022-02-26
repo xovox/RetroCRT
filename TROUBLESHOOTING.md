@@ -15,3 +15,12 @@ You're not changing the horizontal resolution before starting the emulator, this
 ## Image is too narrow
 
 RetroArch is ignoring our custom_viewport_width setting, and probably the height as well.
+
+### Garbled Colors
+
+You'll need to update /boot/config.txt and set the following to 519 for RetroTink & 0 for all other platforms.
+
+```
+dpi_output_format=0
+```
+
