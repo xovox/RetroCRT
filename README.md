@@ -20,8 +20,9 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # RetroCRT
 
 RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk) gaming on CRTs easy and user friendly.
+This only covers video output, JAMMA controls will be a separate project to increase maintainability.
 
-Compared to every distro I've seen out there, one of the biggest advantages of using RetroCRT is that we're only updating configuration files line-by-line instead of overwriting everything.
+The biggest advantage RetroCRT has over other RetroPie CRT toolsets/distributions is we're only updating configuration files line-by-line, so updating RetroPie should *never* be an issue.
 This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running.
 
 # RetroCRT Emulator Support
@@ -29,27 +30,18 @@ This means that RetroCRT should be able to coexist with RetroPie and probably al
 RetroCRT *only* supports Libretro cores, with a few exceptions.
 If you find a Libretro core that's not properly configured when you launch it, please see [the issues page](https://github.com/xovox/RetroCRT/issues) and file a new issue if you don't see your platform already requested
 
-## Videos
+# Notes on Resolutions
 
-* [Fresh Install of RetroCRT](https://www.youtube.com/watch?v=nytsuaoU4R8) shows what you get out of the box
-* [RetroCRT Theme Demo](https://www.youtube.com/watch?v=6hoH16SXjr0) shows what it looks like populated with snapshots & videos
-* [RetroCRT Configuration Files](https://www.youtube.com/watch?v=zDwPPjS4E2w) shows what you have living in /boot that you can edit on your PC, macOS, & Linux computer
+This is a hobby project, so I've made moves to make everything as simple & maintainable as possible.  
+The platforms I've been using this on are calibrated exclusively for 320x240 & 1920x240, and that's how RetroCRT behaves.
+You will see black borders around games that are < 240p, this is by design, I calculate aspect ratios based on vertical resolution.
+For example, 224p is calculated as follows (1920 / 4
 
-## Photo
-
-* [Screenshot](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg)
-
-# Resources
-
-* [The manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md) has a ton of info, read this to get up to speed
-
-* Facebook
-  * [RetroPie CRT Gamers](https://www.facebook.com/groups/RetroPieCRT/) is a group I started for this very purpose
-  * [The CRT Collective](https://www.facebook.com/groups/444560212348840/) is an excellent resource on TV repair, buying, and general knowledge
-
-# Downloads
-
-[The release page](https://github.com/xovox/RetroCRT/releases) has any, and all, pre-built images ready to go.
+To keep my hobby project maintainable, RetroCRT will use only 2 resolutions while you use it:
+320x240 for console & EmulationStation as well as game play running 1920x240.
+This means that any game that runs < 240 will have black borders.
+I calculate correct aspect ratios for all games based on vertical resolution by calculating vertical percentage times max horizontal output, like  (224 / 240) * 1920 = 1785.60 which is rounded up to the nearest even #.
+Hardware output resolution of 224p for uncalibrated sets is eventually coming, but I don't have alot of time to maintain this project.
 
 # Installation
 
@@ -60,7 +52,8 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
 * See [the issues page](https://github.com/xovox/RetroCRT/issues) to see planned supported hardware
 
 * Raspberry Pi
-  * 3 B & B+ are the only ones tested
+  * 3 B & B+ are the only ones tested and supported
+  * 4 is not currently supported
 
 * TV: [RetroTink Ultimate](http://www.retrotink.com)
   * Component & RGB only, for now
@@ -91,6 +84,28 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
 Before doing anything else, update RetroCRT!  You can do this in the RetroPie screen in EmulationStation.
 
 If that doesn't fix it, see the [troubleshooting doc](TROUBLESHOOTING.md).
+
+# Media
+
+Most of this media is outdated as it's based on my previous theme
+
+## Videos
+
+* [Fresh Install of RetroCRT](https://www.youtube.com/watch?v=nytsuaoU4R8) shows what you get out of the box
+* [RetroCRT Theme Demo](https://www.youtube.com/watch?v=6hoH16SXjr0) shows what it looks like populated with snapshots & videos
+* [RetroCRT Configuration Files](https://www.youtube.com/watch?v=zDwPPjS4E2w) shows what you have living in /boot that you can edit on your PC, macOS, & Linux computer
+
+## Photo
+
+* [Screenshot](https://raw.githubusercontent.com/xovox/RetroCRT-Media/master/RetroCRT-240p/Small_NES_Mockup.jpg)
+
+# Resources
+
+* [The manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md) has a ton of info, read this to get up to speed
+
+* Facebook
+  * [RetroPie CRT Gamers](https://www.facebook.com/groups/RetroPieCRT/) is a group I started for this very purpose
+  * [The CRT Collective](https://www.facebook.com/groups/444560212348840/) is an excellent resource on TV repair, buying, and general knowledge
 
 # Footnotes
 
