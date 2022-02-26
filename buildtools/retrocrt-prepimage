@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 ##############################################################################
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
@@ -30,6 +30,18 @@
 # 
 ##############################################################################
 
+<<<<<<< HEAD
+if ! (dpkg -l pv); then
+	sudo apt update
+	sudo apt -y install pv
+fi
+
+rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.5.1/retropie-4.5.1-rpi2_rpi3.img.gz"
+rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
+rpurl="https://files.retropie.org.uk/images/weekly/retropie-buster-4.7.20-rpi2_3_zero2w.img.gz"
+rpimage="$(basename "$rpurl")"
+rcrtimage="/tmp/retrocrt-$(date +%Y%m%d)-$(basename $rpimage .gz)"
+=======
 reqpackages="
 	curl
 	pigz
@@ -41,6 +53,8 @@ if ! dpkg -l $reqpackages ; then
 	sudo apt -y install $reqpackages
 fi
 
+echo
+
 # what branch of RetroCRT are we pulling down
 rcrtbranch="$1"
 blockout="$2"
@@ -49,15 +63,17 @@ blockout="$2"
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
 
 # our two 
-rpimage="$HOME/$(basename "$rpurl")"
-rcrtimage="$HOME/nvme/retrocrt-$rcrtbranch-$(basename $rpimage .gz)"
+rpimage="$HOME/tmp/$(basename "$rpurl")"
+rcrtimage="$HOME/tmp/retrocrt-$rcrtbranch-$(date +%Y%m%d)-$(basename $rpimage .gz)"
 
 if [ ! "$rcrtbranch" ]; then
 	echo "$0 [retrocrt_branch]"
+	echo "$0 noremote"
 	exit
 fi
 
 # download retropie if we don't have it
+>>>>>>> RetroCRT3
 if [ ! -f "$rpimage" ]; then
 	curl -o "$rpimage" -L "$rpurl"
 fi
@@ -65,8 +81,11 @@ fi
 # copy our stored compressed image to a new retrocrt image
 pv -cN "compressed" "$rpimage" | pigz -dc | pv -cN "uncompressed" > $rcrtimage
 
+<<<<<<< HEAD
+=======
 # append 1gb to the new retrocrt image
-sudo dd if=/dev/zero conv=notrunc oflag=append bs=1M count=1000 of=$rcrtimage
+>>>>>>> RetroCRT3
+dd if=/dev/zero conv=notrunc oflag=append bs=1M count=1000 of=$rcrtimage
 
 # create loopback device from new retrocrt image
 loopback="$(sudo losetup -Pf --show $rcrtimage)"
@@ -96,7 +115,11 @@ sudo touch $bootmnt/ssh
 sudo git -C $rootmnt/home/pi/RetroPie-Setup pull
 
 # pull down RetroCRT
-sudo git clone -b $rcrtbranch https://github.com/xovox/RetroCRT $rootmnt/opt/RetroCRT
+if [ "$rcrtbranch" = "noremote" ]; then
+	sudo git clone $HOME/git/RetroCRT $rootmnt/opt/RetroCRT
+else
+	sudo git clone -b $rcrtbranch https://github.com/xovox/RetroCRT $rootmnt/opt/RetroCRT
+fi
 
 cp -v $rootmnt/opt/RetroCRT/files/RetroCRT.sh $rootmnt/home/pi/RetroPie/retropiemenu/
 
@@ -106,12 +129,13 @@ cat << EOF | sudo tee $rootmnt/opt/retropie/configs/all/autostart.sh
 #!/bin/bash -x
 sleep 60
 {
-sudo rm -rfv /var/cache/apt/archives
-sudo ln -sv /dev/shm /var/cache/apt/archives
-sudo apt update
-sudo apt -y dist-upgrade
-sudo rm /var/cache/apt/archives
-sudo mkdir /var/cache/apt/archives
+sudo mount -t tmpfs -o size=512M apt /var/cache/apt
+#sudo rm -rfv /var/cache/apt/archives
+#sudo ln -sv /dev/shm /var/cache/apt/archives
+sudo apt-get update --allow-releaseinfo-change
+sudo apt-get -y dist-upgrade
+#sudo rm /var/cache/apt/archives
+#sudo mkdir /var/cache/apt/archives
 if [ -f /var/run/reboot-required ]; then
 	sudo shutdown --reboot +1
 fi
@@ -138,6 +162,8 @@ hdmi_timings=320 1 16 30 34 240 1 2 3 22 0 0 0 60 0 6400000 1
 dpi_output_format=0
 EOF
 
+<<<<<<< HEAD
+=======
 #cat << CACHE | sudo dd of=$rootmnt/etc/apt/apt.conf.d/01-cache
 #Dir{Cache /dev/shm}
 #Dir::Cache /dev/shm;
@@ -145,6 +171,7 @@ EOF
 #Dir::Cache::Archives /dev/shm;
 #CACHE
 
+>>>>>>> RetroCRT3
 sudo umount $bootmnt
 sudo umount $rootmnt
 sudo losetup -D $loopback
@@ -153,3 +180,6 @@ if [ "$blockout" ]; then
 	pv "$rcrtimage" | sudo dd bs=1M of=$blockout
 	sudo sync
 fi
+
+echo
+echo "$rcrtimage"
