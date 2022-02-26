@@ -30,18 +30,16 @@
 # 
 ##############################################################################
 
-<<<<<<< HEAD
 if ! (dpkg -l pv); then
 	sudo apt update
 	sudo apt -y install pv
 fi
 
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.5.1/retropie-4.5.1-rpi2_rpi3.img.gz"
-rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
 rpurl="https://files.retropie.org.uk/images/weekly/retropie-buster-4.7.20-rpi2_3_zero2w.img.gz"
+rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
 rpimage="$(basename "$rpurl")"
 rcrtimage="/tmp/retrocrt-$(date +%Y%m%d)-$(basename $rpimage .gz)"
-=======
 reqpackages="
 	curl
 	pigz
@@ -73,7 +71,6 @@ if [ ! "$rcrtbranch" ]; then
 fi
 
 # download retropie if we don't have it
->>>>>>> RetroCRT3
 if [ ! -f "$rpimage" ]; then
 	curl -o "$rpimage" -L "$rpurl"
 fi
@@ -81,10 +78,7 @@ fi
 # copy our stored compressed image to a new retrocrt image
 pv -cN "compressed" "$rpimage" | pigz -dc | pv -cN "uncompressed" > $rcrtimage
 
-<<<<<<< HEAD
-=======
 # append 1gb to the new retrocrt image
->>>>>>> RetroCRT3
 dd if=/dev/zero conv=notrunc oflag=append bs=1M count=1000 of=$rcrtimage
 
 # create loopback device from new retrocrt image
@@ -162,8 +156,6 @@ hdmi_timings=320 1 16 30 34 240 1 2 3 22 0 0 0 60 0 6400000 1
 dpi_output_format=0
 EOF
 
-<<<<<<< HEAD
-=======
 #cat << CACHE | sudo dd of=$rootmnt/etc/apt/apt.conf.d/01-cache
 #Dir{Cache /dev/shm}
 #Dir::Cache /dev/shm;
@@ -171,7 +163,6 @@ EOF
 #Dir::Cache::Archives /dev/shm;
 #CACHE
 
->>>>>>> RetroCRT3
 sudo umount $bootmnt
 sudo umount $rootmnt
 sudo losetup -D $loopback
