@@ -86,6 +86,7 @@
     - name: "Resolution: Get Info"
       set_fact:
         arcade_height: 240
+        amiga_height: 240
         atari2600_height: 210
         atari5200_height: 240
         atari7800_height: 240
@@ -129,6 +130,7 @@
     - name: "Resolution: Console/Arcade Multiplier"
       set_fact:
         arcade_percentage: "{{ arcade_height / physical_viewport_height | float }}"
+        amiga_percentage: "{{ amiga_height / physical_viewport_height | float }}"
         atari2600_percentage: "{{ atari2600_height / physical_viewport_height | float }}"
         atari5200_percentage: "{{ atari5200_height / physical_viewport_height | float }}"
         atari7800_percentage: "{{ atari7800_height / physical_viewport_height | float }}"
@@ -152,6 +154,7 @@
     - name: "Resolution: Calc Console/Arcade X"
       set_fact:
         arcade_width: "{{ (physical_viewport_width * arcade_percentage | float) | int}}"
+        amiga_width: "{{ (physical_viewport_width * amiga_percentage | float) | int}}"
         atari2600_width: "{{ (physical_viewport_width * atari2600_percentage | float) | int}}"
         atari5200_width: "{{ (physical_viewport_width * atari5200_percentage | float) | int}}"
         atari7800_width: "{{ (physical_viewport_width * atari7800_percentage | float) | int}}"
@@ -279,6 +282,7 @@
       ignore_errors: "yes"
       with_items:
         - { sys: "arcade",          y: "{{ arcade_height }}",          x: "{{ arcade_width }}"          }
+        - { sys: "amiga",           y: "{{ amiga_height }}",           x: "{{ amiga_width }}"             }
         - { sys: "atari2600",       y: "{{ atari2600_height }}",       x: "{{ atari2600_width }}"       }
         - { sys: "atari5200",       y: "{{ atari5200_height }}",       x: "{{ atari5200_width }}"       }
         - { sys: "atari7800",       y: "{{ atari7800_height }}",       x: "{{ atari7800_width }}"       }
@@ -405,6 +409,7 @@
         - { theme: "RetroCRT-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
       ignore_errors: "yes"
       become: "yes"
+      ignore_errors: "yes"
 
     - name: "Theme: Additional Install/Update"
       git:
@@ -458,11 +463,39 @@
         insertafter: "EOF"
       become: "yes"
 
+    - name: "Install Required Packages"
+      apt:
+        name: [ 'bc', 'dos2unix', 'p7zip-full', 'vim' ]
+        update_cache: true
+        state: present
+      become: "yes"
+
+    - name: "Console Font: Write Configuration"
+      lineinfile:
+        dest: "/etc/default/console-setup"
+        create: "no"
+        backup: "yes"
+        state: "present"
+        regexp: "^{{ item.variable }}.*"
+        line: '{{ item.variable }}="{{ item.value }}"'
+      with_items:
+        - { variable: "FONTFACE", value: "Terminus" }
+        - { variable: "FONTSIZE", value: "6x12"     }
+      become: "yes"
+      notify: "setupcon"
+
     - name: "Mark Our First Run"
       ansible.builtin.file:
         path: "{{home_dir}}/.retrocrtrun"
         state: touch
         mode: u=rw,g=r,o=r
+
+#    - name: "Disable Swap File"
+#      service:
+#        name: "dphys-swapfile"
+#        enabled: "no"
+#        state: stopped
+#      become: "yes"
 
 #    - name: "Fix Permissions"
 #      file:
@@ -476,3 +509,14 @@
 #        - "/opt/retropie"
 #        - "{{home_dir}}"
 #      become: "yes"
+
+#    - name: "Auto-Login Symlink"
+#      file:
+#        src: "/etc/systemd/system/autologin@.service"
+#        dest: "/etc/systemd/system/getty.target.wants/getty@tty1.service"
+#        owner: "root"
+#        group: "root"
+#        state: "link"
+#        force: "yes"
+#      become: "yes"
+
