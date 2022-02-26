@@ -2,7 +2,7 @@
 
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
 
-openingtext=(
+opening_text=(
 "
 RetroCRT is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
@@ -34,32 +34,6 @@ Future supported hardware:
 "
 )
 
-##############################################################################
-# pull in our config
-##############################################################################
-
-retrocrt_config="/boot/retrocrt/retrocrt.txt"
-sudo mkdir -pv /boot/retrocrt
-
-#retrocrt_config="$HOME/.retrocrtrc"
-#source $retrocrt_config
-retrocrt_title="RetroCRT"
-
-# lock in the ansible version we're running
-ansible_ver="2.10.8"
-
-retrocrt_venv="$HOME/.virtualenv/retrocrt3"
-req_packages="
-    dialog
-    dos2unix
-    git
-    python3-apt
-    python3-dev
-    virtualenv
-"
-
-export PS4="   \[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
-
 rotation_opts='
     0 "^"
     90 "> (Currently Buggy in ES)"
@@ -72,13 +46,18 @@ video_out='
     rtrgb "RetroTink: RGB/Component"
 '
 
+custom_timing='
+    no "Use standard RetroCRT settings"
+    yes "Use my custom timings"
+'
+
 region_opts='
     ntsc "NTSC"
     pal "PAL"
     secam "SECAM"
 '
 
-finalwarning="
+final_warning="
 \Zb\Z1LAST CHANCE TO ABORT!!!\Zn
 
 This suite has been tested, but does update *many* things on your system.  It makes backups of *everything* before overwriting, so reverting is possible.
@@ -86,7 +65,7 @@ This suite has been tested, but does update *many* things on your system.  It ma
 Last chance, are you sure you wish to continue?
 "
 
-updategit="
+update_git="
 Update RetroCRT installer and configs before we continue?
 
 This will restart the installer.
@@ -174,6 +153,33 @@ rcrtbanner() {
 set +x
 
 ##############################################################################
+# pull in our config
+##############################################################################
+
+retrocrt_config="/boot/retrocrt/retrocrt.txt"
+sudo mkdir -pv /boot/retrocrt
+sudo mkdir -pv /boot/retrocrt/custom_timings
+
+#retrocrt_config="$HOME/.retrocrtrc"
+#source $retrocrt_config
+retrocrt_title="RetroCRT"
+
+# lock in the ansible version we're running
+ansible_ver="2.10.8"
+
+retrocrt_venv="$HOME/.virtualenv/retrocrt3"
+req_packages="
+    dialog
+    dos2unix
+    git
+    python3-apt
+    python3-dev
+    virtualenv
+"
+
+export PS4="   \[\033[1;30m\]>\[\033[00m\]\[\033[32m\]>\[\033[00m\]\[\033[1;32m\]>\[\033[00m\] "
+
+##############################################################################
 # can we hit the internet?
 ##############################################################################
 
@@ -206,7 +212,7 @@ if [[ -f $retrocrt_venv/bin/activate ]]; then
     source $retrocrt_venv/bin/activate
 fi
 
-if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]]; then
+if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]] && [[ ! "$rcrt_quick" ]]; then
     rcrtbanner "Ensuring Virtual Env has Ansible $ansible_ver"
     pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
 
@@ -248,9 +254,9 @@ fi
 ##############################################################################
 
 textpage="0"
-for text in "${openingtext[@]}"; do
+for text in "${opening_text[@]}"; do
     textpage=$[ $textpage + 1 ]
-        dialog_msg "Greetings! ($textpage/${#openingtext[@]})" "$text" 
+        dialog_msg "Greetings! ($textpage/${#opening_text[@]})" "$text" 
 done
 
 ##############################################################################
@@ -259,7 +265,7 @@ done
 
 disabled_section() {
 if [[ "$network_up" = "true" ]]; then
-    if dialog_yesno "Update RetroCRT" "$updategit" ; then
+    if dialog_yesno "Update RetroCRT" "$update_git" ; then
         clear ; reset ; clear
         rcrtbanner "Updating RetroCRT and Restarting"
         git pull
@@ -333,6 +339,13 @@ elif [ "$retrocrt_video_hardware" = "rtrgb" ]; then
     export dpi_output_format="519"
 fi
 
+export retrocrt_video_custom_timing=${retrocrt_video_custom_timing:-no}
+dialog_menu retrocrt_video_custom_timing "Custom Timings" "Utilize custom video timing?" "$custom_timing"
+
+if [ "$retrocrt_video_custom_timing" ]; then
+    export retrocrt_timings="/boot/retrocrt/custom_timings"
+fi
+
 ##############################################################################
 # see what vertical resolutions are available and present them
 ##############################################################################
@@ -356,7 +369,7 @@ tv_region=${tv_region:-ntsc}
 # one last chance to bail
 ##############################################################################
 
-dialog_yesno "Last Chance!" "$finalwarning" || exit
+dialog_yesno "Last Chance!" "$final_warning" || exit
 
 clear
 

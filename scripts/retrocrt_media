@@ -92,7 +92,7 @@ done
 find * -name '*.mp4' | sort -nb | sort | while read line; do
 	tmpfile="/dev/shm/$RANDOM.mp4"
 
-#	destfile="$destdir/$line"
+	destfile="$destdir/$line"
 
 
 cat << EOF
