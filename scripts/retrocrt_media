@@ -1,0 +1,119 @@
+#!/bin/bash
+
+
+##############################################################################
+# the way it should work
+##############################################################################
+
+# imagemagick 'identify' used to get size of picture via %x %y
+
+rif="-background none -flatten -fuzz 1% -trim +repage"
+
+imagework() {
+	source_file="$1"
+	target_width="$2"
+	target_height="$3"
+	eval $(identify -format "source_height=%h\nsource_width=%w\n" "$sourcefile" )
+	if [ "$source_width" -gt "$target_width" -o "$source_height" -gt "$target_height" ]; then
+		convert "$line" $rif -resize "$msize" "$destfile"
+	fi
+}
+
+# eval $(ffprobe -v error -show_entries stream=width,height,duration -of default=noprint_wrappers=1 "$sourcefile" | sed 's/^/ffprobe_/')
+
+
+destdir="$1"
+
+if [ ! "$destdir" ]; then
+	exit
+fi
+
+##############################################################################
+# image handling
+##############################################################################
+
+# max size of marquees
+msize="128x36>"
+
+# max size of image preview
+isize="128x108>"
+
+# common image manipulation args
+
+##############################################################################
+# video handling
+##############################################################################
+
+# width & height of videos in RetroCRT horizontal theme
+rvw="128"
+rvh="108"
+
+# put these together into a complex filter
+rvf="scale='if(gt(a,$rvh/$rvw),$rvh,-2)':'if(gt(a,$rvh/$rvw),-2,$rvw)'"
+
+echo "#!/bin/bash"
+
+echo destdir="$destdir"
+
+cat << EOF
+find * -type d -exec mkdir -pv \$destdir/{} \;
+EOF
+
+find */marquee */wheel -type f | sort | while read line ; do
+	#tmpfile="/tmp/$(basename "$line")"
+	#convert "$line" $rif -resize "$msize" "$tmpfile"
+	#mv "$tmpfile" "$line"
+	destfile="\$destdir/$line"
+cat << EOF
+if [ ! -f "$destfile" ]; then
+	convert "$line" $rif -resize "$msize" "$destfile"
+	echo -n "!"
+else
+	echo -n "."
+fi
+EOF
+done
+
+find */boxart */image */cartart -type f | sort | while read line ; do
+	#tmpfile="/dev/shm/$(basename "$line")"
+	#convert "$line" $rif -resize "$isize" "$tmpfile"
+	#mv "$tmpfile" "$line"
+	destfile="\$destdir/$line"
+cat << EOF
+if [ ! -f "$destfile" ]; then
+	convert "$line" $rif -resize "$isize" "$destfile"
+	echo -n "!"
+else
+	echo -n "."
+fi
+EOF
+done
+
+find * -name '*.mp4' | sort -nb | sort | while read line; do
+	tmpfile="/dev/shm/$RANDOM.mp4"
+
+#	destfile="$destdir/$line"
+
+
+cat << EOF
+
+if [ ! -f "$destfile" ]; then
+	nice -n 19 \
+	ionice -c 3 \
+	ffmpeg \
+		-i "$line" \
+		-pix_fmt yuv420p \
+		-ab 128k \
+		-vf "$rvf" \
+		-t 00:20 \
+		-crf 17 \
+		-preset veryslow \
+		-y \
+		"\$destdir/$line"
+fi
+EOF
+done
+
+exit
+
+ffmpeg -i input.avi -pix_fmt yuv420p -c:v h264 -ab 128k -vf "scale=-1:108" -y /dev/shm/what.mp4
