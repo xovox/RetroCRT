@@ -62,7 +62,7 @@
 
     - name: "Set Default Timings"
       set_fact:
-        default_timings: "{{ lookup('file', '{{ retrocrt_timings }}/default') }}"
+        default_timings: "{{ lookup('file', '{{ retrocrt_timings }}/low_res') }}"
 
     - name: "Find / UUID"
       command: "findmnt --noheadings --output PARTUUID /"

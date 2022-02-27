@@ -343,6 +343,7 @@ export retrocrt_video_custom_timing=${retrocrt_video_custom_timing:-no}
 dialog_menu retrocrt_video_custom_timing "Custom Timings" "Utilize custom video timing?" "$custom_timing"
 
 if [ "$retrocrt_video_custom_timing" ]; then
+    sudo cp -n "$retrocrt_timings"/* /boot/retrocrt/custom_timings/
     export retrocrt_timings="/boot/retrocrt/custom_timings"
 fi
 
