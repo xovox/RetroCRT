@@ -411,17 +411,17 @@
       become: "yes"
       ignore_errors: "yes"
 
-    - name: "Theme: Additional Install/Update"
-      git:
-        depth: 1
-        repo: "https://github.com/{{ item.repo }}"
-        dest: "/etc/emulationstation/themes/{{ item.theme }}"
-      with_items:
-        - { theme: "GBZ35 Dark",             repo: "rxbrad/es-theme-gbz35-dark"              }
-        - { theme: "Pixel Heaven",           repo: "skeletoooooor/es-pixel-heaven"           }
-        - { theme: "Art Book",               repo: "anthonycaccese/es-theme-art-book-4-3"             }
-      ignore_errors: "yes"
-      become: "yes"
+#    - name: "Theme: Additional Install/Update"
+#      git:
+#        depth: 1
+#        repo: "https://github.com/{{ item.repo }}"
+#        dest: "/etc/emulationstation/themes/{{ item.theme }}"
+#      with_items:
+#        - { theme: "GBZ35 Dark",             repo: "rxbrad/es-theme-gbz35-dark"              }
+#        - { theme: "Pixel Heaven",           repo: "skeletoooooor/es-pixel-heaven"           }
+#        - { theme: "Art Book",               repo: "anthonycaccese/es-theme-art-book-4-3"             }
+#      ignore_errors: "yes"
+#      become: "yes"
 #        - { theme: "Free Play",              repo: "rxbrad/es-theme-freeplay"                         }
 #        - { theme: "Comic Book Wheel Art",   repo: "TMNTturtleguy/es-theme-ComicBook_4-3_SE-Wheelart" }
 #        - { theme: "Comic Book",             repo: "TMNTturtleguy/es-theme-ComicBook_4-3"             }
