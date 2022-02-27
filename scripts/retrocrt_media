@@ -1,119 +1,86 @@
 #!/bin/bash
 
-
 ##############################################################################
-# the way it should work
+# EmulationStation scales images & videos fairly terribly when you're on a low
+# resolution display.  This script is designed to probe your media files and
+# resize them if they exceed the specifications
+##############################################################################
+# In this example from the RetroCRT 240p theme we have a max size of 40% x 45%
+# of the screen for our preview images & videos
+#
+#    <video name="md_video">
+#      <origin>0.5 0.5</origin>
+#      <pos>0.740 0.470</pos>
+#      <maxSize>0.40 0.450</maxSize>
+#      <showSnapshotNoVideo>true</showSnapshotNoVideo>
+#      <delay>3</delay>
+#      <showSnapshotDelay>true</showSnapshotDelay>
+#    </video>
+#  </view>
+#
+# so the math works out as
+#
+# 320 * .4 = 128
+# 240 * .45 = 108
+#
+# And that gives us all we need to run the script against the necessary files
+# As you can see, both images & videos are included, the script checks the
+# media type prior to acting on anything
+#
+# find $HOME/RetroPie/roms/*/{image,boxart,cartart,video,snap} -type f -exec retrocrt_media 128 108 {} \;
+#
+# we can do the same for our marquee/wheel files
+# find $HOME/RetroPie/roms/*/{marquee,wheel} -type f -exec ~/resize_media 128 36 {} \;
+#
 ##############################################################################
 
-# imagemagick 'identify' used to get size of picture via %x %y
+max_width="$1"
+max_height="$2"
+sourcefile="$3"
+destfile="/dev/shm/$(basename "$sourcefile")"
 
-rif="-background none -flatten -fuzz 1% -trim +repage"
+rvf="scale='if(gt(a,$max_height/$max_width),$max_height,-2)':'if(gt(a,$max_height/$max_width),-2,$max_width)',fade=t=in:st=0:d=1,fade=t=out:st=19:d=1"
+raf="afade=t=in:st=0:d=2,afade=t=out:st=18:d=2"
 
-imagework() {
-	source_file="$1"
-	target_width="$2"
-	target_height="$3"
-	eval $(identify -format "source_height=%h\nsource_width=%w\n" "$sourcefile" )
-	if [ "$source_width" -gt "$target_width" -o "$source_height" -gt "$target_height" ]; then
-		convert "$line" $rif -resize "$msize" "$destfile"
+if [[ "$sourcefile" =~ .*.mp4 ]]; then
+	eval $(ffprobe -v error -show_entries stream=width,height,duration -of default=noprint_wrappers=1 "$sourcefile" | sed 's/^/media_/')
+	if [ "$media_width" -gt "$max_width" -o "$media_height" -gt "$max_height" ]; then
+		echo "##############################################################################"
+		echo "processing $sourcefile"
+		echo "##############################################################################"
+		echo ""
+		nice -n 19 \
+		ionice -c 3 \
+			ffmpeg \
+				-loglevel fatal -stats \
+				-i "$sourcefile" \
+				-pix_fmt yuv420p \
+				-ab 128k \
+				-vf "$rvf" \
+				-af "$raf" \
+				-t 00:20 \
+				-crf 17 \
+				-preset veryslow \
+				-y \
+				"$destfile"
+		return_code="$?"
+		echo
 	fi
-}
-
-# eval $(ffprobe -v error -show_entries stream=width,height,duration -of default=noprint_wrappers=1 "$sourcefile" | sed 's/^/ffprobe_/')
-
-
-destdir="$1"
-
-if [ ! "$destdir" ]; then
-	exit
-fi
-
-##############################################################################
-# image handling
-##############################################################################
-
-# max size of marquees
-msize="128x36>"
-
-# max size of image preview
-isize="128x108>"
-
-# common image manipulation args
-
-##############################################################################
-# video handling
-##############################################################################
-
-# width & height of videos in RetroCRT horizontal theme
-rvw="128"
-rvh="108"
-
-# put these together into a complex filter
-rvf="scale='if(gt(a,$rvh/$rvw),$rvh,-2)':'if(gt(a,$rvh/$rvw),-2,$rvw)'"
-
-echo "#!/bin/bash"
-
-echo destdir="$destdir"
-
-cat << EOF
-find * -type d -exec mkdir -pv \$destdir/{} \;
-EOF
-
-find */marquee */wheel -type f | sort | while read line ; do
-	#tmpfile="/tmp/$(basename "$line")"
-	#convert "$line" $rif -resize "$msize" "$tmpfile"
-	#mv "$tmpfile" "$line"
-	destfile="\$destdir/$line"
-cat << EOF
-if [ ! -f "$destfile" ]; then
-	convert "$line" $rif -resize "$msize" "$destfile"
-	echo -n "!"
+elif [[ "$sourcefile" =~ .*.jpg|.*.png ]]; then
+	eval $(identify -format "media_height=%h\nmedia_width=%w\n" "$sourcefile" )
+	if [ "$media_width" -gt "$max_width" -o "$media_height" -gt "$max_height" ]; then
+		echo "##############################################################################"
+		echo "processing $sourcefile"
+		echo "##############################################################################"
+		convert "$sourcefile" $rif -resize "${target_width}x${target_height}>" "$destfile"
+		return_code="$?"
+		echo
+	fi
 else
-	echo -n "."
+	echo "$0 [max_width] [max_height] [file]"
+	exit 1
 fi
-EOF
-done
 
-find */boxart */image */cartart -type f | sort | while read line ; do
-	#tmpfile="/dev/shm/$(basename "$line")"
-	#convert "$line" $rif -resize "$isize" "$tmpfile"
-	#mv "$tmpfile" "$line"
-	destfile="\$destdir/$line"
-cat << EOF
-if [ ! -f "$destfile" ]; then
-	convert "$line" $rif -resize "$isize" "$destfile"
-	echo -n "!"
-else
-	echo -n "."
+if [ "$return_code" = "0" ]; then
+	mv "$destfile" "$sourcefile"
 fi
-EOF
-done
-
-find * -name '*.mp4' | sort -nb | sort | while read line; do
-	tmpfile="/dev/shm/$RANDOM.mp4"
-
-	destfile="$destdir/$line"
-
-
-cat << EOF
-
-if [ ! -f "$destfile" ]; then
-	nice -n 19 \
-	ionice -c 3 \
-	ffmpeg \
-		-i "$line" \
-		-pix_fmt yuv420p \
-		-ab 128k \
-		-vf "$rvf" \
-		-t 00:20 \
-		-crf 17 \
-		-preset veryslow \
-		-y \
-		"\$destdir/$line"
-fi
-EOF
-done
-
-exit
-
-ffmpeg -i input.avi -pix_fmt yuv420p -c:v h264 -ab 128k -vf "scale=-1:108" -y /dev/shm/what.mp4
