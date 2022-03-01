@@ -28,6 +28,9 @@
 # media type prior to acting on anything
 #
 # find $HOME/RetroPie/roms/*/{image,boxart,cartart,video,snap} -type f -exec retrocrt_media 128 108 {} \;
+#
+# we can do the same for our marquee/wheel files
+# find $HOME/RetroPie/roms/*/{marquee,wheel} -type f -exec ~/resize_media 128 36 {} \;
 ##############################################################################
 
 convert_image() {
