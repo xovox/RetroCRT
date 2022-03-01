@@ -28,59 +28,111 @@
 # media type prior to acting on anything
 #
 # find $HOME/RetroPie/roms/*/{image,boxart,cartart,video,snap} -type f -exec retrocrt_media 128 108 {} \;
-#
-# we can do the same for our marquee/wheel files
-# find $HOME/RetroPie/roms/*/{marquee,wheel} -type f -exec ~/resize_media 128 36 {} \;
-#
 ##############################################################################
 
-max_width="$1"
-max_height="$2"
-sourcefile="$3"
-destfile="/dev/shm/$(basename "$sourcefile")"
+convert_image() {
+	convert "$source_file" -scale "${target_width}x${target_height}${target_operator}" "$tmp_file"
+	return_code="$?"
+}
 
-rvf="scale='if(gt(a,$max_height/$max_width),$max_height,-2)':'if(gt(a,$max_height/$max_width),-2,$max_width)',fade=t=in:st=0:d=1,fade=t=out:st=19:d=1"
-raf="afade=t=in:st=0:d=2,afade=t=out:st=18:d=2"
+convert_video() {
+	# fade-in/out audio/video filters
+	raf="afade=t=in:st=0:d=2,afade=t=out:st=18:d=2"
+	rvf="fade=t=in:st=0:d=1,fade=t=out:st=19:d=1,scale=$target_width:$target_height"
 
-if [[ "$sourcefile" =~ .*.mp4 ]]; then
-	eval $(ffprobe -v error -show_entries stream=width,height,duration -of default=noprint_wrappers=1 "$sourcefile" | sed 's/^/media_/')
-	if [ "$media_width" -gt "$max_width" -o "$media_height" -gt "$max_height" ]; then
-		echo "##############################################################################"
-		echo "processing $sourcefile"
-		echo "##############################################################################"
-		echo ""
-		nice -n 19 \
-		ionice -c 3 \
-			ffmpeg \
-				-loglevel fatal -stats \
-				-i "$sourcefile" \
-				-pix_fmt yuv420p \
-				-ab 128k \
-				-vf "$rvf" \
-				-af "$raf" \
-				-t 00:20 \
-				-crf 17 \
-				-preset veryslow \
-				-y \
-				"$destfile"
-		return_code="$?"
-		echo
+	ffmpeg \
+		-loglevel fatal \
+		-stats \
+		-i "$source_file" \
+		-pix_fmt yuv420p \
+		-ab 128k \
+		-vf "$rvf" \
+		-af "$raf" \
+		-t 00:20 \
+		-crf 17 \
+		-preset veryslow \
+		-y \
+			"$tmp_file"
+
+	return_code="$?"
+}
+
+get_even() {
+	export var=$1
+	shift
+	export string="$@"
+
+	if [ "$(($string%2))" = "1" ]; then
+		export $var=$[ "$string" + 1 ]
+	else
+		export $var="$string"
 	fi
-elif [[ "$sourcefile" =~ .*.jpg|.*.png ]]; then
-	eval $(identify -format "media_height=%h\nmedia_width=%w\n" "$sourcefile" )
-	if [ "$media_width" -gt "$max_width" -o "$media_height" -gt "$max_height" ]; then
-		echo "##############################################################################"
-		echo "processing $sourcefile"
-		echo "##############################################################################"
-		convert "$sourcefile" $rif -resize "${target_width}x${target_height}>" "$destfile"
-		return_code="$?"
-		echo
-	fi
+}
+
+
+
+get_even max_width "$1"
+get_even max_height "$2"
+source_file="$3"
+ratio_width="$4"
+ratio_height="$5"
+
+tmp_file="/dev/shm/$RANDOM-$(basename "$source_file")"
+
+
+#if [ "$ratio_width" ]; then
+#	convert_scale_flag="!"
+#
+#	max_width_horiz="$max_width"
+#	max_height_horiz="$[ ($max_width / 4) * 3 ]"
+#
+#	max_width_vert="$[ ($max_height / 4) * 3 ]"
+#	max_height_vert="$max_height"
+#	max_height_vert="$[ $max_height_vert + 1 ]"
+#else
+#	convert_scale_flag=">"
+#fi
+
+
+##############################################################################
+# find the size of our media
+##############################################################################
+if [[ "$source_file" =~ .*.mp4$ ]]; then
+	eval $(ffprobe -v error -show_entries stream=width,height,duration -of default=noprint_wrappers=1 "$source_file" | sed 's/^/media_/')
+elif [[ "$source_file" =~ .*.jpg$|.*.png$ ]]; then
+	eval $(identify -format "media_height=%h\nmedia_width=%w\n" "$source_file" )
+fi
+
+get_even media_width $media_width
+get_even media_height $media_height
+
+if [ "$ratio_height" -a "$media_width" -gt "$media_height" ]; then
+	get_even target_width "$max_width"
+	get_even target_height "$[ ($max_width / 4) * 3 ]"
+	target_operator="!"
+elif [ "$ratio_height" -a "$media_width" -lt "$media_height" ]; then
+	get_even target_height "$max_height"
+	get_even target_width "$[ ($max_height / 4) * 3 ]"
+	target_operator="!"
 else
-	echo "$0 [max_width] [max_height] [file]"
-	exit 1
+	get_even target_height "$max_height"
+	get_even target_width "$max_width"
+	target_operator=">"
+fi
+#() do math to find what we want
+# check ratio as well
+
+if [ "$media_width" -gt "$max_width" -o "$media_height" -gt "$max_height" ]; then
+	echo "##############################################################################"
+	echo "processing $source_file"
+	echo "##############################################################################"
+	if [[ "$source_file" =~ .*.mp4$ ]]; then
+		convert_video
+	elif [[ "$source_file" =~ .*.png$|.*.jpg$ ]]; then
+		convert_image
+	fi
 fi
 
 if [ "$return_code" = "0" ]; then
-	mv "$destfile" "$sourcefile"
+	mv "$tmp_file" "$source_file"
 fi
