@@ -25,21 +25,17 @@
 #
 # And that gives us all we need to run the script against the necessary files
 # As you can see, both images & videos are included, the script checks the
-# media type prior to acting on anything
+# media type prior to acting on anything.  the final 'crt' flag means we're
+# going to treat this like a screenshot/video capture and ensure it's 4:3
 #
-# find $HOME/RetroPie/roms/*/{image,boxart,cartart,video,snap} -type f -exec retrocrt_media 128 108 {} \;
+# find $HOME/RetroPie/roms/*/{image,boxart,cartart,video,snap} -type f -exec retrocrt_media 128 108 {} crt \;
 #
 # we can do the same for our marquee/wheel files
 # find $HOME/RetroPie/roms/*/{marquee,wheel} -type f -exec retrocrt_media 128 36 {} \;
 ##############################################################################
 
 convert_image() {
-	#		-distort Barrel 0,0,0.1,0.9, \
-	#		-gravity center \
-	#		-extent 100%x104 \
-	time convert "$source_file" \
-		-scale "${target_width}x${target_height}${target_operator}" \
-		"$tmp_file"
+	convert "$source_file" $media_pre_scale -scale "${target_width}x${target_height}${target_operator}" "$tmp_file"
 	return_code="$?"
 }
 
@@ -48,12 +44,8 @@ convert_video() {
 	raf="afade=t=in:st=0:d=2,afade=t=out:st=18:d=2"
 	rvf="fade=t=in:st=0:d=1,fade=t=out:st=19:d=1,scale=$target_width:$target_height"
 
-	time \
-	ionice -c 3 -n 7 \
-	nice -n -19 \
 	ffmpeg \
 		-loglevel fatal \
-		-stats \
 		-i "$source_file" \
 		-pix_fmt yuv420p \
 		-ab 128k \
@@ -80,13 +72,12 @@ get_even() {
 	fi
 }
 
-
-
 get_even max_width "$1"
 get_even max_height "$2"
 source_file="$3"
-ratio_width="$4"
-ratio_height="$5"
+media_type="$4"
+
+echo -n ">>> $source_file"
 
 tmp_file="/dev/shm/$RANDOM-$(basename "$source_file")"
 
@@ -109,39 +100,39 @@ tmp_file="/dev/shm/$RANDOM-$(basename "$source_file")"
 # find the size of our media
 ##############################################################################
 if [[ "$source_file" =~ .*.mp4$ ]]; then
+	echo -n " > probing"
 	eval $(ffprobe -v error -show_entries stream=width,height,duration -of default=noprint_wrappers=1 "$source_file" | sed 's/^/media_/')
 elif [[ "$source_file" =~ .*.jpg$|.*.png$ ]]; then
+	echo -n " > probing"
 	eval $(identify -format "media_height=%h\nmedia_width=%w\n" "$source_file" )
 fi
 
 get_even media_width $media_width
 get_even media_height $media_height
 
-if [ "$ratio_height" -a "$media_width" -gt "$media_height" ]; then
-	get_even target_width "$max_width"
-	get_even target_height "$[ ($max_width / 4) * 3 ]"
-	target_operator="!"
-elif [ "$ratio_height" -a "$media_width" -lt "$media_height" ]; then
-	get_even target_height "$max_height"
-	get_even target_width "$[ ($max_height / 4) * 3 ]"
-	target_operator="!"
-else
-	get_even target_height "$max_height"
-	get_even target_width "$max_width"
-	target_operator=">"
+if [ "$media_type" = "crt" ];then
+	if [ "$media_width" -gt "$media_height" ]; then
+		media_pre_scale="-scale 320x240!"
+	elif [ "$media_width" -lt "$media_height" ]; then
+		media_pre_scale="-scale 240x320!"
+	fi
 fi
+
+get_even target_height "$max_height"
+get_even target_width "$max_width"
+target_operator=">"
 #() do math to find what we want
 # check ratio as well
 
 if [ "$media_width" -gt "$max_width" -o "$media_height" -gt "$max_height" ]; then
-	echo "##############################################################################"
-	echo "processing $source_file"
-	echo "##############################################################################"
+	echo " > converting!"
 	if [[ "$source_file" =~ .*.mp4$ ]]; then
 		convert_video
 	elif [[ "$source_file" =~ .*.png$|.*.jpg$ ]]; then
 		convert_image
 	fi
+else
+	echo " > pass!"
 fi
 
 if [ "$return_code" = "0" ]; then
