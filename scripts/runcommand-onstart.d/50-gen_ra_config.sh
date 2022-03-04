@@ -23,9 +23,7 @@ for i in $retrocrt_install/scripts/debug/* ; do
     source $i
 done
 
-debuglog loading $ra_rom_basename
 squishy() {
-debuglog "doing a squishy $1"
 cat << SQUISHY
 #R# we did a squishy
 custom_viewport_width = 1210
@@ -37,14 +35,12 @@ exit
 
 # if this platform isn't in our list of no per-rom resolutions...
 if ! (grep -wq "$1" $retrocrt_install/retrocrt_timings/no_per_rom_timings.txt); then
-    debuglog "per rom resolution"
     # check for a per-rom resolution
     retrocrt_rom_settings="$(egrep "^$ra_rom_basename," $retrocrt_install/retrocrt_resolutions.csv)"
 fi
 
 # if we're unable to find anything, exit
 if [[ ! "$retrocrt_rom_settings" ]]; then
-    debuglog "no retrocrt rom settings"
     exit
 fi
 
@@ -67,7 +63,6 @@ sed -i "
 
 # extract our resolution & orientation information
 if [[ "$retrocrt_rom_settings" ]]; then
-    debuglog "grabbing rom settings"
     custom_viewport_height="$(cut -d',' -f3 <<< "$retrocrt_rom_settings")"
     custom_viewport_width="$(cut -d',' -f2 <<< "$retrocrt_rom_settings")"
     rom_monitor_orientation="$(cut -d',' -f4 <<< "$retrocrt_rom_settings")"
@@ -83,7 +78,6 @@ GLOBAL
 
 if [[ "$rom_monitor_orientation" = "V" ]] && [[ "$rotate_ra" =~ [02] ]]; then
     if [[ "$custom_viewport_width" -gt "246" ]]; then
-        debuglog "smooth vertical game"
         echo video_smooth = true
         squishy 240
     else
@@ -96,7 +90,6 @@ if [[ "$rom_monitor_orientation" = "H" ]] && [[ "$rotate_ra" =~ [13] ]]; then
     squishy 240
 fi
 
-debuglog "standard horizontal game"
 cat << SCREENCALC | bc -q
 physical_viewport_width = $physical_viewport_width
 physical_viewport_height = $physical_viewport_height

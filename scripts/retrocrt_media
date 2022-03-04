@@ -34,7 +34,12 @@
 ##############################################################################
 
 convert_image() {
-	convert "$source_file" -scale "${target_width}x${target_height}${target_operator}" "$tmp_file"
+	#		-distort Barrel 0,0,0.1,0.9, \
+	#		-gravity center \
+	#		-extent 100%x104 \
+	time convert "$source_file" \
+		-scale "${target_width}x${target_height}${target_operator}" \
+		"$tmp_file"
 	return_code="$?"
 }
 
@@ -43,6 +48,9 @@ convert_video() {
 	raf="afade=t=in:st=0:d=2,afade=t=out:st=18:d=2"
 	rvf="fade=t=in:st=0:d=1,fade=t=out:st=19:d=1,scale=$target_width:$target_height"
 
+	time \
+	ionice -c 3 -n 7 \
+	nice -n -19 \
 	ffmpeg \
 		-loglevel fatal \
 		-stats \
