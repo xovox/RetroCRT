@@ -75,12 +75,15 @@ fi
 pv -cN "compressed" "$rpimage" | pigz -dc | pv -cN "uncompressed" > $rcrtimage
 
 # append 1gb to the new retrocrt image
-dd if=/dev/zero conv=notrunc oflag=append bs=1M count=1000 of=$rcrtimage
+dd if=/dev/zero conv=notrunc oflag=append bs=1M count=2000 of=$rcrtimage
 
 # create loopback device from new retrocrt image
 loopback="$(sudo losetup -Pf --show $rcrtimage)"
 bootpart=${loopback}p1
 rootpart=${loopback}p2
+
+sudo tune2fs -o journal_data_writeback $rootpart
+sudo tune2fs -O ^has_journal $rootpart
 
 # grow out the / filesystem to fill the additional 1gb
 sudo parted $loopback -- resizepart 2 100%
@@ -129,6 +132,18 @@ sudo apt-get -y dist-upgrade
 if [ -f /var/run/reboot-required ]; then
 	sudo shutdown --reboot +1
 fi
+cd /home/pi/RetroPie-Setup
+git pull
+for i in lr-mame2003 mupen64plus ; do
+	sudo ./retropie_packages.sh \$i remove
+done
+
+for i in daphne joy2key lr-mame2003-plus lr-mupen64plus ; do
+	sudo ./retropie_packages.sh \$i depends
+	sudo ./retropie_packages.sh \$i install_bin
+done
+
+
 cd /opt/RetroCRT
 git pull
 export rcrtauto=true
