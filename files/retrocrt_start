@@ -1,0 +1,18 @@
+#!/bin/bash
+
+exit 0
+
+echo $$ > /run/retrocrtstart.pid
+
+sleep 60
+#convert               \ input.png       \ -background none \ -gravity center  \ -extent 100x100  \ output.png
+{
+sudo -u pi nice -n 19 ionice -c 3	find ~pi/RetroPie/media/arcade/image			-type f		-exec /home/pi/retrocrt_media 128 108 {} crt	\;
+
+sudo -u pi nice -n 19 ionice -c 3	find ~pi/RetroPie/{media,roms}/*/{video,snap}		-type f		-exec /home/pi/retrocrt_media 128 108 {} crt	\;
+
+sudo -u pi nice -n 19 ionice -c 3 	find ~pi/RetroPie/{media,roms}/*/{marquee,wheel}	-type f		-exec /home/pi/retrocrt_media 128 36 {}		\;
+} > /tmp/retrocrt_media.out
+
+
+exit 0
