@@ -1,10 +1,13 @@
 [Unit] 
-Requires=network.target
+Type=simple
+Description=RetroCRT Background Tasks
+Requires=multiuser.target
 DefaultDependencies=no
 Before=shutdown.target reboot.target
 
 [Service] 
-ExecStop=/home/pi/RetroCRT/scripts/shutdown.sh
+ExecStop=/usr/bin/retrocrtstop
+ExecStart=/usr/bin/retrocrtstart
 Type=oneshot 
 RemainAfterExit=true
 
