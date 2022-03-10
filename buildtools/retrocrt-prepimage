@@ -130,6 +130,7 @@ if [ -f /var/run/reboot-required ]; then
 	sudo shutdown --reboot +1
 fi
 cd /opt/RetroCRT
+git pull
 export rcrtauto=true
 ./retrocrt_setup.sh
 } 2>&1 | sudo tee /bootstrap.\$(date +%Y%m%d_%H%M%S).out
