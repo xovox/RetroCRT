@@ -30,11 +30,6 @@
 # 
 ##############################################################################
 
-if ! (dpkg -l pv); then
-	sudo apt update
-	sudo apt -y install pv
-fi
-
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.5.1/retropie-4.5.1-rpi2_rpi3.img.gz"
 rpurl="https://files.retropie.org.uk/images/weekly/retropie-buster-4.7.20-rpi2_3_zero2w.img.gz"
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
@@ -61,6 +56,7 @@ blockout="$2"
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
 
 # our two 
+mkdir $HOME/tmp
 rpimage="$HOME/tmp/$(basename "$rpurl")"
 rcrtimage="$HOME/tmp/retrocrt-$rcrtbranch-$(date +%Y%m%d)-$(basename $rpimage .gz)"
 
@@ -149,7 +145,8 @@ display_default_lcd=1
 dpi_group=2
 dpi_mode=87
 disable_splash=1
-hdmi_timings=320 1 16 30 34 240 1 2 3 22 0 0 0 60 0 6400000 1
+#hdmi_timings=320 1 16 30 34 240 1 2 3 22 0 0 0 60 0 6400000 1
+hdmi_timings=320 1 23 25 39 240 1 4 3 15 0 0 0 60 0 6400000 1
 #
 # 519 for RetroTink Ultimate
 # 0 for everything else
