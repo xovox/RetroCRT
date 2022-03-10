@@ -1,8 +1,5 @@
 #!/bin/bash
 
-wpa_rcrt=/boot/retrocrt/wpa_supplicant.conf
-wpa_conf=/etc/wpa_supplicant/wpa_supplicant.conf
-
 eval "$(dos2unix < "/boot/retrocrt/retrocrt.txt")"
 
 if [[ "$rotate_es" == [13] ]]; then
@@ -11,4 +8,8 @@ else
 	resolution_es="320 240"
 fi
 
-emulationstation --no-splash --screenrotate $rotate_es --resolution $resolution_es #auto
+emulationstation \
+	--no-splash \
+	--screenrotate $rotate_es \
+	--resolution $resolution_es \
+		2> /dev/shm/emulationstation.err
