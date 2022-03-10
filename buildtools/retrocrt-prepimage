@@ -41,7 +41,7 @@ reqpackages="
 	pv
 "
 
-if ! dpkg -l $reqpackages ; then
+if ! dpkg -l $reqpackages < /dev/null ; then
 	sudo apt update
 	sudo apt -y install $reqpackages
 fi
@@ -56,7 +56,7 @@ blockout="$2"
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
 
 # our two 
-mkdir $HOME/tmp
+mkdir -pv $HOME/tmp
 rpimage="$HOME/tmp/$(basename "$rpurl")"
 rcrtimage="$HOME/tmp/retrocrt-$rcrtbranch-$(date +%Y%m%d)-$(basename $rpimage .gz)"
 
