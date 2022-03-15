@@ -406,7 +406,6 @@
       with_items:
         - { theme: "RetroCRT",          repo: "xovox/es-theme-RetroCRT-240p"          }
         - { theme: "RetroCRT-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
-      ignore_errors: "yes"
       become: "yes"
       ignore_errors: "yes"
 
