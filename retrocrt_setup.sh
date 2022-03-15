@@ -103,7 +103,9 @@ You have three choices on how to handle these games.
 dialog_menu() {
     if [ ! "$rcrtauto" ]; then
         default_item="$(eval "echo \${$1}")"
-        dialog_menu_result="$(echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 3>&1 1>&2 2>&3)"
+        #dialog_menu_result="$(echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 3>&1 1>&2 2>&3)"
+        (echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 2> /dev/shm/dialog_result)
+	export dialog_menu_result="$(cat /dev/shm/dialog_result)"
         if [ ! "$dialog_menu_result" ]; then
             exit 1
         fi
@@ -145,12 +147,12 @@ fi
 
 rcrtbanner() {
 	rcrtbanner="$1"
+	rcrtbwidth="$[ $(wc -L <<< "$rcrtbanner") + 2 ]"
 	printf %${rcrtbwidth}s | tr ' ' '='
-        printf "%*s\n" $(((${#rcrtbanner}+$rcrtbwidth)/2)) "$rcrtbanner"
+        printf "\n%*s\n" $(((${#rcrtbanner}+$rcrtbwidth)/2)) "$rcrtbanner"
 	printf %${rcrtbwidth}s | tr ' ' '='
 	echo
 }
-set +x
 
 ##############################################################################
 # pull in our config
@@ -214,11 +216,14 @@ fi
 
 if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]] && [[ ! "$rcrt_quick" ]]; then
     rcrtbanner "Ensuring Virtual Env has Ansible $ansible_ver"
-    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
+    if ! pip list --local | tr -s ' ' | grep "ansible-base $ansible_ver" ; then
+	    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
+    fi
+
+    echo
 
     rcrtbanner "Ensuring Ansible Modules are Installed"
-    ansible-galaxy install -vvvv -r requirements.yml
-
+    ansible-galaxy install -v -r requirements.yml
 fi
 
 ##############################################################################
@@ -230,6 +235,7 @@ good_backup_string="%Y%m%d_%H%M%S"
 ansible_basic_py="$(find $retrocrt_venv | grep "ansible/module_utils/basic.py$")"
 
 if grep -wq "$bad_backup_string" $ansible_basic_py ; then
+    rcrtbanner "Patching Ansible"
     sed -i.$(date +%Y%m%d_%H%M%S) "s/$bad_backup_string/$good_backup_string/" \
         $ansible_basic_py
 fi
@@ -446,6 +452,7 @@ export PATH="\$retrocrt_install/scripts:\$PATH"
 ##############################################################################
 
 export ANSIBLE_RETRY_FILES_ENABLED=0
+export DEPRECATION_WARNINGS=false
 
 ##############################################################################
 # Emulation Resolution, Currently Unused
