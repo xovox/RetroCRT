@@ -41,6 +41,8 @@ reqpackages="
 	pv
 "
 
+clear
+
 if ! dpkg -l $reqpackages < /dev/null ; then
 	sudo apt update
 	sudo apt -y install $reqpackages
@@ -138,11 +140,10 @@ for i in lr-mame2003 mupen64plus ; do
 	sudo ./retropie_packages.sh \$i remove
 done
 
-for i in daphne joy2key lr-mame2003-plus lr-mupen64plus ; do
+for i in lr-bluemsx lr-freeintv daphne lr-mame2003-plus lr-mupen64plus lr-neocd; do
 	sudo ./retropie_packages.sh \$i depends
 	sudo ./retropie_packages.sh \$i install_bin
 done
-
 
 cd /opt/RetroCRT
 git pull
@@ -168,13 +169,6 @@ hdmi_timings=320 1 23 25 39 240 1 4 3 15 0 0 0 60 0 6400000 1
 # 0 for everything else
 dpi_output_format=0
 EOF
-
-#cat << CACHE | sudo dd of=$rootmnt/etc/apt/apt.conf.d/01-cache
-#Dir{Cache /dev/shm}
-#Dir::Cache /dev/shm;
-#Dir::Cache{Archives /dev/shm/}
-#Dir::Cache::Archives /dev/shm;
-#CACHE
 
 sudo umount $bootmnt
 sudo umount $rootmnt
