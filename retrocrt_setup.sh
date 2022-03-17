@@ -75,6 +75,12 @@ rotation="
 Would you like to rotate the screen?  This requires a reboot.
 "
 
+reset_timings="
+Would you like to update/reset your current resolutions used for boot/ES and emulation?
+
+This is generally very safe.
+"
+
 verticalres="
 What vertical resolution do you prefer?
 "
@@ -160,7 +166,7 @@ rcrtbanner() {
 
 retrocrt_config="/boot/retrocrt/retrocrt.txt"
 sudo mkdir -pv /boot/retrocrt
-sudo mkdir -pv /boot/retrocrt/custom_timings
+sudo mkdir -pv /boot/retrocrt/video_timings
 
 #retrocrt_config="$HOME/.retrocrtrc"
 #source $retrocrt_config
@@ -269,16 +275,16 @@ done
 # update before proceding?
 ##############################################################################
 
-if [[ "$network_up" = "true" ]]; then
-    if dialog_yesno "Update RetroCRT" "$update_git" ; then
-        clear ; reset ; clear
-        rcrtbanner "Updating RetroCRT and Restarting"
-        git pull
-        sleep 5
-        $0
-        exit
-    fi
+#if [[ "$network_up" = "true" ]]; then
+if dialog_yesno "Update RetroCRT" "$update_git" ; then
+    clear ; reset ; clear
+    rcrtbanner "Updating RetroCRT and Restarting"
+    git pull
+    sleep 5
+    $0
+    exit
 fi
+#fi
 
 ##############################################################################
 # version browser!
@@ -346,10 +352,12 @@ fi
 export retrocrt_video_custom_timing=${retrocrt_video_custom_timing:-no}
 #dialog_menu retrocrt_video_custom_timing "Custom Timings" "Utilize custom video timing?" "$custom_timing"
 
-#if [ "$retrocrt_video_custom_timing" ]; then
-    sudo cp -n "$retrocrt_timings"/* /boot/retrocrt/custom_timings/
-    export retrocrt_timings="/boot/retrocrt/custom_timings"
-#fi
+if dialog_yesno "Reset Timings" "$reset_timings" ; then
+        sudo cp -f "$retrocrt_timings"/* /boot/retrocrt/video_timings/
+fi
+
+sudo cp -n "$retrocrt_timings"/* /boot/retrocrt/video_timings/
+export retrocrt_timings="/boot/retrocrt/video_timings"
 
 ##############################################################################
 # see what vertical resolutions are available and present them

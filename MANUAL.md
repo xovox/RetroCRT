@@ -17,6 +17,22 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# Updating Resolution
+
+Currently there isn't an automated method for doing this.
+
+There are two files that are used:
+** low_res handles the boot & ES menu resolution
+** super_res handles the emulation resolution
+
+There are also alternate video modes in that directory that you can copy on top of what's there, or you can save your own.
+You're able to reset them via the RetroCRT setup system.
+
+These are saved in the following directory:
+```
+/boot/retrocrt/video_timings/
+```
+
 # Gotchas
 
 ## Always Run RetroCRT Setup after RetroPie-Setup or OS Updates!
