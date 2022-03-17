@@ -280,6 +280,7 @@ if dialog_yesno "Update RetroCRT" "$update_git" ; then
     clear ; reset ; clear
     rcrtbanner "Updating RetroCRT and Restarting"
     git pull
+    echo
     sleep 5
     $0
     exit
