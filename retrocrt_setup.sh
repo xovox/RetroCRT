@@ -269,7 +269,6 @@ done
 # update before proceding?
 ##############################################################################
 
-disabled_section() {
 if [[ "$network_up" = "true" ]]; then
     if dialog_yesno "Update RetroCRT" "$update_git" ; then
         clear ; reset ; clear
@@ -280,7 +279,6 @@ if [[ "$network_up" = "true" ]]; then
         exit
     fi
 fi
-}
 
 ##############################################################################
 # version browser!
@@ -346,12 +344,12 @@ elif [ "$retrocrt_video_hardware" = "rtrgb" ]; then
 fi
 
 export retrocrt_video_custom_timing=${retrocrt_video_custom_timing:-no}
-dialog_menu retrocrt_video_custom_timing "Custom Timings" "Utilize custom video timing?" "$custom_timing"
+#dialog_menu retrocrt_video_custom_timing "Custom Timings" "Utilize custom video timing?" "$custom_timing"
 
-if [ "$retrocrt_video_custom_timing" ]; then
+#if [ "$retrocrt_video_custom_timing" ]; then
     sudo cp -n "$retrocrt_timings"/* /boot/retrocrt/custom_timings/
     export retrocrt_timings="/boot/retrocrt/custom_timings"
-fi
+#fi
 
 ##############################################################################
 # see what vertical resolutions are available and present them
