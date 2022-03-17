@@ -107,6 +107,8 @@ Most of this media is outdated as it's based on my previous theme
 
 # Footnotes
 
+Splash music is Master Boot Record's _After Burner_
+
 I am not affiliated with RetroPie, Mike Chi, RetroTink, pi2jamma, or anyone else.
 I'm doing this as a personal project.
 
