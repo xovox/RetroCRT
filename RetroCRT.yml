@@ -467,6 +467,7 @@
         update_cache: true
         state: present
       become: "yes"
+      ignore_errors: "yes"
 
     - name: "Console Font: Write Configuration"
       lineinfile:
