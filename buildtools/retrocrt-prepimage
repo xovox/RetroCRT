@@ -33,6 +33,9 @@
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.5.1/retropie-4.5.1-rpi2_rpi3.img.gz"
 rpurl="https://files.retropie.org.uk/images/weekly/retropie-buster-4.7.20-rpi2_3_zero2w.img.gz"
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
+rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.8/retropie-buster-4.8-rpi2_3_zero2w.img.gz"
+
+
 rpimage="$(basename "$rpurl")"
 rcrtimage="/tmp/retrocrt-$(date +%Y%m%d)-$(basename $rpimage .gz)"
 reqpackages="
@@ -55,7 +58,6 @@ rcrtbranch="$1"
 blockout="$2"
 
 # latest version of retropie for raspberry pi 3
-rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
 
 # our two 
 mkdir -pv $HOME/tmp
@@ -64,6 +66,7 @@ rcrtimage="$HOME/tmp/retrocrt-$rcrtbranch-$(date +%Y%m%d)-$(basename $rpimage .g
 
 if [ ! "$rcrtbranch" ]; then
 	echo "$0 [retrocrt_branch]"
+	echo "$0 [retrocrt_branch] [targetblockdev]"
 	echo "$0 noremote"
 	exit
 fi
