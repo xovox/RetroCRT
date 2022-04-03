@@ -276,7 +276,7 @@ done
 ##############################################################################
 
 #if [[ "$network_up" = "true" ]]; then
-if dialog_yesno "Update RetroCRT" "$update_git" ; then
+if [ ! "$rcrtauto" ] && dialog_yesno "Update RetroCRT" "$update_git" ; then
     clear ; reset ; clear
     rcrtbanner "Updating RetroCRT and Restarting"
     git pull
