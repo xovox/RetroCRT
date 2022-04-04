@@ -367,12 +367,12 @@
         line: "<{{ item.type }} name=\"{{ item.name }}\" value=\"{{ item.value }}\" \/>"
         backup: "yes"
       with_items:
-        - { type: "string",  name: "ThemeSet",             value: "RetroCRT" }
-        - { type: "string",  name: "TransitionStyle",      value: "instant"  }
-        - { type: "bool",    name: "EnableSounds",         value: "false"    }
-        - { type: "bool",    name: "ScreenSaverVideoMute", value: "true"     }
-        - { type: "bool",    name: "VideoAudio",           value: "false"    }
-        - { type: "bool",    name: "VideoOmxPlayer",       value: "true"     }
+        - { type: "string",  name: "ThemeSet",             value: "RetroCRT-240p-Rainbow" }
+        - { type: "string",  name: "TransitionStyle",      value: "instant"               }
+        - { type: "bool",    name: "EnableSounds",         value: "false"                 }
+        - { type: "bool",    name: "ScreenSaverVideoMute", value: "true"                  }
+        - { type: "bool",    name: "VideoAudio",           value: "false"                 }
+        - { type: "bool",    name: "VideoOmxPlayer",       value: "true"                  }
       when: first_run.stat.exists == False
 
 
@@ -420,8 +420,6 @@
 #        - { theme: "GBZ35 Dark",             repo: "rxbrad/es-theme-gbz35-dark"              }
 #        - { theme: "Pixel Heaven",           repo: "skeletoooooor/es-pixel-heaven"           }
 #        - { theme: "Art Book",               repo: "anthonycaccese/es-theme-art-book-4-3"             }
-#      ignore_errors: "yes"
-#      become: "yes"
 #        - { theme: "Free Play",              repo: "rxbrad/es-theme-freeplay"                         }
 #        - { theme: "Comic Book Wheel Art",   repo: "TMNTturtleguy/es-theme-ComicBook_4-3_SE-Wheelart" }
 #        - { theme: "Comic Book",             repo: "TMNTturtleguy/es-theme-ComicBook_4-3"             }
@@ -430,6 +428,8 @@
 #        - { theme: "Arcade CRT 2020",        repo: "andreamav/es-theme-arcade-crt2020"             }
       #when:
       #  - install_optional_themes == "yes"
+#      ignore_errors: "yes"
+#      become: "yes"
 
     - name: "Ensure runcommand scripts exist"
       lineinfile:
