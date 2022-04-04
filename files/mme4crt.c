@@ -5,6 +5,8 @@
  * Author Jochen Zurborg
  * Date 08.11.2019
  * last modified 14.11.2019
+
+
 **/
 #include <stddef.h>
 #include <string.h>
@@ -266,7 +268,7 @@ int crt_rpi_switch(int width, int height, float hz, int crt_center_adjust, int m
     {
 
         snprintf(set_hdmi_timing, sizeof(set_hdmi_timing),
-            "vcgencmd hdmi_timings %d 1 %d %d %d %d 1 %d %d %d 0 0 0 %f %d %f 1",
+            "vcgencmd hdmi_timings %d 1 %d %d %d %d 1 %d %d %d 0 0 0 %.0f %d %.0f 1",
             width, hfp, hsp, hbp, height, vfp,vsp, vbp,
             hz, ip_flag, pixel_clock);
 
@@ -302,7 +304,7 @@ int crt_rpi_switch(int width, int height, float hz, int crt_center_adjust, int m
     {
 
         snprintf(set_hdmi_timing, sizeof(set_hdmi_timing),
-            "vcgencmd hdmi_timings %d 1 %d %d %d %d 1 %d %d %d 0 0 0 %f %d %f 1",
+            "vcgencmd hdmi_timings %d 1 %d %d %d %d 1 %d %d %d 0 0 0 %.0f %d %.0f 1",
             width, hfp, hsp, hbp, height, vfp,vsp, vbp,
             hz, ip_flag, pixel_clock);
 

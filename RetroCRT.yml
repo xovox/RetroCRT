@@ -396,6 +396,7 @@
         state: "absent"
       with_items:
         - { theme: "carbon" }
+        - { theme: "carbon-2021" }
       become: "yes"
 
     - name: "Theme: RetroCRT Install/Update"
@@ -404,8 +405,9 @@
         repo: "https://github.com/{{ item.repo }}"
         dest: "/etc/emulationstation/themes/{{ item.theme }}"
       with_items:
-        - { theme: "RetroCRT",          repo: "xovox/es-theme-RetroCRT-240p"          }
-        - { theme: "RetroCRT-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
+        - { theme: "RetroCRT-240p",          repo: "xovox/es-theme-RetroCRT-240p"          }
+        - { theme: "RetroCRT-240p-Rainbow",  repo: "xovox/es-theme-RetroCRT-240p-Rainbow"  }
+        - { theme: "RetroCRT-240p-Vertical", repo: "xovox/es-theme-RetroCRT-240p-Vertical" }
       become: "yes"
       ignore_errors: "yes"
 
