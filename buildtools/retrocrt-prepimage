@@ -30,39 +30,33 @@
 # 
 ##############################################################################
 
-rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.5.1/retropie-4.5.1-rpi2_rpi3.img.gz"
-rpurl="https://files.retropie.org.uk/images/weekly/retropie-buster-4.7.20-rpi2_3_zero2w.img.gz"
-rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
+# what branch of RetroCRT are we pulling down
+rcrtbranch="$1"
+# possible block device to write to
+blockout="$2"
+
+#rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.5.1/retropie-4.5.1-rpi2_rpi3.img.gz"
+#rpurl="https://files.retropie.org.uk/images/weekly/retropie-buster-4.7.20-rpi2_3_zero2w.img.gz"
+#rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.7.1/retropie-buster-4.7.1-rpi2_3.img.gz"
 rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.8/retropie-buster-4.8-rpi2_3_zero2w.img.gz"
 
-
-rpimage="$(basename "$rpurl")"
-rcrtimage="/tmp/retrocrt-$(date +%Y%m%d)-$(basename $rpimage .gz)"
 reqpackages="
 	curl
 	pigz
 	pv
 "
 
-clear
+rcrtbanner() {
+	rcrtbanner="$1"
+	rcrtbwidth="$[ $(wc -L <<< "$rcrtbanner") + 2 ]"
+	printf %${rcrtbwidth}s | tr ' ' '='
+        printf "\n%*s\n" $(((${#rcrtbanner}+$rcrtbwidth)/2)) "$rcrtbanner"
+	printf %${rcrtbwidth}s | tr ' ' '='
+	echo
+}
 
-if ! dpkg -l $reqpackages < /dev/null ; then
-	sudo apt update
-	sudo apt -y install $reqpackages
-fi
-
-echo
-
-# what branch of RetroCRT are we pulling down
-rcrtbranch="$1"
-blockout="$2"
-
-# latest version of retropie for raspberry pi 3
-
-# our two 
-mkdir -pv $HOME/tmp
 rpimage="$HOME/tmp/$(basename "$rpurl")"
-rcrtimage="$HOME/tmp/retrocrt-$rcrtbranch-$(date +%Y%m%d)-$(basename $rpimage .gz)"
+rcrtimage="$HOME/tmp/retrocrt-$(date +%Y%m%d)-$rcrtbranch-$(basename $rpimage .gz)"
 
 if [ ! "$rcrtbranch" ]; then
 	echo "$0 [retrocrt_branch]"
@@ -71,15 +65,29 @@ if [ ! "$rcrtbranch" ]; then
 	exit
 fi
 
+mkdir -pv $HOME/tmp
+
+rcrtbanner "checking installed packages"
+
+if ! dpkg -l $reqpackages < /dev/null ; then
+	sudo apt update
+	sudo apt -y install $reqpackages
+fi
+
+echo
+
 # download retropie if we don't have it
 if [ ! -f "$rpimage" ]; then
+	rcrtbanner "downloading retropie image"
 	curl -o "$rpimage" -L "$rpurl"
 fi
 
+rcrtbanner "decompressing retropie"
 # copy our stored compressed image to a new retrocrt image
 pv -cN "compressed" "$rpimage" | pigz -dc | pv -cN "uncompressed" > $rcrtimage
 
 # append 1gb to the new retrocrt image
+rcrtbanner "appending storage space to image"
 dd if=/dev/zero conv=notrunc oflag=append bs=1M count=2000 of=$rcrtimage
 
 # create loopback device from new retrocrt image
@@ -87,14 +95,16 @@ loopback="$(sudo losetup -Pf --show $rcrtimage)"
 bootpart=${loopback}p1
 rootpart=${loopback}p2
 
-sudo tune2fs -o journal_data_writeback $rootpart
-sudo tune2fs -O ^has_journal $rootpart
-
-# grow out the / filesystem to fill the additional 1gb
+# grow out the / filesystem to fill the additional storage
+rcrtbanner "growing filesystem"
 sudo parted $loopback -- resizepart 2 100%
 sudo partprobe
 sudo e2fsck -f $rootpart
 sudo resize2fs $rootpart
+
+rcrtbanner "tuning image for SD use"
+sudo tune2fs -o journal_data_writeback $rootpart
+sudo tune2fs -O ^has_journal $rootpart
 
 # mount our filesystems
 bootmnt="$(mktemp -d)"
@@ -102,6 +112,7 @@ rootmnt="$(mktemp -d)"
 sudo mount $bootpart $bootmnt
 sudo mount $rootpart $rootmnt
 
+rcrtbanner "tweaking image"
 # prevent automatic filesystem growth
 sudo sed -i.retrocrt '/END INIT INFO/a exit 0 # RetroCRT' $rootmnt/etc/init.d/resize2fs_once
 sudo sed -i.retrocrt 's| init=/usr/lib/raspi-config/init_resize.sh||' $bootmnt/cmdline.txt
@@ -112,6 +123,7 @@ sudo touch $bootmnt/ssh
 # update retropie
 sudo git -C $rootmnt/home/pi/RetroPie-Setup pull
 
+rcrtbanner "cloning latest retrocrt"
 # pull down RetroCRT
 if [ "$rcrtbranch" = "noremote" ]; then
 	sudo git clone $HOME/git/RetroCRT $rootmnt/opt/RetroCRT
@@ -123,6 +135,7 @@ cp -v $rootmnt/opt/RetroCRT/files/RetroCRT.sh $rootmnt/home/pi/RetroPie/retropie
 
 sudo chown -Rc 1000:1000 $rootmnt/opt/RetroCRT $rootmnt/home/pi
 
+rcrtbanner "setting up firstboot script"
 cat << EOF | sudo tee $rootmnt/opt/retropie/configs/all/autostart.sh
 #!/bin/bash -x
 sleep 60
@@ -157,6 +170,7 @@ EOF
 
 sudo chmod -c 755 $rootmnt/opt/retropie/configs/all/autostart.sh
 
+rcrtbanner "updating config.txt"
 # enable GPIO video
 cat << EOF | sudo tee -a $bootmnt/config.txt
 dtoverlay=dpi24
@@ -178,9 +192,13 @@ sudo umount $rootmnt
 sudo losetup -D $loopback
 
 if [ "$blockout" ]; then
+	rcrtbanner "writing to $blockout"
 	pv "$rcrtimage" | sudo dd bs=1M of=$blockout
-	sudo sync
 fi
+
+rcrtbanner "running sync"
+
+sudo sync
 
 echo
 echo "$rcrtimage"
