@@ -42,6 +42,7 @@ rpurl="https://github.com/RetroPie/RetroPie-Setup/releases/download/4.8/retropie
 
 reqpackages="
 	curl
+	git
 	pigz
 	pv
 "
@@ -49,14 +50,16 @@ reqpackages="
 rcrtbanner() {
 	rcrtbanner="$1"
 	rcrtbwidth="$[ $(wc -L <<< "$rcrtbanner") + 2 ]"
+	echo
 	printf %${rcrtbwidth}s | tr ' ' '='
         printf "\n%*s\n" $(((${#rcrtbanner}+$rcrtbwidth)/2)) "$rcrtbanner"
 	printf %${rcrtbwidth}s | tr ' ' '='
 	echo
+	echo
 }
 
 rpimage="$HOME/tmp/$(basename "$rpurl")"
-rcrtimage="$HOME/tmp/retrocrt-$(date +%Y%m%d)-$rcrtbranch-$(basename $rpimage .gz)"
+rcrtimage="/tmp/retrocrt-$(date +%Y%m%d)-$rcrtbranch-$(basename $rpimage .gz)"
 
 if [ ! "$rcrtbranch" ]; then
 	echo "$0 [retrocrt_branch]"
@@ -64,6 +67,8 @@ if [ ! "$rcrtbranch" ]; then
 	echo "$0 noremote"
 	exit
 fi
+
+starttime=$(date +%s)
 
 mkdir -pv $HOME/tmp
 
@@ -73,8 +78,6 @@ if ! dpkg -l $reqpackages < /dev/null ; then
 	sudo apt update
 	sudo apt -y install $reqpackages
 fi
-
-echo
 
 # download retropie if we don't have it
 if [ ! -f "$rpimage" ]; then
@@ -159,12 +162,14 @@ done
 for i in lr-bluemsx lr-freeintv daphne lr-mame2003-plus lr-mupen64plus lr-neocd; do
 	sudo ./retropie_packages.sh \$i depends
 	sudo ./retropie_packages.sh \$i install_bin
+	sudo ./retropie_packages.sh \$i configure
 done
 
 cd /opt/RetroCRT
 git pull
 export rcrtauto=true
 ./retrocrt_setup.sh
+sudo shutdown -h now
 } 2>&1 | sudo tee /bootstrap.\$(date +%Y%m%d_%H%M%S).out
 EOF
 
@@ -200,5 +205,7 @@ rcrtbanner "running sync"
 
 sudo sync
 
-echo
+rcrtbanner "completed in $[ $(date +%s) - $starttime ] seconds"
+
 echo "$rcrtimage"
+echo

@@ -1,4 +1,4 @@
-#!/bin/bash -ex
+#!/bin/bash -e
 
 ##############################################################################
 # This file is part of RetroCRT (https://github.com/xovox/RetroCRT)
@@ -36,6 +36,23 @@
 rcrtimage="$1"
 blockdev="$2"
 
+if [ ! "$blockdev" ]; then
+	echo $0 "[image] [blockdev]"
+	exit
+fi
+
+rcrtbanner() {
+	rcrtbanner="$1"
+	rcrtbwidth="$[ $(wc -L <<< "$rcrtbanner") + 2 ]"
+	echo
+	printf %${rcrtbwidth}s | tr ' ' '='
+        printf "\n%*s\n" $(((${#rcrtbanner}+$rcrtbwidth)/2)) "$rcrtbanner"
+	printf %${rcrtbwidth}s | tr ' ' '='
+	echo
+	echo
+}
+
+
 loopback="$(sudo losetup -Pf --show $rcrtimage)"
 bootpart=${loopback}p1
 rootpart=${loopback}p2
@@ -43,35 +60,50 @@ bootmnt="$(mktemp -d)"
 rootmnt="$(mktemp -d)"
 
 for i in 1 2 ; do
+	rcrtbanner "${blockdev}$i -> $rcrtimage"
 	sudo dd if=${blockdev}$i bs=1M of=${loopback}p${i} status=progress
 done
 
+rcrtbanner "fsck root partition"
+
 sudo e2fsck -f $rootpart
 
-sudo mount $bootpart $bootmnt
-sudo mount $rootpart $rootmnt
+rcrtbanner "re-enabling resizing on first boot"
+
+sudo mount -v $bootpart $bootmnt
+sudo mount -v $rootpart $rootmnt
 
 sudo sed -i 's|$| init=/usr/lib/raspi-config/init_resize.sh|' $bootmnt/cmdline.txt
 sudo sed -i '/RetroCRT/d' $rootmnt/etc/init.d/resize2fs_once
 
-sudo umount $bootmnt
-sudo umount $rootmnt
+sudo umount -v $bootmnt
+sudo umount -v $rootmnt
 sudo losetup -D $loopback
 
-sudo dd if=$rcrtimage bs=1M of=$blockdev status=progress
+rcrtbanner "writing image to sd"
+
+rcrtbanner "$rcrtimage -> ${blockdev}$i"
+pv "$rcrtimage" | sudo dd bs=1M of=$blockdev
+
+rcrtbanner "running sync"
+
 sleep 5
 sudo sync
 
-mkdir -pv /var/www/html/RetroCRT-$(date +%Y%m%d)
+rcrtbanner "creating archive"
 
-cp $rcrtimage /var/www/html/RetroCRT-$(date +%Y%m%d)/RetroCRT-$(date +%Y%m%d).img
+releasedir="/var/www/html/RetroCRT-Releases/RetroCRT-$(date +%Y%m%d)"
+
+mkdir -pv "$releasedir"
+
+cp -v $rcrtimage $releasedir/
 
 for i in README MANUAL; do
-	markdown ../$i.md > /var/www/html/RetroCRT-$(date +%Y%m%d)/$i.html
+	markdown ../$i.md > $releasedir/$i.html
 done
 
-cp ../LICENSE.txt /var/www/html/RetroCRT-$(date +%Y%m%d)/
+cp ../LICENSE.txt $releasedir/
 
-cd /var/www/html/
+cd $releasedir/..
 
 7z a RetroCRT-$(date +%Y%m%d).7z RetroCRT-$(date +%Y%m%d)
