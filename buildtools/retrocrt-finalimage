@@ -94,7 +94,7 @@ releasedir="/var/www/html/RetroCRT-Releases/RetroCRT-$(date +%Y%m%d)"
 
 mkdir -pv "$releasedir"
 
-cp -v $rcrtimage $releasedir/
+mv -v $rcrtimage $releasedir/
 
 for i in README MANUAL; do
 	markdown ../$i.md > $releasedir/$i.html
