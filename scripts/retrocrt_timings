@@ -30,6 +30,10 @@ elif [ -f "$system_timings" ]; then
 	hdmi_timings="$(cat $system_timings)"
 fi
 
+if test "$ra_system" && grep -wq $ra_system $retrocrt_install/retrocrt_timings/no_modeswitch.txt; then
+	unset hdmi_timings
+fi
+
 # does the timings file exist?
 if [ "$hdmi_timings" ]; then
 	# apply our new timings
