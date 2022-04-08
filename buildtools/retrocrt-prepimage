@@ -74,10 +74,8 @@ mkdir -pv $HOME/tmp
 
 rcrtbanner "checking installed packages"
 
-if ! dpkg -l $reqpackages < /dev/null ; then
-	sudo apt update
-	sudo apt -y install $reqpackages
-fi
+sudo apt update
+sudo apt -y install $reqpackages
 
 # download retropie if we don't have it
 if [ ! -f "$rpimage" ]; then
@@ -169,6 +167,7 @@ cd /opt/RetroCRT
 git pull
 export rcrtauto=true
 ./retrocrt_setup.sh
+omxplayer files/finished.flac
 sudo shutdown -h now
 } 2>&1 | sudo tee /bootstrap.\$(date +%Y%m%d_%H%M%S).out
 EOF
