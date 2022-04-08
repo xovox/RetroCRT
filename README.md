@@ -30,19 +30,6 @@ This means that RetroCRT should be able to coexist with RetroPie and probably al
 RetroCRT *only* supports Libretro cores, with a few exceptions.
 If you find a Libretro core that's not properly configured when you launch it, please see [the issues page](https://github.com/xovox/RetroCRT/issues) and file a new issue if you don't see your platform already requested
 
-# Notes on Resolutions
-
-This is a hobby project, so I've made moves to make everything as simple & maintainable as possible.  
-The platforms I've been using this on are calibrated exclusively for 320x240 & 1920x240, and that's how RetroCRT behaves.
-You will see black borders around games that are < 240p, this is by design, I calculate aspect ratios based on vertical resolution.
-For example, 224p is calculated as follows (1920 / 4
-
-To keep my hobby project maintainable, RetroCRT will use only 2 resolutions while you use it:
-320x240 for console & EmulationStation as well as game play running 1920x240.
-This means that any game that runs < 240 will have black borders.
-I calculate correct aspect ratios for all games based on vertical resolution by calculating vertical percentage times max horizontal output, like  (224 / 240) * 1920 = 1785.60 which is rounded up to the nearest even #.
-Hardware output resolution of 224p for uncalibrated sets is eventually coming, but I don't have alot of time to maintain this project.
-
 # Installation
 
 See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
@@ -82,6 +69,19 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
 Before doing anything else, update RetroCRT!  You can do this in the RetroPie screen in EmulationStation.
 
 If that doesn't fix it, see the [troubleshooting doc](TROUBLESHOOTING.md).
+
+# Notes on Resolutions
+
+This is a hobby project, so I've made moves to make everything as simple & maintainable as possible.  
+The platforms I've been using this on are calibrated exclusively for 320x240 & 1920x240, and that's how RetroCRT behaves.
+You will see black borders around games that are < 240p, this is by design, I calculate aspect ratios based on vertical resolution.
+For example, 224p is calculated as follows (1920 / 4
+
+To keep my hobby project maintainable, RetroCRT will use only 2 resolutions while you use it:
+320x240 for console & EmulationStation as well as game play running 1920x240.
+This means that any game that runs < 240 will have black borders.
+I calculate correct aspect ratios for all games based on vertical resolution by calculating vertical percentage times max horizontal output, like  (224 / 240) * 1920 = 1785.60 which is rounded up to the nearest even #.
+Hardware output resolution of 224p for uncalibrated sets is eventually coming, but I don't have alot of time to maintain this project.
 
 # Media
 

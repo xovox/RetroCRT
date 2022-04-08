@@ -57,7 +57,7 @@ dpi_output_format=519
 
 ## Pre-Built Images
 
-I'm not supporting the pre-built image anymore, please use the manual installation method.  It's an outdated OS and base RetroPie, but it's fine to use as a test bed.
+[The release page](https://github.com/xovox/RetroCRT/releases) has pre-built images
 
 ## Manual Installation
 
