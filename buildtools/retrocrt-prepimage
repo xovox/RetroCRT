@@ -167,8 +167,6 @@ cd /opt/RetroCRT
 git pull
 export rcrtauto=true
 ./retrocrt_setup.sh
-omxplayer files/finished.flac
-sudo shutdown -h now
 } 2>&1 | sudo tee /bootstrap.\$(date +%Y%m%d_%H%M%S).out
 EOF
 

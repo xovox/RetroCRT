@@ -80,8 +80,6 @@ sudo umount -v $bootmnt
 sudo umount -v $rootmnt
 sudo losetup -D $loopback
 
-rcrtbanner "writing image to sd"
-
 rcrtbanner "$rcrtimage -> ${blockdev}$i"
 pv "$rcrtimage" | sudo dd bs=1M of=$blockdev
 
