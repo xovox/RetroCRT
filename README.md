@@ -19,16 +19,20 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # RetroCRT
 
-RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk) gaming on CRTs easy and user friendly.
+RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk) gaming on 15khz CRTs easy and user friendly.
 This only covers video output, JAMMA controls will be a separate project to increase maintainability.
 
-The biggest advantage RetroCRT has over other RetroPie CRT toolsets/distributions is we're only updating configuration files line-by-line, so updating RetroPie should *never* be an issue.
+The biggest advantage RetroCRT has over other RetroPie 15khz CRT toolsets/distributions is we're only updating configuration files line-by-line, so updating RetroPie should *never* be an issue.
 This means that RetroCRT should be able to coexist with RetroPie and probably almost everything else you're running.
 
 # RetroCRT Emulator Support
 
 RetroCRT *only* supports Libretro cores, with a few exceptions.
 If you find a Libretro core that's not properly configured when you launch it, please see [the issues page](https://github.com/xovox/RetroCRT/issues) and file a new issue if you don't see your platform already requested
+
+* Social/Support
+  * [RetroPie CRT Gamers](https://www.facebook.com/groups/RetroPieCRT/) is my group for RetroCRT and other tools/distributions
+  * [The issues page](https://github.com/xovox/RetroCRT/issues) to submit bugs/unexpected behavior
 
 # Installation
 
@@ -60,7 +64,7 @@ See [the manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md).
 * Pixel-perfect arcade emulation for most games!
   * This is achieved with on-load screen resolution changes!
 * Automatic rotation for vertical games!
-* Installation of additional CRT Friendly EmulationStation themes!
+* Installation of additional 15khz CRT Friendly EmulationStation themes!
 * No system messages on boot/shutdown/reboot!
 * My unbridled enthusiasm about building this project!
 
@@ -100,10 +104,6 @@ Most of this media is outdated as it's based on my previous theme
 # Resources
 
 * [The manual](https://github.com/xovox/RetroCRT/blob/master/MANUAL.md) has a ton of info, read this to get up to speed
-
-* Facebook
-  * [RetroPie CRT Gamers](https://www.facebook.com/groups/RetroPieCRT/) is a group I started for this very purpose
-  * [The CRT Collective](https://www.facebook.com/groups/444560212348840/) is an excellent resource on TV repair, buying, and general knowledge
 
 # Footnotes
 
