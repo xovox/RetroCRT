@@ -325,20 +325,26 @@
         regexp: "^{{ item.variable }}.*"
         line: "{{ item.variable }} = {{ item.value }}"
       with_items:
-        - { variable: "aspect_ratio_index",     value: "23"                             }
-        - { variable: "custom_viewport_height", value: "{{ physical_viewport_height }}" }
-        - { variable: "custom_viewport_width",  value: "{{ physical_viewport_width }}"  }
-        - { variable: "libretro_log_level",     value: "3"                              }
-        - { variable: "log_verbosity",          value: "true"                           }
-        - { variable: "menu_enable_widgets",    value: "false"                          }
-        - { variable: "video_font_enable",      value: "false"                          }
-        - { variable: "video_fullscreen",       value: "true"                           }
-        - { variable: "video_hard_sync",        value: "true"                           }
-        - { variable: "video_refresh_rate",     value: "59.73"                          }
-        - { variable: "video_scale_integer",    value: "true"                           }
-        - { variable: "video_smooth",           value: "false"                          }
-        - { variable: "video_threaded",         value: "true"                           }
-        - { variable: "video_vsync",            value: "true"                           }
+        - { variable: "aspect_ratio_index",                      value: "23"                             }
+        - { variable: "custom_viewport_height",                  value: "{{ physical_viewport_height }}" }
+        - { variable: "custom_viewport_width",                   value: "{{ physical_viewport_width }}"  }
+        - { variable: "libretro_log_level",                      value: "3"                              }
+        - { variable: "log_verbosity",                           value: "true"                           }
+        - { variable: "menu_enable_widgets",                     value: "false"                          }
+        - { variable: "menu_rgui_shadows",                       value: "true"                           }
+        - { variable: "menu_show_advanced_settings",             value: "true"                           }
+        - { variable: "rgui_aspect_ratio_lock",                  value: "3"                              }
+        - { variable: "rgui_background_filler_thickness_enable", value: "false"                          }
+        - { variable: "rgui_border_filler_enable",               value: "false"                          }
+        - { variable: "rgui_menu_color_theme",                   value: "6"                              }
+        - { variable: "video_font_enable",                       value: "false"                          }
+        - { variable: "video_fullscreen",                        value: "true"                           }
+        - { variable: "video_hard_sync",                         value: "true"                           }
+        - { variable: "video_refresh_rate",                      value: "59.73"                          }
+        - { variable: "video_scale_integer",                     value: "true"                           }
+        - { variable: "video_smooth",                            value: "false"                          }
+        - { variable: "video_threaded",                          value: "true"                           }
+        - { variable: "video_vsync",                             value: "true"                           }
 
     - name: "Ensure es_settings.cfg Exists"
       lineinfile:
