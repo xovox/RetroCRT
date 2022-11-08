@@ -222,8 +222,10 @@ fi
 
 if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]] && [[ ! "$rcrt_quick" ]]; then
     rcrtbanner "Ensuring Virtual Env has Ansible $ansible_ver"
+    pip install --upgrade pip
     if ! pip list --local | tr -s ' ' | grep "ansible-base $ansible_ver" ; then
-	    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
+	    #pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
+	    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm -r requires.txt
     fi
 
     echo
