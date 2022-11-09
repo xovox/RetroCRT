@@ -59,7 +59,7 @@ rcrtbanner() {
 }
 
 rpimage="$HOME/tmp/$(basename "$rpurl")"
-rcrtimage="/tmp/retrocrt-$(date +%Y%m%d)-$rcrtbranch-$(basename $rpimage .gz)"
+rcrtimage="/storage/internal/retrocrt-$(date +%Y%m%d)-$rcrtbranch-$(basename $rpimage .gz)"
 
 if [ ! "$rcrtbranch" ]; then
 	echo "$0 [retrocrt_branch]"
@@ -67,6 +67,9 @@ if [ ! "$rcrtbranch" ]; then
 	echo "$0 noremote"
 	exit
 fi
+
+# ensure we have sudo
+sudo clear
 
 starttime=$(date +%s)
 
@@ -89,7 +92,7 @@ pv -cN "compressed" "$rpimage" | pigz -dc | pv -cN "uncompressed" > $rcrtimage
 
 # append 1gb to the new retrocrt image
 rcrtbanner "appending storage space to image"
-dd if=/dev/zero conv=notrunc oflag=append bs=1M count=2000 of=$rcrtimage
+dd if=/dev/zero conv=notrunc oflag=append bs=1M count=1024 of=$rcrtimage
 
 # create loopback device from new retrocrt image
 loopback="$(sudo losetup -Pf --show $rcrtimage)"
@@ -152,6 +155,7 @@ if [ -f /var/run/reboot-required ]; then
 	sudo shutdown --reboot +1
 fi
 cd /home/pi/RetroPie-Setup
+git fetch
 git pull
 for i in lr-mame2003 mupen64plus ; do
 	sudo ./retropie_packages.sh \$i remove
@@ -162,6 +166,9 @@ for i in lr-bluemsx lr-freeintv daphne lr-mame2003-plus lr-mupen64plus lr-neocd;
 	sudo ./retropie_packages.sh \$i install_bin
 	sudo ./retropie_packages.sh \$i configure
 done
+
+sudo __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh setup post_update
+sudo __nodialog=1 /home/pi/RetroPie-Setup/retropie_packages.sh setup update_packages
 
 cd /opt/RetroCRT
 git pull
