@@ -1,2 +1,2 @@
 ansible-base==2.10.16
-cryptography==36.0.2
+cryptography==37.0.4
