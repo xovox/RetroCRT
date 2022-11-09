@@ -1,9 +1,2 @@
-ansible-base==2.10.8
-cffi==1.15.0
+ansible-base==2.10.16
 cryptography==36.0.2
-Jinja2==3.1.1
-MarkupSafe==2.1.1
-packaging==21.3
-pycparser==2.21
-pyparsing==3.0.7
-PyYAML==6.0
