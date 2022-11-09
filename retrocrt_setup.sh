@@ -111,7 +111,7 @@ dialog_menu() {
         default_item="$(eval "echo \${$1}")"
         #dialog_menu_result="$(echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 3>&1 1>&2 2>&3)"
         (echo /usr/bin/dialog --title "'$retrocrt_title :: $2'" --default-item "$default_item" --menu "'$3'" 0 0 0 $4 | bash 2> /dev/shm/dialog_result)
-	export dialog_menu_result="$(cat /dev/shm/dialog_result)"
+        export dialog_menu_result="$(cat /dev/shm/dialog_result)"
         if [ ! "$dialog_menu_result" ]; then
             exit 1
         fi
@@ -146,18 +146,18 @@ fi
 ##############################################################################
 
 if [ "$COLUMNS" ]; then
-	rcrtbwidth=$COLUMNS
+        rcrtbwidth=$COLUMNS
 else
-	rcrtbwidth=40
+        rcrtbwidth=40
 fi
 
 rcrtbanner() {
-	rcrtbanner="$1"
-	rcrtbwidth="$[ $(wc -L <<< "$rcrtbanner") + 2 ]"
-	printf %${rcrtbwidth}s | tr ' ' '='
+        rcrtbanner="$1"
+        rcrtbwidth="$[ $(wc -L <<< "$rcrtbanner") + 2 ]"
+        printf %${rcrtbwidth}s | tr ' ' '='
         printf "\n%*s\n" $(((${#rcrtbanner}+$rcrtbwidth)/2)) "$rcrtbanner"
-	printf %${rcrtbwidth}s | tr ' ' '='
-	echo
+        printf %${rcrtbwidth}s | tr ' ' '='
+        echo
 }
 
 ##############################################################################
@@ -171,9 +171,6 @@ sudo mkdir -pv /boot/retrocrt/video_timings
 #retrocrt_config="$HOME/.retrocrtrc"
 #source $retrocrt_config
 retrocrt_title="RetroCRT"
-
-# lock in the ansible version we're running
-ansible_ver="2.10.8"
 
 retrocrt_venv="$HOME/.virtualenv/retrocrt3"
 req_packages="
@@ -221,13 +218,9 @@ if [[ -f $retrocrt_venv/bin/activate ]]; then
 fi
 
 if [[ "$VIRTUAL_ENV" = "$retrocrt_venv" ]] && [[ ! "$rcrt_quick" ]]; then
-    rcrtbanner "Ensuring Virtual Env has Ansible $ansible_ver"
+    rcrtbanner "Ensuring Python Modules are Installed"
     pip install --upgrade pip
-    if ! pip list --local | tr -s ' ' | grep "ansible-base $ansible_ver" ; then
-	    #pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm ansible-base==$ansible_ver
-	    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm -r requires.txt
-    fi
-
+    pip install --retries 5 --timeout 5 --upgrade --cache-dir /dev/shm -r requires.txt
     echo
 
     rcrtbanner "Ensuring Ansible Modules are Installed"
@@ -294,8 +287,8 @@ fi
 ##############################################################################
 
 #if [[ "$network_up" = "true" ]]; then
-#	clear ; reset ; clear
-#	git fetch --tags
+#        clear ; reset ; clear
+#        git fetch --tags
 #fi
 
 #git_tag_latest="$(git for-each-ref --format="%(tag)" --sort=-taggerdate --count=1 refs/tags)"
