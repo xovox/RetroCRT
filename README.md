@@ -17,6 +17,11 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# RetroCRT's Future
+
+I haven't needed to update RetroCRT for a while, everything works as I'd expect it to.
+There are features I'd like to add, but over all it's fairly mature.
+
 # RetroCRT
 
 RetroCRT is a suite of tools designed to make [RetroPie](https://retropie.org.uk) gaming on 15khz CRTs easy and user friendly.
